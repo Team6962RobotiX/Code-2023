@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -38,6 +40,7 @@ public class Drive extends SubsystemBase {
   RelativeEncoder rightBankEncoder = rightBank1.getEncoder();
 
   private DifferentialDriveOdometry odometry;
+  private Field2d field = new Field2d();
 
   private IMU IMU;
 
@@ -64,16 +67,38 @@ public class Drive extends SubsystemBase {
     IMU = new IMU();
 
     odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
+
+    SmartDashboard.putData("Field", field);
   }
 
   @Override
   public void periodic() {
     odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
+    field.setRobotPose(odometry.getPoseMeters());
     // This method will be called once per scheduler run
   }
 
   public Pose2d getPose() {
     return odometry.getPoseMeters();
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftBankEncoder.getVelocity(), rightBankEncoder.getVelocity());
+  }
+
+  public double getHeading() {
+    return IMU.getRotation2d().getDegrees();
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftBank.setVoltage(leftVolts);
+    rightBank.setVoltage(rightVolts);
+    drive.feed();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    odometry.resetPosition(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition(), pose);
   }
 
   @Override

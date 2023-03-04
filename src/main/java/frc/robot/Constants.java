@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -26,10 +28,15 @@ public final class Constants {
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.4; // Hard limit on power
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
-  public static final double WHEEL_RADIUS_METERS = 8 / 100;
+  public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
+  public static final double WHEEL_RADIUS = 8 / 100; // Meters
   public static final double GEARBOX_RATIO = 1 / 8.45;
-  public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS_METERS * GEARBOX_RATIO;
-
+  public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
+  public static final double DRIVE_KP = 0;
+  public static final double DRIVE_KS = 0;
+  public static final double DRIVE_KV = 0;
+  public static final double DRIVE_KA = 0;
+  public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
   public static final double TWIST_DEADZONE = 0.2; // Joystick deadzone for turning
@@ -102,6 +109,11 @@ public final class Constants {
   public static final double CLAW_GRAB_MIN_POWER = 0.05; // Slowest speed claw will grab (0 - 1)
   public static final double CLAW_GRAB_MAX_POWER = 0.4; // Fastest speed claw will grab (0 - 1)
 
+  // Autonomous Config
+  public static final double AUTONOMOUS_MAX_SPEED = 1; // m / s
+  public static final double AUTONOMOUS_MAX_ACCELERATION = 1; // m / s^2
+  public static final double AUTONOMOUS_RAMSETE_B = 0;
+  public static final double AUTONOMOUS_RAMSETE_ZETA = 0;
 
   public static double mapPower(double power, double min, double max, double deadZone) {
     double sign = Math.signum(power);
