@@ -44,8 +44,10 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, 5).onTrue(claw.close());
     new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
-    new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, Constants.ARM_EXTEND_MAX_POWER));
-    new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -Constants.ARM_EXTEND_MAX_POWER));
+    new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, Constants.ARM_EXTEND_POWER));
+    new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -Constants.ARM_EXTEND_POWER));
+
+    new JoystickButton(driveJoystick, 11).onTrue(new AutoBalance(IMU, drive));
   }
 
   public Command getAutonomousCommand() {

@@ -16,7 +16,7 @@ public final class Constants {
 
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
-  public static final boolean ENABLE_BALANCE = false;
+  public static final boolean ENABLE_BALANCE = true;
   public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
@@ -26,6 +26,9 @@ public final class Constants {
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.4; // Hard limit on power
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
+  public static final double WHEEL_RADIUS_METERS = 0;
+  public static final double GEARBOX_RATIO = 0;
+  public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS_METERS * GEARBOX_RATIO;
 
 
   // Joystick Dead-zones
@@ -67,7 +70,7 @@ public final class Constants {
   // Extension
   public static final double ARM_EXTEND_LIMIT = 33; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
-  public static final double ARM_EXTEND_MIN_POWER = 0.1; // Slowest speed arm will extend (0 - 1)
+  public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
 
 
@@ -77,6 +80,20 @@ public final class Constants {
   public static final double ARM_LIFT_MIN_ANGLE = 28; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_PRECISION = 1; // Degrees of precision
+
+
+  // PID & FF Config
+  public static final double ARM_EXTEND_KP = 0;
+  public static final double ARM_EXTEND_KI = 0;
+  public static final double ARM_EXTEND_KD = 0;
+
+  public static final double ARM_LIFT_KP = 0;
+  public static final double ARM_LIFT_KI = 0;
+  public static final double ARM_LIFT_KD = 0;
+
+  public static final double ARM_LIFT_KS = 0;
+  public static final double ARM_LIFT_KG = 0;
+  public static final double ARM_LIFT_KV = 0;
 
 
   // Claw Config

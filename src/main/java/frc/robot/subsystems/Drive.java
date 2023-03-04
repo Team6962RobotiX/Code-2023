@@ -8,6 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
@@ -19,10 +24,22 @@ import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
 
-  CANSparkMax leftBank1, leftBank2, rightBank1, rightBank2;
-  RelativeEncoder rightBankEncoder, leftBankEncoder;
-  MotorControllerGroup rightBank, leftBank;
-  DifferentialDrive drive;
+  CANSparkMax leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
+  CANSparkMax leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
+  CANSparkMax rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
+  CANSparkMax rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
+
+  MotorControllerGroup rightBank = new MotorControllerGroup(rightBank1, rightBank2);
+  MotorControllerGroup leftBank = new MotorControllerGroup(leftBank1, leftBank2);
+
+  DifferentialDrive drive = new DifferentialDrive(leftBank, rightBank);
+
+  RelativeEncoder leftBankEncoder = leftBank1.getEncoder();
+  RelativeEncoder rightBankEncoder = rightBank1.getEncoder();
+
+  private DifferentialDriveOdometry odometry;
+
+  private IMU IMU;
 
   public Drive() {
     if (!Constants.ENABLE_DRIVE) {
@@ -30,34 +47,33 @@ public class Drive extends SubsystemBase {
       return;
     }
 
-    leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
-    leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
-    rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
-    rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
-
     leftBank1.restoreFactoryDefaults();
     leftBank2.restoreFactoryDefaults();
     rightBank1.restoreFactoryDefaults();
     rightBank2.restoreFactoryDefaults();
 
-    leftBank1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    leftBank2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    rightBank1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    rightBank2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    rightBank = new MotorControllerGroup(rightBank1, rightBank2);
-    leftBank = new MotorControllerGroup(leftBank1, leftBank2);
     leftBank.setInverted(true);
 
-    drive = new DifferentialDrive(leftBank, rightBank);
+    leftBankEncoder.setPositionConversionFactor(Constants.DRIVE_DISTANCE_PER_REVOLUTION);
+    rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_DISTANCE_PER_REVOLUTION);
 
-    leftBankEncoder = leftBank1.getEncoder();
-    rightBankEncoder = rightBank1.getEncoder();
+    resetEncoders();
+
+    IMU = new IMU();
+
+    odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
   }
 
   @Override
   public void periodic() {
+    odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
     // This method will be called once per scheduler run
+  }
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
   }
 
   @Override
@@ -86,5 +102,10 @@ public class Drive extends SubsystemBase {
     }
 
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
+  }
+
+  public void resetEncoders() {
+    leftBankEncoder.setPosition(0);
+    rightBankEncoder.setPosition(0);
   }
 }

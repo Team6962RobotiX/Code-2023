@@ -48,8 +48,8 @@ public class ArmLiftToAngle extends CommandBase {
   public void execute() {
     setLiftPosition(targetLiftPosition);
 
-    double basePower = liftFF.calculate(arm.getLiftPosition(), 0, 0);
-    double PIDPower = liftPID.calculate(arm.getLiftPosition());
+    double basePower = liftFF.calculate(arm.getLiftTicks(), 0, 0);
+    double PIDPower = liftPID.calculate(arm.getLiftTicks());
     arm.setLiftPower(basePower + PIDPower);
   }
 
