@@ -33,7 +33,7 @@ public class Drive extends SubsystemBase {
     leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
     leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
     rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
-    rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
+    rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
 
     leftBank1.restoreFactoryDefaults();
     leftBank2.restoreFactoryDefaults();
@@ -73,10 +73,18 @@ public class Drive extends SubsystemBase {
   }
 
   public void arcadeDrive(double straightPower, double turningPower) {
+    if (!Constants.ENABLE_DRIVE) {
+      return;
+    }
+
     drive.arcadeDrive(straightPower, turningPower);
   }
 
   public void tankDrive(double leftBankSpeed, double rightBankSpeed) {
+    if (!Constants.ENABLE_DRIVE) {
+      return;
+    }
+
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
   }
 }
