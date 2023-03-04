@@ -26,8 +26,8 @@ public final class Constants {
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.4; // Hard limit on power
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
-  public static final double WHEEL_RADIUS_METERS = 0;
-  public static final double GEARBOX_RATIO = 0;
+  public static final double WHEEL_RADIUS_METERS = 8 / 100;
+  public static final double GEARBOX_RATIO = 1 / 8.45;
   public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS_METERS * GEARBOX_RATIO;
 
 
