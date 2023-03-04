@@ -33,48 +33,18 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick.getRawAxis(1), () -> driveJoystick.getRawAxis(2)));
+
     // Configure the trigger bindings
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
 
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return ExampleCommand.exampleAuto(new ExampleSubsystem());
+    return null;
   }
-
-
-  public double getDriveJoystickAxis(int axis) {
-    return driveJoystick.getRawAxis(axis);
-  }
-
-  public JoystickButton getDriveJoystickButton(int button) {
-    return new JoystickButton(driveJoystick, button);
-  }
-
-  public double getUtilityJoystickAxis(int axis) {
-    return utilityJoystick.getRawAxis(axis);
-  }
-
-  public JoystickButton getUtilityJoystickButton(int button) {
-    return new JoystickButton(utilityJoystick, button);
-  }
-
 }

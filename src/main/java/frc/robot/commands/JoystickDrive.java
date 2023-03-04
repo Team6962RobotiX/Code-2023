@@ -6,18 +6,24 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.*;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
 public class JoystickDrive extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final Drive drive;
+  private final Supplier<Double> joystickStraight, joystickTurn;
 
-  public JoystickDrive(Drive driveSubsystem) {
-    drive = driveSubsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public JoystickDrive(Drive drive, Supplier<Double> joystickStraight, Supplier<Double> joystickTurn) {
+    this.drive = drive;
+    this.joystickStraight = joystickStraight;
+    this.joystickTurn = joystickTurn;
+
     addRequirements(drive);
   }
 
@@ -29,11 +35,19 @@ public class JoystickDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double straightAxis = joystickStraight.get();
+    double twistAxis = joystickTurn.get();
+
+    double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
+    double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_POWER_LIMIT, Constants.TWIST_DEADZONE);
+
+    drive.arcadeDrive(straightPower, turningPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    drive.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -54,48 +55,28 @@ public class Drive extends SubsystemBase {
     rightBankEncoder = rightBank1.getEncoder();
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public CommandBase exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(() -> {
-      /* one-time action goes here */
-    });
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-    if (!Constants.ENABLE_DRIVE) {
-      return;
-    }
-
-    double straightAxis = driveJoystick.getRawAxis(1);
-    double twistAxis = driveJoystick.getRawAxis(2);
-
-    double straightPower = mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
-    double turningPower = mapPower(twistAxis, 0, Constants.DRIVE_POWER_LIMIT, Constants.TWIST_DEADZONE);
-
-    drive.arcadeDrive(straightPower, turningPower);
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public void setIdleMode(CANSparkMax.IdleMode idleMode) {
+    leftBank1.setIdleMode(idleMode);
+    leftBank2.setIdleMode(idleMode);
+    rightBank1.setIdleMode(idleMode);
+    rightBank2.setIdleMode(idleMode);
+  }
+
+  public void arcadeDrive(double straightPower, double turningPower) {
+    drive.arcadeDrive(straightPower, turningPower);
+  }
+
+  public void tankDrive(double leftBankSpeed, double rightBankSpeed) {
+    drive.tankDrive(leftBankSpeed, rightBankSpeed);
   }
 }
