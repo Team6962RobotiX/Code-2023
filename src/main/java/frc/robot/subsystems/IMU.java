@@ -14,16 +14,11 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.commands.*;
 import frc.robot.Constants;
 
-public class Balance extends SubsystemBase {
+public class IMU extends SubsystemBase {
 
   AHRS IMU;
 
-  public Balance() {
-    if (!Constants.ENABLE_BALANCE) {
-      System.out.println("Balance Disabled");
-      return;
-    }
-
+  public IMU() {
     IMU = new AHRS(I2C.Port.kMXP);
   }
 
@@ -35,5 +30,9 @@ public class Balance extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public double getPitch() {
+    return IMU.getPitch();
   }
 }

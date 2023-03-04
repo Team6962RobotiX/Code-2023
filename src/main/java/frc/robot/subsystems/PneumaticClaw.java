@@ -43,4 +43,12 @@ public class PneumaticClaw extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+  public CommandBase close() {
+    return this.runOnce(() -> clawSolenoid.set(DoubleSolenoid.Value.kReverse));
+  }
+
+  public CommandBase open() {
+    return this.runOnce(() -> clawSolenoid.set(DoubleSolenoid.Value.kForward));
+  }
 }

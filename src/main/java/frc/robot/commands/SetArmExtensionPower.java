@@ -13,13 +13,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
-  private final ExampleSubsystem m_subsystem;
+public class SetArmExtensionPower extends CommandBase {
+  private final Arm arm;
 
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  double extendPower = 0;
+
+  public SetArmExtensionPower(Arm arm, double extendPower) {
+    this.arm = arm;
+    this.extendPower = extendPower;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
@@ -30,11 +33,13 @@ public class ExampleCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    arm.setExtendPower(extendPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    arm.setExtendPower(0);
   }
 
   // Returns true when the command should end.

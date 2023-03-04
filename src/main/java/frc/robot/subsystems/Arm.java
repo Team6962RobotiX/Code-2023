@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import com.revrobotics.CANSparkMax;
@@ -19,16 +21,23 @@ import frc.robot.Constants;
 public class Arm extends SubsystemBase {
 
   // MOTOR CONTROLLERS
-  MotorControllerGroup armLift;
-  CANSparkMax armLift1, armLift2, armExtend;
+  MotorControllerGroup lift;
+  CANSparkMax lift1, lift2, extend;
 
   // ENCODERS
-  RelativeEncoder armExtendEncoder;
-  DutyCycleEncoder armLiftEncoder;
+  RelativeEncoder extendEncoder;
+  DutyCycleEncoder liftEncoder;
 
-  double armLiftBasePower = 0;
-  double armLiftTargetAngle = 0;
-  double p_armLiftEncoder = 0;
+  double minAngle = Constants.ARM_LIFT_MIN_ANGLE;
+  double maxExtension = Constants.ARM_EXTEND_LIMIT;
+  double extendTicksPerInch = Constants.ARM_EXTEND_LIMIT / (Constants.ARM_EXTEND_INCHES - Constants.ARM_RETRACT_INCHES);
+
+  PIDController extendPID;
+  PIDController liftPID;
+  ArmFeedforward liftFF;
+
+  double targetLiftPosition = 0;
+  double targetExtendPosition = 0;
 
   public Arm() {
 
@@ -37,36 +46,41 @@ public class Arm extends SubsystemBase {
       return;
     }
 
-    armLift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
-    armLift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
-    armExtend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
+    lift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
+    lift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
+    extend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
 
-    armLift1.restoreFactoryDefaults();
-    armLift2.restoreFactoryDefaults();
-    armExtend.restoreFactoryDefaults();
+    lift1.restoreFactoryDefaults();
+    lift2.restoreFactoryDefaults();
+    extend.restoreFactoryDefaults();
 
-    armLift1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    armLift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    armExtend.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    lift1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    armLift2.setInverted(true);
-    armLift = new MotorControllerGroup(armLift1, armLift2);
+    lift2.setInverted(true);
+    lift = new MotorControllerGroup(lift1, lift2);
 
-    armExtend.setInverted(true);
-    armExtend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.ARM_EXTEND_LIMIT);
-    armExtend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
+    extend.setInverted(true);
+    extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.ARM_EXTEND_LIMIT);
+    extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
 
-    armExtendEncoder = armExtend.getEncoder();
-    armLiftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
-    armLiftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
-    armLiftEncoder.setDistancePerRotation(360.0);
-
-    p_armLiftEncoder = armLiftEncoder.getDistance();
-    armLiftTargetAngle = armLiftEncoder.getDistance();
+    extendEncoder = extend.getEncoder();
+    liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
+    liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
+    liftEncoder.setDistancePerRotation(360.0);
   }
 
   @Override
   public void periodic() {
+    double maxExtension = Math.min(Constants.ARM_EXTEND_LIMIT, (Constants.ARM_HEIGHT_INCHES / Math.cos(liftEncoder.getDistance() / 180 * Math.PI) - Constants.ARM_RETRACT_INCHES) * extendTicksPerInch);
+    if (liftEncoder.getDistance() > 90) {
+      maxExtension = Constants.ARM_EXTEND_LIMIT;
+    }
+    double minAngle = Math.cos((Constants.ARM_HEIGHT_INCHES * extendTicksPerInch) / maxExtension);
+    if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
+      minAngle = Constants.ARM_LIFT_MIN_ANGLE;
+    }
     // This method will be called once per scheduler run
   }
 
@@ -75,9 +89,57 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
+  public double getExtendPosition() {
+    return extendEncoder.getPosition();
+  }
+
+  public double getLiftPosition() {
+    return liftEncoder.getDistance();
+  }
+
+  public double getMinLiftAngle() {
+    return minAngle;
+  }
+
+  public double getMaxExtendPosition() {
+    return Constants.ARM_LIFT_MAX_ANGLE;
+  }
+
+  public void setExtendPower(double power) {
+    double extendPos = extendEncoder.getPosition();
+
+    if (extendPos > maxExtension) {
+      power = Math.min(0, power);
+    }
+
+    if (extendPos < 0) {
+      power = Math.max(0, power);
+    }
+
+    power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
+
+    extend.set(power);
+  }
+
+  public void setLiftPower(double power) {
+    double liftAngle = liftEncoder.getDistance();
+
+    if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
+      power = Math.min(0, power);
+    }
+
+    if (liftAngle < minAngle) {
+      power = Math.max(0, power);
+    }
+
+    power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
+
+    lift.set(power);
+  }
+
   public void setIdleMode(CANSparkMax.IdleMode idleMode) {
-    armLift1.setIdleMode(idleMode);
-    armLift2.setIdleMode(idleMode);
-    armExtend.setIdleMode(idleMode);
+    lift1.setIdleMode(idleMode);
+    lift2.setIdleMode(idleMode);
+    extend.setIdleMode(idleMode);
   }
 }
