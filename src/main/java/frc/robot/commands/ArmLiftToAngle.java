@@ -26,8 +26,8 @@ public class ArmLiftToAngle extends CommandBase {
   public ArmLiftToAngle(Arm arm, double targetLiftPosition) {
     this.arm = arm;
 
-    liftFF = new ArmFeedforward(0, 0, 0);
-    liftPID = new PIDController(0, 0, 0);
+    liftFF = new ArmFeedforward(Constants.ARM_LIFT_KS, Constants.ARM_LIFT_KG, Constants.ARM_LIFT_KV);
+    liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
 
     setLiftPosition(targetLiftPosition);
 

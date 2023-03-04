@@ -23,7 +23,7 @@ public class ArmExtendToPosition extends CommandBase {
   public ArmExtendToPosition(Arm arm, double targetExtendPosition) {
     this.arm = arm;
 
-    extendPID = new PIDController(0, 0, 0);
+    extendPID = new PIDController(Constants.ARM_EXTEND_KP, Constants.ARM_EXTEND_KI, Constants.ARM_EXTEND_KD);
     extendPID.setSetpoint(targetExtendPosition);
 
     setExtendPosition(targetExtendPosition);
