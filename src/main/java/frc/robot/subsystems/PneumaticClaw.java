@@ -7,12 +7,31 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
 import frc.robot.commands.*;
 import frc.robot.Constants;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
+public class PneumaticClaw extends SubsystemBase {
+
+  Compressor clawCompressor;
+  DoubleSolenoid clawSolenoid;
+
+  public PneumaticClaw() {
+    if (!Constants.ENABLE_PNEUMATIC_CLAW) {
+      System.out.println("Pneumatic Claw Disabled");
+      return;
+    }
+
+    clawCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+    clawCompressor.enableDigital();
+
+    clawCompressor.disable();
+
+    clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    clawSolenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   /**

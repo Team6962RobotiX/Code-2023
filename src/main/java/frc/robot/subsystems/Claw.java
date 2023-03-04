@@ -7,12 +7,38 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 import frc.robot.commands.*;
 import frc.robot.Constants;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
+public class Claw extends SubsystemBase {
+
+  CANSparkMax clawGrab;
+  DigitalInput clawStop;
+  RelativeEncoder clawGrabEncoder;
+
+  public Claw() {
+    if (!Constants.ENABLE_CLAW) {
+      System.out.println("Claw Disabled");
+      return;
+    }
+
+    clawGrab = new CANSparkMax(Constants.CAN_CLAW_GRAB, CANSparkMax.MotorType.kBrushless);
+
+    clawGrab.restoreFactoryDefaults();
+
+    clawGrab.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    clawGrab.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.CLAW_GRAB_LIMIT);
+    clawGrab.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
+
+    clawGrabEncoder = clawGrab.getEncoder();
+
+    clawStop = new DigitalInput(Constants.DIO_CLAW_GRAB_MICRO_SWITCH);
   }
 
   /**

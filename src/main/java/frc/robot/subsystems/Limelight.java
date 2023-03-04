@@ -10,9 +10,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.*;
 import frc.robot.Constants;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class Limelight extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
+  public Limelight() {
+    if (!Constants.ENABLE_LIMELIGHT) {
+      System.out.println("Vision Disabled");
+      return;
+    }
   }
 
   /**

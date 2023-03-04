@@ -7,12 +7,24 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.I2C;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import frc.robot.commands.*;
 import frc.robot.Constants;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
+public class Balance extends SubsystemBase {
+
+  AHRS IMU;
+
+  public Balance() {
+    if (!Constants.ENABLE_BALANCE) {
+      System.out.println("Balance Disabled");
+      return;
+    }
+
+    IMU = new AHRS(I2C.Port.kMXP);
   }
 
   /**
