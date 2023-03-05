@@ -20,11 +20,12 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
 
-  // MOTOR CONTROLLERS
-  MotorControllerGroup lift;
-  CANSparkMax lift1, lift2, extend;
+  CANSparkMax lift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
+  CANSparkMax lift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
+  CANSparkMax extend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
 
-  // ENCODERS
+  MotorControllerGroup lift = new MotorControllerGroup(lift1, lift2);
+
   RelativeEncoder extendEncoder;
   DutyCycleEncoder liftEncoder;
 
@@ -37,10 +38,6 @@ public class Arm extends SubsystemBase {
       return;
     }
 
-    lift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
-    lift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
-    extend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
-
     lift1.restoreFactoryDefaults();
     lift2.restoreFactoryDefaults();
     extend.restoreFactoryDefaults();
@@ -50,7 +47,6 @@ public class Arm extends SubsystemBase {
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     lift2.setInverted(true);
-    lift = new MotorControllerGroup(lift1, lift2);
 
     extend.setInverted(true);
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.ARM_EXTEND_LIMIT);
@@ -85,7 +81,8 @@ public class Arm extends SubsystemBase {
     if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
       minAngle = Constants.ARM_LIFT_MIN_ANGLE;
     }
-    return minAngle;
+    // return minAngle;
+    return Constants.ARM_LIFT_MIN_ANGLE;
   }
 
   public double getMaxExtendTicks() {
@@ -93,7 +90,8 @@ public class Arm extends SubsystemBase {
     if (liftEncoder.getDistance() > 90) {
       maxExtension = Constants.ARM_EXTEND_LIMIT;
     }
-    return maxExtension;
+    // return maxExtension;
+    return Constants.ARM_EXTEND_LIMIT;
   }
 
   public double extendInchesToTicks(double inches) {
@@ -136,5 +134,13 @@ public class Arm extends SubsystemBase {
     lift1.setIdleMode(idleMode);
     lift2.setIdleMode(idleMode);
     extend.setIdleMode(idleMode);
+  }
+
+  public CommandBase coast() {
+    return this.runOnce(() -> setIdleMode(CANSparkMax.IdleMode.kCoast));
+  }
+
+  public CommandBase brake() {
+    return this.runOnce(() -> setIdleMode(CANSparkMax.IdleMode.kBrake));
   }
 }

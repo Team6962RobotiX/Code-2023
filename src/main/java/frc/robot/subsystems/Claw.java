@@ -17,9 +17,9 @@ import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
 
-  CANSparkMax clawGrab;
-  DigitalInput clawStop;
-  RelativeEncoder clawGrabEncoder;
+  CANSparkMax clawGrab = new CANSparkMax(Constants.CAN_CLAW_GRAB, CANSparkMax.MotorType.kBrushless);;
+  DigitalInput clawStop = new DigitalInput(Constants.DIO_CLAW_GRAB_MICRO_SWITCH);;
+  RelativeEncoder clawGrabEncoder = clawGrab.getEncoder();;
 
   public Claw() {
     if (!Constants.ENABLE_CLAW) {
@@ -27,18 +27,12 @@ public class Claw extends SubsystemBase {
       return;
     }
 
-    clawGrab = new CANSparkMax(Constants.CAN_CLAW_GRAB, CANSparkMax.MotorType.kBrushless);
-
     clawGrab.restoreFactoryDefaults();
 
     clawGrab.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     clawGrab.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.CLAW_GRAB_LIMIT);
     clawGrab.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
-
-    clawGrabEncoder = clawGrab.getEncoder();
-
-    clawStop = new DigitalInput(Constants.DIO_CLAW_GRAB_MICRO_SWITCH);
   }
 
   @Override

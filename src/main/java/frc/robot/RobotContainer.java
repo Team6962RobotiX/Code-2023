@@ -59,48 +59,56 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, 5).onTrue(claw.close());
     new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
-    new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, Constants.ARM_EXTEND_POWER));
-    new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -Constants.ARM_EXTEND_POWER));
+    new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, 0.4));
+    new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -0.4));
+    
+    new JoystickButton(driveJoystick, 12).onTrue(new ArmLiftToAngle(arm, 120));
+    new JoystickButton(driveJoystick, 10).onTrue(new ArmLiftToAngle(arm, 30));
 
     new JoystickButton(driveJoystick, 11).onTrue(new AutoBalance(IMU, drive));
+    new JoystickButton(driveJoystick, 11).onFalse(new JoystickDrive(drive, () -> driveJoystick.getRawAxis(1), () -> driveJoystick.getRawAxis(2)));
+    new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
+    new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
+
   }
 
   public Command getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, 10);
+    // // Create a voltage constraint to ensure we don't accelerate too fast
+    // var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, 10);
 
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(Constants.AUTONOMOUS_MAX_SPEED, Constants.AUTONOMOUS_MAX_ACCELERATION)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(Constants.DRIVE_KINEMATICS)
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
+    // // Create config for trajectory
+    // TrajectoryConfig config = new TrajectoryConfig(Constants.AUTONOMOUS_MAX_SPEED, Constants.AUTONOMOUS_MAX_ACCELERATION)
+    //     // Add kinematics to ensure max speed is actually obeyed
+    //     .setKinematics(Constants.DRIVE_KINEMATICS)
+    //     // Apply the voltage constraint
+    //     .addConstraint(autoVoltageConstraint);
 
-    // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    // // An example trajectory to follow.  All units in meters.
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
 
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(0)),
 
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
 
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+    //     // End 3 meters straight ahead of where we started, facing forward
+    //     new Pose2d(3, 0, new Rotation2d(0)),
 
-        // Pass config
-        config);
+    //     // Pass config
+    //     config);
 
-    RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, drive::getPose, new RamseteController(Constants.AUTONOMOUS_RAMSETE_B, Constants.AUTONOMOUS_RAMSETE_ZETA), new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, drive::getWheelSpeeds, new PIDController(Constants.DRIVE_KP, 0, 0), new PIDController(Constants.DRIVE_KP, 0, 0),
+    // RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, drive::getPose, new RamseteController(Constants.AUTONOMOUS_RAMSETE_B, Constants.AUTONOMOUS_RAMSETE_ZETA), new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, drive::getWheelSpeeds, new PIDController(Constants.DRIVE_KP, 0, 0), new PIDController(Constants.DRIVE_KP, 0, 0),
 
-        // RamseteCommand passes volts to the callback
-        drive::tankDriveVolts, drive);
+    //     // RamseteCommand passes volts to the callback
+    //     drive::tankDriveVolts, drive);
 
-    // Reset odometry to the starting pose of the trajectory.
-    drive.resetOdometry(exampleTrajectory.getInitialPose());
+    // // Reset odometry to the starting pose of the trajectory.
+    // drive.resetOdometry(exampleTrajectory.getInitialPose());
 
-    // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
+    // // Run path following command, then stop at the end.
+    // return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
+    return null;
   }
 
   // ExtendArm

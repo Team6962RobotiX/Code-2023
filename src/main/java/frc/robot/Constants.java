@@ -19,8 +19,8 @@ public final class Constants {
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = false;
-  public static final boolean ENABLE_CLAW = false;
+  public static final boolean ENABLE_ARM = true;
+  public static final boolean ENABLE_CLAW = true;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
   public static final boolean ENABLE_LIMELIGHT = false;
 
@@ -68,14 +68,14 @@ public final class Constants {
 
 
   // Arm Positioning
-  public static final double ARM_EXTEND_INCHES = 60; // Inches from pivot when fully extended
+  public static final double ARM_EXTEND_INCHES = 70; // Inches from pivot when fully extended
   public static final double ARM_RETRACT_INCHES = 40; // Inches from pivot when fully retracted
   public static final double ARM_HEIGHT_INCHES = 40; // Inches above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
 
 
   // Extension
-  public static final double ARM_EXTEND_LIMIT = 33; // Arm extend limit (measured in encoder ticks)
+  public static final double ARM_EXTEND_LIMIT = 36; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
   public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
@@ -93,11 +93,13 @@ public final class Constants {
   public static final double ARM_EXTEND_KP = 0;
   public static final double ARM_EXTEND_KI = 0;
   public static final double ARM_EXTEND_KD = 0;
-
-  public static final double ARM_LIFT_KP = 0;
+  
+  // PID
+  public static final double ARM_LIFT_KP = 0.02;
   public static final double ARM_LIFT_KI = 0;
   public static final double ARM_LIFT_KD = 0;
 
+  // FF
   public static final double ARM_LIFT_KS = 0;
   public static final double ARM_LIFT_KG = 0;
   public static final double ARM_LIFT_KV = 0;

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** An example command that uses an example subsystem. */
 public class ArmLiftToAngle extends CommandBase {
@@ -46,10 +47,12 @@ public class ArmLiftToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(targetLiftPosition);
+
     setLiftPosition(targetLiftPosition);
 
-    double basePower = liftFF.calculate(arm.getLiftTicks(), 0, 0);
-    double PIDPower = liftPID.calculate(arm.getLiftTicks());
+    double basePower = liftFF.calculate(arm.getLiftAngle(), 0, 0);
+    double PIDPower = liftPID.calculate(arm.getLiftAngle());
     arm.setLiftPower(basePower + PIDPower);
   }
 
