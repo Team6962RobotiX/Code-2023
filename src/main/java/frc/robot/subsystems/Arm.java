@@ -13,7 +13,10 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.commands.*;
@@ -28,7 +31,7 @@ public class Arm extends SubsystemBase {
   MotorControllerGroup lift = new MotorControllerGroup(lift1, lift2);
 
   RelativeEncoder extendEncoder;
-  DutyCycleEncoder liftEncoder;
+  AbsoluteEncoder liftEncoder;
 
   PIDController extendPID;
   PIDController liftPID;
@@ -59,15 +62,15 @@ public class Arm extends SubsystemBase {
 
     extendEncoder = extend.getEncoder();
     extendEncoder.setPositionConversionFactor(Constants.ARM_EXTEND_TICKS_PER_METER);
-    liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
-    liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
-    liftEncoder.setDistancePerRotation(360.0);
+    liftEncoder = lift2.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+    liftEncoder.setZeroOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
+    liftEncoder.setPositionConversionFactor(360.0);
 
     liftFF = new ArmFeedforward(Constants.ARM_LIFT_KS, Constants.ARM_LIFT_KG, Constants.ARM_LIFT_KV);
     liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
 
-    targetLiftAngle = liftEncoder.getDistance();
-    targetExtendMeters = extendEncoder.getPosition();
+    targetLiftAngle = getLiftAngle();
+    targetExtendMeters = getExtendMeters();
 
     setLiftAngle(targetLiftAngle);
     setLiftAngle(targetExtendMeters);
@@ -82,6 +85,10 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (!Constants.ENABLE_ARM) {
+      return;
+    }
+
     setLiftAngle(targetLiftAngle);
     setExtendMeters(targetExtendMeters);
 
@@ -104,7 +111,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getLiftAngle() {
-    return liftEncoder.getDistance();
+    return liftEncoder.getPosition();
   }
 
   public double getMinLiftAngle() {
@@ -117,7 +124,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMaxExtendMeters() {
-    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(liftEncoder.getDistance() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
     if (getLiftAngle() > 90) {
       maxExtension = Constants.ARM_MAX_LENGTH;
     }
@@ -126,7 +133,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setExtendPower(double power) {
-    double extendPos = extendEncoder.getPosition();
+    double extendPos = getExtendMeters();
 
     if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
@@ -141,7 +148,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setLiftPower(double power) {
-    double liftAngle = liftEncoder.getDistance();
+    double liftAngle = getExtendMeters();
 
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       power = Math.min(0, power);

@@ -54,7 +54,6 @@ public final class Constants {
   public static final int CAN_ARM_EXTEND = 13;
   public static final int CAN_CLAW_GRAB = 16;
 
-  public static final int DIO_ARM_LIFT_ENCODER = 0;
   public static final int DIO_CLAW_GRAB_MICRO_SWITCH = 1;
 
   public static final int USB_DRIVE_JOYSTICK = 0;

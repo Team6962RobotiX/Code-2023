@@ -59,8 +59,8 @@ public class Drive extends SubsystemBase {
 
     leftBank.setInverted(true);
 
-    leftBankEncoder.setPositionConversionFactor(Constants.DRIVE_DISTANCE_PER_REVOLUTION);
-    rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_DISTANCE_PER_REVOLUTION);
+    leftBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
+    rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
 
     resetEncoders();
 
@@ -69,6 +69,7 @@ public class Drive extends SubsystemBase {
     odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
 
     SmartDashboard.putData("Field", field);
+    SmartDashboard.putData("Differential Drive", drive);
   }
 
   @Override
