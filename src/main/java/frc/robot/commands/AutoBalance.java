@@ -33,9 +33,9 @@ public class AutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pitch = IMU.getPitch();
-    if (Math.abs(pitch) > Constants.BALANCE_LEVEL_ANGLE_RANGE) {
-      double power = -((pitch / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(pitch)));
+    double roll = IMU.getRoll();
+    if (Math.abs(roll) > Constants.BALANCE_LEVEL_ANGLE_RANGE) {
+      double power = -((roll / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(roll)));
       drive.tankDrive(power, power);
     }
   }

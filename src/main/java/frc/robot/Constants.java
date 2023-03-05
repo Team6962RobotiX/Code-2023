@@ -18,9 +18,9 @@ public final class Constants {
 
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
-  public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = true;
-  public static final boolean ENABLE_CLAW = true;
+  public static final boolean ENABLE_BALANCE = false;
+  public static final boolean ENABLE_ARM = false;
+  public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
   public static final boolean ENABLE_LIMELIGHT = false;
 
@@ -29,9 +29,9 @@ public final class Constants {
   public static final double DRIVE_POWER_LIMIT = 0.4; // Hard limit on power
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
-  public static final double WHEEL_RADIUS = 8 / 100; // Meters
-  public static final double GEARBOX_RATIO = 1 / 8.45;
-  public static final double DRIVE_METERS_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
+  public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
+  public static final double GEARBOX_RATIO = 1.0 / 10.71; // 10.71 for test chassis, 8.45 for main chassis
+  public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
   public static final double DRIVE_KP = 11.505;
   public static final double DRIVE_KS = 0.064051;
   public static final double DRIVE_KV = 0.029835;
@@ -45,10 +45,10 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 10;
-  public static final int CAN_LEFT_DRIVE_2 = 28;
-  public static final int CAN_RIGHT_DRIVE_1 = 7;
-  public static final int CAN_RIGHT_DRIVE_2 = 27;
+  public static final int CAN_LEFT_DRIVE_1 = 1; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_2 = 2; // 28 for Main Chassis, 2 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_1 = 3; // 7 for Main Chassis, 3 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_2 = 4; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 13;

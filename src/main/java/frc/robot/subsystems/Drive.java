@@ -36,7 +36,7 @@ public class Drive extends SubsystemBase {
 
   DifferentialDrive drive = new DifferentialDrive(leftBank, rightBank);
 
-  RelativeEncoder leftBankEncoder = leftBank1.getEncoder();
+  RelativeEncoder leftBankEncoder = leftBank2.getEncoder();
   RelativeEncoder rightBankEncoder = rightBank1.getEncoder();
 
   private DifferentialDriveOdometry odometry;
@@ -44,11 +44,13 @@ public class Drive extends SubsystemBase {
 
   private IMU IMU;
 
-  public Drive() {
+  public Drive(IMU IMU) {
     if (!Constants.ENABLE_DRIVE) {
       System.out.println("Drive Disabled");
       return;
     }
+
+    this.IMU = IMU;
 
     leftBank1.restoreFactoryDefaults();
     leftBank2.restoreFactoryDefaults();
@@ -63,10 +65,7 @@ public class Drive extends SubsystemBase {
     rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
 
     resetEncoders();
-
-    IMU = new IMU();
-
-    odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
+    odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
 
     SmartDashboard.putData("Field", field);
     SmartDashboard.putData("Differential Drive", drive);
@@ -74,8 +73,7 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(leftBankEncoder.getPosition());
-    odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition());
+    odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
     // This method will be called once per scheduler run
   }
@@ -85,7 +83,7 @@ public class Drive extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftBankEncoder.getVelocity(), rightBankEncoder.getVelocity());
+    return new DifferentialDriveWheelSpeeds(leftBankEncoder.getVelocity(), -rightBankEncoder.getVelocity());
   }
 
   public double getHeading() {
@@ -100,7 +98,7 @@ public class Drive extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(IMU.getRotation2d(), leftBankEncoder.getPosition(), rightBankEncoder.getPosition(), pose);
+    odometry.resetPosition(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition(), pose);
   }
 
   @Override

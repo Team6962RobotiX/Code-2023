@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -17,15 +18,16 @@ import frc.robot.Constants;
 
 public class IMU extends SubsystemBase {
 
-  AHRS IMU;
+  AHRS IMU = new AHRS(SPI.Port.kMXP);;
 
   public IMU() {
-    IMU = new AHRS(SerialPort.Port.kMXP);
+    
   }
 
   @Override
   public void periodic() {
-    System.out.println(IMU.isCalibrating());
+    // System.out.println(IMU.getRoll());
+    // System.out.println(IMU.isCalibrating());
     // This method will be called once per scheduler run
   }
 
@@ -34,8 +36,8 @@ public class IMU extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public double getPitch() {
-    return IMU.getPitch();
+  public double getRoll() {
+    return IMU.getRoll();
   }
 
   public Rotation2d getRotation2d() {

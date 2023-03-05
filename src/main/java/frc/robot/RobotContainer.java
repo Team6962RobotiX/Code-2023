@@ -43,8 +43,8 @@ public class RobotContainer {
   private final Joystick driveJoystick = new Joystick(Constants.USB_DRIVE_JOYSTICK);
   private final Joystick utilityJoystick = new Joystick(Constants.USB_UTILITY_JOYSTICK);
 
-  private final Drive drive = new Drive();
   private final IMU IMU = new IMU();
+  private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm();
   private final PneumaticClaw claw = new PneumaticClaw();
   private final Limelight limelight = new Limelight();
