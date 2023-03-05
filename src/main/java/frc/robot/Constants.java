@@ -68,14 +68,15 @@ public final class Constants {
 
 
   // Arm Positioning
-  public static final double ARM_EXTEND_INCHES = 70; // Inches from pivot when fully extended
-  public static final double ARM_RETRACT_INCHES = 40; // Inches from pivot when fully retracted
-  public static final double ARM_HEIGHT_INCHES = 40; // Inches above ground from pivot
+  public static final double ARM_MAX_LENGTH = 1.8; // Meters from pivot when fully extended
+  public static final double ARM_STARTING_LENGTH = 1; // Meters from pivot when fully retracted
+  public static final double ARM_HEIGHT = 1; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
+  public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
 
 
   // Extension
-  public static final double ARM_EXTEND_LIMIT = 36; // Arm extend limit (measured in encoder ticks)
+  public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
   public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
@@ -93,7 +94,7 @@ public final class Constants {
   public static final double ARM_EXTEND_KP = 0;
   public static final double ARM_EXTEND_KI = 0;
   public static final double ARM_EXTEND_KD = 0;
-  
+
   // PID
   public static final double ARM_LIFT_KP = 0.02;
   public static final double ARM_LIFT_KI = 0;

@@ -18,16 +18,15 @@ public class ArmExtendToPosition extends CommandBase {
   PIDController extendPID;
 
   private final Arm arm;
-  double targetExtendTicks;
-  double targetExtendInches;
+  double targetExtendMeters;
 
-  public ArmExtendToPosition(Arm arm, double targetExtendInches) {
+  public ArmExtendToPosition(Arm arm, double targetExtendMeters) {
     this.arm = arm;
 
     extendPID = new PIDController(Constants.ARM_EXTEND_KP, Constants.ARM_EXTEND_KI, Constants.ARM_EXTEND_KD);
 
-    targetExtendTicks = arm.extendInchesToTicks(targetExtendInches);
-    setExtendTicks(targetExtendTicks);
+    this.targetExtendMeters = targetExtendMeters;
+    setExtendMeters(targetExtendMeters);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
@@ -42,8 +41,8 @@ public class ArmExtendToPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    setExtendTicks(targetExtendTicks);
-    double PIDPower = extendPID.calculate(arm.getExtendTicks());
+    setExtendMeters(targetExtendMeters);
+    double PIDPower = extendPID.calculate(arm.getExtendMeters());
     arm.setExtendPower(PIDPower);
   }
 
@@ -59,13 +58,13 @@ public class ArmExtendToPosition extends CommandBase {
     return false;
   }
 
-  private void setExtendTicks(double ticks) {
-    ticks = Math.min(ticks, arm.getMaxExtendTicks());
+  private void setExtendMeters(double meters) {
+    meters = Math.min(meters, arm.getMaxExtendMeters());
 
-    ticks = Math.max(ticks, 0);
+    meters = Math.max(meters, 0);
 
-    targetExtendTicks = ticks;
+    targetExtendMeters = meters;
 
-    extendPID.setSetpoint(targetExtendTicks);
+    extendPID.setSetpoint(targetExtendMeters);
   }
 }

@@ -29,8 +29,6 @@ public class Arm extends SubsystemBase {
   RelativeEncoder extendEncoder;
   DutyCycleEncoder liftEncoder;
 
-  double extendTicksPerInch = Constants.ARM_EXTEND_LIMIT / (Constants.ARM_EXTEND_INCHES - Constants.ARM_RETRACT_INCHES);
-
   public Arm() {
 
     if (!Constants.ENABLE_ARM) {
@@ -49,10 +47,11 @@ public class Arm extends SubsystemBase {
     lift2.setInverted(true);
 
     extend.setInverted(true);
-    extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) Constants.ARM_EXTEND_LIMIT);
+    extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH));
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
 
     extendEncoder = extend.getEncoder();
+    extendEncoder.setPositionConversionFactor(Constants.ARM_EXTEND_TICKS_PER_METER);
     liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
     liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
     liftEncoder.setDistancePerRotation(360.0);
@@ -68,7 +67,7 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public double getExtendTicks() {
+  public double getExtendMeters() {
     return extendEncoder.getPosition();
   }
 
@@ -77,7 +76,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMinLiftAngle() {
-    double minAngle = Math.cos((Constants.ARM_HEIGHT_INCHES * extendTicksPerInch) / getMaxExtendTicks());
+    double minAngle = Math.cos(Constants.ARM_HEIGHT / getMaxExtendMeters());
     if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
       minAngle = Constants.ARM_LIFT_MIN_ANGLE;
     }
@@ -85,23 +84,19 @@ public class Arm extends SubsystemBase {
     return Constants.ARM_LIFT_MIN_ANGLE;
   }
 
-  public double getMaxExtendTicks() {
-    double maxExtension = Math.min(Constants.ARM_EXTEND_LIMIT, (Constants.ARM_HEIGHT_INCHES / Math.cos(liftEncoder.getDistance() / 180 * Math.PI) - Constants.ARM_RETRACT_INCHES) * extendTicksPerInch);
-    if (liftEncoder.getDistance() > 90) {
-      maxExtension = Constants.ARM_EXTEND_LIMIT;
+  public double getMaxExtendMeters() {
+    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(liftEncoder.getDistance() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    if (getLiftAngle() > 90) {
+      maxExtension = Constants.ARM_MAX_LENGTH;
     }
     // return maxExtension;
-    return Constants.ARM_EXTEND_LIMIT;
-  }
-
-  public double extendInchesToTicks(double inches) {
-    return (inches - Constants.ARM_RETRACT_INCHES) * extendTicksPerInch;
+    return Constants.ARM_MAX_LENGTH;
   }
 
   public void setExtendPower(double power) {
     double extendPos = extendEncoder.getPosition();
 
-    if (extendPos > getMaxExtendTicks()) {
+    if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
     }
 
