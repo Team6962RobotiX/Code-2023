@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -20,12 +20,12 @@ public class IMU extends SubsystemBase {
   AHRS IMU;
 
   public IMU() {
-    IMU = new AHRS(I2C.Port.kMXP);
+    IMU = new AHRS(SerialPort.Port.kMXP);
   }
 
   @Override
   public void periodic() {
-    System.out.println(IMU.isConnected());
+    System.out.println(IMU.isCalibrating());
     // This method will be called once per scheduler run
   }
 
