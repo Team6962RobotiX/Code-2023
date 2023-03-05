@@ -32,10 +32,10 @@ public final class Constants {
   public static final double WHEEL_RADIUS = 8 / 100; // Meters
   public static final double GEARBOX_RATIO = 1 / 8.45;
   public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
-  public static final double DRIVE_KP = 0;
-  public static final double DRIVE_KS = 0;
-  public static final double DRIVE_KV = 0;
-  public static final double DRIVE_KA = 0;
+  public static final double DRIVE_KP = 11.505;
+  public static final double DRIVE_KS = 0.064051;
+  public static final double DRIVE_KV = 0.029835;
+  public static final double DRIVE_KA = 0.002516;
   public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
