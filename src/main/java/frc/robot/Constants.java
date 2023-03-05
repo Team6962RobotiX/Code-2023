@@ -31,7 +31,7 @@ public final class Constants {
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 8 / 100; // Meters
   public static final double GEARBOX_RATIO = 1 / 8.45;
-  public static final double DRIVE_DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
+  public static final double DRIVE_METERS_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
   public static final double DRIVE_KP = 11.505;
   public static final double DRIVE_KS = 0.064051;
   public static final double DRIVE_KV = 0.029835;
@@ -80,14 +80,14 @@ public final class Constants {
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
   public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
-
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.05; // Meters of precision
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.15; // Max arm lifting power
   public static final double ARM_LIFT_POWER_INCREMENT = 0.005; // Arm lifting power increment each tick
   public static final double ARM_LIFT_MIN_ANGLE = 28; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
-  public static final double ARM_LIFT_ANGLE_PRECISION = 1; // Degrees of precision
+  public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
 
   // PID & FF Config

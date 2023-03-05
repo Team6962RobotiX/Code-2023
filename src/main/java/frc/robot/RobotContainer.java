@@ -9,6 +9,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,6 +53,8 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick.getRawAxis(1), () -> driveJoystick.getRawAxis(2)));
 
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -61,9 +65,9 @@ public class RobotContainer {
 
     new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, 0.4));
     new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -0.4));
-    
-    new JoystickButton(driveJoystick, 12).onTrue(new ArmLiftToAngle(arm, 120));
-    new JoystickButton(driveJoystick, 10).onTrue(new ArmLiftToAngle(arm, 30));
+
+    new JoystickButton(driveJoystick, 12).onTrue(arm.liftToAngle(120));
+    new JoystickButton(driveJoystick, 10).onTrue(arm.liftToAngle(30));
 
     new JoystickButton(driveJoystick, 11).onTrue(new AutoBalance(IMU, drive));
     new JoystickButton(driveJoystick, 11).onFalse(new JoystickDrive(drive, () -> driveJoystick.getRawAxis(1), () -> driveJoystick.getRawAxis(2)));

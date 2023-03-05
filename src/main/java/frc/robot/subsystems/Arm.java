@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -29,8 +30,14 @@ public class Arm extends SubsystemBase {
   RelativeEncoder extendEncoder;
   DutyCycleEncoder liftEncoder;
 
-  public Arm() {
+  PIDController extendPID;
+  PIDController liftPID;
+  ArmFeedforward liftFF;
 
+  double targetExtendMeters;
+  double targetLiftAngle;
+
+  public Arm() {
     if (!Constants.ENABLE_ARM) {
       System.out.println("Arm Disabled");
       return;
@@ -55,10 +62,35 @@ public class Arm extends SubsystemBase {
     liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
     liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
     liftEncoder.setDistancePerRotation(360.0);
+
+    liftFF = new ArmFeedforward(Constants.ARM_LIFT_KS, Constants.ARM_LIFT_KG, Constants.ARM_LIFT_KV);
+    liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
+
+    targetLiftAngle = liftEncoder.getDistance();
+    targetExtendMeters = extendEncoder.getPosition();
+
+    setLiftAngle(targetLiftAngle);
+    setLiftAngle(targetExtendMeters);
+
+    liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE);
+    extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
+    liftPID.setSetpoint(targetLiftAngle);
+
+    SmartDashboard.putData("Lift PID", liftPID);
+    SmartDashboard.putData("Extend PID", extendPID);
   }
 
   @Override
   public void periodic() {
+    setLiftAngle(targetLiftAngle);
+    setExtendMeters(targetExtendMeters);
+
+    double liftBasePower = liftFF.calculate(getLiftAngle(), 0, 0);
+    double liftPIDPower = liftPID.calculate(getLiftAngle());
+    setLiftPower(liftBasePower + liftPIDPower);
+
+    double extendPIDPower = extendPID.calculate(getExtendMeters());
+    setExtendPower(extendPIDPower);
     // This method will be called once per scheduler run
   }
 
@@ -99,7 +131,6 @@ public class Arm extends SubsystemBase {
     if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
     }
-
     if (extendPos < 0) {
       power = Math.max(0, power);
     }
@@ -115,7 +146,6 @@ public class Arm extends SubsystemBase {
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       power = Math.min(0, power);
     }
-
     if (liftAngle < getMinLiftAngle()) {
       power = Math.max(0, power);
     }
@@ -123,6 +153,23 @@ public class Arm extends SubsystemBase {
     power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
 
     lift.set(power);
+  }
+
+  private void setLiftAngle(double angle) {
+    angle = Math.min(angle, Constants.ARM_LIFT_MAX_ANGLE);
+
+    angle = Math.max(angle, getMinLiftAngle());
+
+    targetLiftAngle = angle;
+  }
+
+  private void setExtendMeters(double meters) {
+    meters = Math.min(meters, getMaxExtendMeters());
+    meters = Math.max(meters, 0);
+
+    targetExtendMeters = meters;
+
+    extendPID.setSetpoint(targetExtendMeters);
   }
 
   public void setIdleMode(CANSparkMax.IdleMode idleMode) {
@@ -137,5 +184,13 @@ public class Arm extends SubsystemBase {
 
   public CommandBase brake() {
     return this.runOnce(() -> setIdleMode(CANSparkMax.IdleMode.kBrake));
+  }
+
+  public CommandBase liftToAngle(double angle) {
+    return this.runOnce(() -> setLiftAngle(angle));
+  }
+
+  public CommandBase extendToPosition(double position) {
+    return this.runOnce(() -> setExtendMeters(position));
   }
 }
