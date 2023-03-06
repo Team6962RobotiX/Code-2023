@@ -35,7 +35,7 @@ public class AutoBalance extends CommandBase {
   public void execute() {
     double roll = IMU.getRoll();
     if (Math.abs(roll) > Constants.BALANCE_LEVEL_ANGLE_RANGE) {
-      double power = -((roll / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(roll)));
+      double power = ((roll / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(roll)));
       drive.tankDrive(power, power);
     }
   }
