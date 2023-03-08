@@ -8,10 +8,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
+import java.util.Map;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
@@ -31,7 +39,7 @@ public class Arm extends SubsystemBase {
   MotorControllerGroup lift = new MotorControllerGroup(lift1, lift2);
 
   RelativeEncoder extendEncoder;
-  AbsoluteEncoder liftEncoder;
+  DutyCycleEncoder liftEncoder;
 
   PIDController extendPID;
   PIDController liftPID;
@@ -39,6 +47,14 @@ public class Arm extends SubsystemBase {
 
   double targetExtendMeters;
   double targetLiftAngle;
+
+  private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
+
+  private GenericEntry P = dashboard.add("P", Constants.ARM_LIFT_KP).getEntry();
+  private GenericEntry I = dashboard.add("I", Constants.ARM_LIFT_KI).getEntry();
+  private GenericEntry D = dashboard.add("D", Constants.ARM_LIFT_KD).getEntry();
+  private GenericEntry target = dashboard.add("Target Angle", 90).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", Constants.ARM_LIFT_MIN_ANGLE, "max", Constants.ARM_LIFT_MAX_ANGLE)).getEntry();
+  private GenericEntry angle = dashboard.add("Current Angle", 90).getEntry();
 
   public Arm() {
     if (!Constants.ENABLE_ARM) {
@@ -62,10 +78,9 @@ public class Arm extends SubsystemBase {
 
     extendEncoder = extend.getEncoder();
     extendEncoder.setPositionConversionFactor(1 / Constants.ARM_EXTEND_TICKS_PER_METER);
-    // liftEncoder = lift2.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-    // System.out.println(liftEncoder.getZeroOffset());
-    // liftEncoder.setZeroOffset(liftEncoder.getZeroOffset());
-    // liftEncoder.setPositionConversionFactor(360.0);
+    liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
+    liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
+    liftEncoder.setDistancePerRotation(360.0);
 
     liftFF = new ArmFeedforward(Constants.ARM_LIFT_KS, Constants.ARM_LIFT_KG, Constants.ARM_LIFT_KV);
     liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
@@ -81,8 +96,7 @@ public class Arm extends SubsystemBase {
     extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
     liftPID.setSetpoint(targetLiftAngle);
 
-    SmartDashboard.putData("Lift PID", liftPID);
-    SmartDashboard.putData("Extend PID", extendPID);
+
   }
 
   @Override
@@ -90,6 +104,13 @@ public class Arm extends SubsystemBase {
     if (!Constants.ENABLE_ARM) {
       return;
     }
+
+    liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
+    liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
+    liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
+    targetLiftAngle = target.getDouble(90);
+
+    angle.setDouble(getLiftAngle());
 
     setLiftAngle(targetLiftAngle);
     setExtendMeters(targetExtendMeters);
@@ -100,7 +121,7 @@ public class Arm extends SubsystemBase {
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
     // setExtendPower(extendPIDPower);
-    
+
     // System.out.println(getLiftAngle());
     // This method will be called once per scheduler run
   }
@@ -115,17 +136,16 @@ public class Arm extends SubsystemBase {
   }
 
   public double getLiftAngle() {
-    return 90;
-    // return liftEncoder.getPosition();
+    return liftEncoder.getDistance();
   }
 
   public double getMinLiftAngle() {
-    double minAngle = Math.cos(Constants.ARM_HEIGHT / getMaxExtendMeters());
+    double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
     if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
       minAngle = Constants.ARM_LIFT_MIN_ANGLE;
     }
-    // return minAngle;
-    return Constants.ARM_LIFT_MIN_ANGLE;
+    return minAngle;
+    // return Constants.ARM_LIFT_MIN_ANGLE;
   }
 
   public double getMaxExtendMeters() {
@@ -133,8 +153,8 @@ public class Arm extends SubsystemBase {
     if (getLiftAngle() > 90) {
       maxExtension = Constants.ARM_MAX_LENGTH;
     }
-    // return maxExtension;
-    return Constants.ARM_MAX_LENGTH;
+    return maxExtension;
+    // return Constants.ARM_MAX_LENGTH;
   }
 
   public void setExtendPower(double power) {
@@ -153,28 +173,22 @@ public class Arm extends SubsystemBase {
   }
 
   public void setLiftPower(double power) {
+    double liftAngle = getExtendMeters();
+
+    if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
+      power = Math.min(0, power);
+    }
+    if (liftAngle < getMinLiftAngle()) {
+      power = Math.max(0, power);
+    }
+
+    power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
+
     lift.set(power);
-    return;
-    
-    // double liftAngle = getExtendMeters();
-
-    // if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
-    //   power = Math.min(0, power);
-    // }
-    // if (liftAngle < getMinLiftAngle()) {
-    //   power = Math.max(0, power);
-    // }
-
-    // power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
-
-    // System.out.println(power);
-
-    // lift.set(power);
   }
 
   private void setLiftAngle(double angle) {
     angle = Math.min(angle, Constants.ARM_LIFT_MAX_ANGLE);
-
     angle = Math.max(angle, getMinLiftAngle());
 
     targetLiftAngle = angle;
@@ -197,6 +211,13 @@ public class Arm extends SubsystemBase {
     extend.setIdleMode(idleMode);
   }
 
+  public void setTargetPosition(double targetX, double targetY) {
+    targetY -= Constants.ARM_HEIGHT;
+
+    setExtendMeters(Math.sqrt(targetX * targetX + targetY * targetY) - Constants.ARM_STARTING_LENGTH);
+    setLiftAngle(Math.atan(targetY / targetX));
+  }
+
   public CommandBase coast() {
     return this.runOnce(() -> setIdleMode(CANSparkMax.IdleMode.kCoast));
   }
@@ -213,7 +234,11 @@ public class Arm extends SubsystemBase {
     return this.runOnce(() -> setLiftAngle(angle));
   }
 
-  public CommandBase extendToPosition(double position) {
-    return this.runOnce(() -> setExtendMeters(position));
+  public CommandBase extendToLength(double length) {
+    return this.runOnce(() -> setExtendMeters(length));
+  }
+
+  public CommandBase toPosition(double targetX, double targetY) {
+    return this.runOnce(() -> setTargetPosition(targetX, targetY));
   }
 }

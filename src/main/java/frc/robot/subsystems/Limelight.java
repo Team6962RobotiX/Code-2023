@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 
 public class Limelight extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
+  LimelightHelpers.LimelightResults topLimelightData;
+  LimelightHelpers.LimelightResults bottomLimelightData;
+
   public Limelight() {
     if (!Constants.ENABLE_LIMELIGHT) {
       System.out.println("Vision Disabled");
@@ -21,6 +24,8 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
+    topLimelightData = LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME);
+    bottomLimelightData = LimelightHelpers.getLatestResults(Constants.BOTTOM_LIMELIGHT_NAME);
     // This method will be called once per scheduler run
   }
 

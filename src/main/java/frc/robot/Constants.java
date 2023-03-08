@@ -55,6 +55,7 @@ public final class Constants {
   public static final int CAN_CLAW_GRAB = 16;
 
   public static final int DIO_CLAW_GRAB_MICRO_SWITCH = 1;
+  public static final int DIO_ARM_LIFT_ENCODER = 0;
 
   public static final int USB_DRIVE_JOYSTICK = 0;
   public static final int USB_UTILITY_JOYSTICK = 1;
@@ -81,6 +82,7 @@ public final class Constants {
   public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.05; // Meters of precision
 
+
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.15; // Max arm lifting power
   public static final double ARM_LIFT_POWER_INCREMENT = 0.005; // Arm lifting power increment each tick
@@ -104,7 +106,6 @@ public final class Constants {
   public static final double ARM_LIFT_KG = 0;
   public static final double ARM_LIFT_KV = 0;
 
-
   // Claw Config
   public static final double CLAW_GRAB_LIMIT = -200; // Claw grab limit (measured in encoder ticks)
   public static final double CLAW_GRAB_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
@@ -116,6 +117,11 @@ public final class Constants {
   public static final double AUTONOMOUS_MAX_ACCELERATION = 1; // m / s^2
   public static final double AUTONOMOUS_RAMSETE_B = 0;
   public static final double AUTONOMOUS_RAMSETE_ZETA = 0;
+
+  // Limelight Config
+  public static final String TOP_LIMELIGHT_NAME = "top_limelight";
+  public static final String BOTTOM_LIMELIGHT_NAME = "bottom_limelight";
+
 
   public static double mapPower(double power, double min, double max, double deadZone) {
     double sign = Math.signum(power);
