@@ -97,6 +97,12 @@ public class Arm extends SubsystemBase {
     liftPID.setSetpoint(targetLiftAngle);
 
 
+    if (lift1.getFaults() != 0 || lift2.getFaults() != 0) {
+      System.out.println("ARM LIFT MOTOR CONTROLLERS NOT WORKING");
+      lift1.close();
+      lift2.close();
+    }
+
   }
 
   @Override
@@ -110,17 +116,15 @@ public class Arm extends SubsystemBase {
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
     targetLiftAngle = target.getDouble(90);
     
-    angle.setDouble(getLiftAngle());
-
     setLiftAngle(targetLiftAngle);
     setExtendMeters(targetExtendMeters);
 
     double liftBasePower = liftFF.calculate(getLiftAngle(), 0, 0);
     double liftPIDPower = liftPID.calculate(getLiftAngle());
-    // setLiftPower(liftBasePower + liftPIDPower);
+    setLiftPower(liftBasePower + liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
-    // setExtendPower(extendPIDPower);
+    setExtendPower(extendPIDPower);
 
     // System.out.println(getLiftAngle());
     // This method will be called once per scheduler run
