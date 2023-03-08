@@ -39,7 +39,7 @@ public final class Constants {
   public static final double DRIVE_KS = 0.10063;
   public static final double DRIVE_KV = 0.030039;
   public static final double DRIVE_KA = 0.0071934;
-  
+
   public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
