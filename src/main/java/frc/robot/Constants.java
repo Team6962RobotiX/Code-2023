@@ -32,10 +32,14 @@ public final class Constants {
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 10.71; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
-  public static final double DRIVE_KP = 11.505;
-  public static final double DRIVE_KS = 0.064051;
-  public static final double DRIVE_KV = 0.029835;
-  public static final double DRIVE_KA = 0.002516;
+
+  public static final double DRIVE_VEL_KP = 0.0091849;
+  public static final double DRIVE_POS_KP = 23.685;
+  public static final double DRIVE_POS_KD = 0.56287;
+  public static final double DRIVE_KS = 0.10063;
+  public static final double DRIVE_KV = 0.030039;
+  public static final double DRIVE_KA = 0.0071934;
+  
   public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
