@@ -73,8 +73,8 @@ public final class Constants {
 
   // Arm Positioning
   public static final double ARM_MAX_LENGTH = 1.8; // Meters from pivot when fully extended
-  public static final double ARM_STARTING_LENGTH = 1; // Meters from pivot when fully retracted
-  public static final double ARM_HEIGHT = 1; // Meters above ground from pivot
+  public static final double ARM_STARTING_LENGTH = 1.05; // Meters from pivot when fully retracted
+  public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
 

@@ -124,9 +124,9 @@ public class Arm extends SubsystemBase {
     setLiftPower(liftBasePower + liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
-    setExtendPower(extendPIDPower);
+    // setExtendPower(extendPIDPower);
 
-    // System.out.println(getLiftAngle());
+    System.out.println(getExtendMeters());
     // This method will be called once per scheduler run
   }
 
@@ -144,21 +144,21 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMinLiftAngle() {
-    // double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
-    // if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
-    //   minAngle = Constants.ARM_LIFT_MIN_ANGLE;
-    // }
-    // return minAngle;
-    return Constants.ARM_LIFT_MIN_ANGLE;
+    double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
+    if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
+      minAngle = Constants.ARM_LIFT_MIN_ANGLE;
+    }
+    return minAngle;
+    // return Constants.ARM_LIFT_MIN_ANGLE;
   }
 
   public double getMaxExtendMeters() {
-    // double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
-    // if (getLiftAngle() > 90) {
-    //   maxExtension = Constants.ARM_MAX_LENGTH;
-    // }
-    // return maxExtension;
-    return Constants.ARM_MAX_LENGTH;
+    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    if (getLiftAngle() > 90) {
+      maxExtension = Constants.ARM_MAX_LENGTH;
+    }
+    return maxExtension;
+    // return Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH;
   }
 
   public void setExtendPower(double power) {
