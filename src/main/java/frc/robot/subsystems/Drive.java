@@ -59,7 +59,7 @@ public class Drive extends SubsystemBase {
 
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    leftBank.setInverted(true);
+    rightBank.setInverted(true);
 
     leftBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
     rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
@@ -127,6 +127,10 @@ public class Drive extends SubsystemBase {
     }
 
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
+  }
+
+  public CommandBase arcadeDriveCmd(double straightPower, double turningPower) {
+    return this.runOnce(() -> arcadeDrive(straightPower, turningPower));
   }
 
   public void resetEncoders() {

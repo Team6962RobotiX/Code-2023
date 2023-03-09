@@ -35,11 +35,11 @@ public class JoystickDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double straightAxis = joystickStraight.get();
-    double twistAxis = joystickTurn.get();
+    double straightAxis = -joystickStraight.get();
+    double twistAxis = -joystickTurn.get();
 
     double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
-    double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_POWER_LIMIT, Constants.TWIST_DEADZONE);
+    double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
 
     drive.arcadeDrive(straightPower, turningPower);
   }
