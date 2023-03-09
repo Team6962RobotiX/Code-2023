@@ -92,7 +92,7 @@ public final class Constants {
 
 
   // PID & FF Config
-  public static final double ARM_EXTEND_KP = 0;
+  public static final double ARM_EXTEND_KP = 2.25;
   public static final double ARM_EXTEND_KI = 0;
   public static final double ARM_EXTEND_KD = 0;
 
