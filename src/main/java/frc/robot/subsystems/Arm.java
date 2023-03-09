@@ -97,6 +97,12 @@ public class Arm extends SubsystemBase {
     liftPID.setSetpoint(targetLiftAngle);
 
 
+    if (lift1.getFaults() != 0 || lift2.getFaults() != 0) {
+      System.out.println("ARM LIFT MOTOR CONTROLLERS NOT WORKING");
+      lift1.close();
+      lift2.close();
+    }
+
   }
 
   @Override
@@ -109,18 +115,16 @@ public class Arm extends SubsystemBase {
     liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
     targetLiftAngle = target.getDouble(90);
-
-    angle.setDouble(getLiftAngle());
-
+    
     setLiftAngle(targetLiftAngle);
     setExtendMeters(targetExtendMeters);
 
     double liftBasePower = liftFF.calculate(getLiftAngle(), 0, 0);
     double liftPIDPower = liftPID.calculate(getLiftAngle());
-    // setLiftPower(liftBasePower + liftPIDPower);
+    setLiftPower(liftBasePower + liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
-    // setExtendPower(extendPIDPower);
+    setExtendPower(extendPIDPower);
 
     // System.out.println(getLiftAngle());
     // This method will be called once per scheduler run
@@ -140,21 +144,21 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMinLiftAngle() {
-    double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
-    if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
-      minAngle = Constants.ARM_LIFT_MIN_ANGLE;
-    }
-    return minAngle;
-    // return Constants.ARM_LIFT_MIN_ANGLE;
+    // double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
+    // if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
+    //   minAngle = Constants.ARM_LIFT_MIN_ANGLE;
+    // }
+    // return minAngle;
+    return Constants.ARM_LIFT_MIN_ANGLE;
   }
 
   public double getMaxExtendMeters() {
-    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
-    if (getLiftAngle() > 90) {
-      maxExtension = Constants.ARM_MAX_LENGTH;
-    }
-    return maxExtension;
-    // return Constants.ARM_MAX_LENGTH;
+    // double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    // if (getLiftAngle() > 90) {
+    //   maxExtension = Constants.ARM_MAX_LENGTH;
+    // }
+    // return maxExtension;
+    return Constants.ARM_MAX_LENGTH;
   }
 
   public void setExtendPower(double power) {
@@ -173,7 +177,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setLiftPower(double power) {
-    double liftAngle = getExtendMeters();
+    double liftAngle = getLiftAngle();
 
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       power = Math.min(0, power);

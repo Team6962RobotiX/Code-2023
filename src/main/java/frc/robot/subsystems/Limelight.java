@@ -24,8 +24,8 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    topLimelightData = LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME);
-    bottomLimelightData = LimelightHelpers.getLatestResults(Constants.BOTTOM_LIMELIGHT_NAME);
+    // topLimelightData = LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME);
+    // bottomLimelightData = LimelightHelpers.getLatestResults(Constants.BOTTOM_LIMELIGHT_NAME);
     // This method will be called once per scheduler run
   }
 

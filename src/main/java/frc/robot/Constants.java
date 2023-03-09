@@ -30,12 +30,16 @@ public final class Constants {
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
-  public static final double GEARBOX_RATIO = 1.0 / 10.71; // 10.71 for test chassis, 8.45 for main chassis
+  public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
-  public static final double DRIVE_KP = 11.505;
-  public static final double DRIVE_KS = 0.064051;
-  public static final double DRIVE_KV = 0.029835;
-  public static final double DRIVE_KA = 0.002516;
+
+  public static final double DRIVE_VEL_KP = 0.0091849;
+  public static final double DRIVE_POS_KP = 23.685;
+  public static final double DRIVE_POS_KD = 0.56287;
+  public static final double DRIVE_KS = 0.10063;
+  public static final double DRIVE_KV = 0.030039;
+  public static final double DRIVE_KA = 0.0071934;
+
   public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
@@ -63,8 +67,8 @@ public final class Constants {
 
   // Balance Config
   public static final double BALANCE_LEVEL_ANGLE_RANGE = 2.5; // Angle range required to declare leveled
-  public static final double BALANCE_ANGLE_POWER_MULTIPLE = 2; // Motor power multiple based on current angle
-  public static final double BALANCE_BASE_POWER = 0.25; // Base balancing speed
+  public static final double BALANCE_ANGLE_POWER_MULTIPLE = 4; // Motor power multiple based on current angle
+  public static final double BALANCE_BASE_POWER = 0.15; // Base balancing speed
 
 
   // Arm Positioning
@@ -84,9 +88,9 @@ public final class Constants {
 
 
   // Lifting
-  public static final double ARM_LIFT_MAX_POWER = 0.15; // Max arm lifting power
+  public static final double ARM_LIFT_MAX_POWER = 0.4; // Max arm lifting power
   public static final double ARM_LIFT_POWER_INCREMENT = 0.005; // Arm lifting power increment each tick
-  public static final double ARM_LIFT_MIN_ANGLE = 28; // Min arm angle (degrees)
+  public static final double ARM_LIFT_MIN_ANGLE = 35; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
