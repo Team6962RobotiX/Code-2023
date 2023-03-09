@@ -33,6 +33,7 @@ public final class Constants {
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
+  public static final double DRIVE_ORIENT_KP = 0;
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
   public static final double DRIVE_POS_KD = 0.56287;
@@ -125,12 +126,22 @@ public final class Constants {
   // Limelight Config
   public static final String TOP_LIMELIGHT_NAME = "top_limelight";
   public static final String BOTTOM_LIMELIGHT_NAME = "bottom_limelight";
-
-
+  
+  // Align Config
+  public static final double PICK_UP_HEIGHT = 0.15;
+  public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 2.0) * 0.0254;
+  public static final double NODE_TAPE_HEIGHT_TOP = (41.125 + 2.0) * 0.0254;
+  public static final double NODE_TIP_HEIGHT_MID = (22.125 + 4.0 + 8.0) * 0.0254;
+  public static final double NODE_TIP_HEIGHT_TOP = (41.125 + 4.0 + (3.0 / 16.0)) * 0.0254;
+  public static final double PLACING_OVER_NODE_HEIGHT = 0.25;
+  public static final double TOP_LIMELIGHT_HEIGHT = 1.1811;
+  public static final double BOTTOM_LIMELIGHT_HEIGHT = 0.1651;
+  
+  
   public static double mapPower(double power, double min, double max, double deadZone) {
     double sign = Math.signum(power);
     double absPower = Math.abs(power);
-
+    
     if (absPower < deadZone) {
       return 0.0;
     } else {

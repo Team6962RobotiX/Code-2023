@@ -13,10 +13,11 @@ import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightResults;
 
+import java.lang.Math;
+
 public class Limelight extends SubsystemBase {
-  LimelightHelpers.LimelightResults limelightData;
-  private LimelightHelpers.LimelightTarget_Retro[] retroTargets;
-  String name;
+  private LimelightHelpers.LimelightResults limelightData;
+  private String name;
 
   public Limelight(String name) {
     if (!Constants.ENABLE_LIMELIGHT) {
@@ -29,19 +30,14 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     limelightData = LimelightHelpers.getLatestResults(name);
-    retroTargets = limelightData.targetingResults.targets_Retro;
-
   }
 
-  public LimelightHelpers.LimelightTarget_Retro getTopCenterTarget() {
-    LimelightHelpers.LimelightTarget_Retro mostCentered = retroTargets[0];
-    for (int i = 0; i < retroTargets.length; i++) {
-      if (mostCentered.tx > retroTargets[i].tx) {
-        mostCentered = retroTargets[i];
-      }
-    }
+  public LimelightHelpers.Results getTargetingResults() {
+    return limelightData.targetingResults;
+  }
 
-    return mostCentered;
+  public String getName() {
+    return name;
   }
 
   @Override
