@@ -22,6 +22,7 @@ public class AutoOrient extends CommandBase {
 
     private Limelight camera;
     private Drive drive;
+    private Arm arm;
     private LimelightHelpers.LimelightTarget_Retro centerNode;
     private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
@@ -29,9 +30,10 @@ public class AutoOrient extends CommandBase {
     private String level;
 
     /** An example command that uses an example subsystem. */
-    public AutoOrient(Limelight camera, Drive drive, String level) {
+    public AutoOrient(Limelight camera, Drive drive, Arm arm, String level) {
         this.camera = camera;
         this.drive = drive;
+        this.arm = arm;
         this.level = level;
 
         addRequirements(camera, drive);
@@ -56,8 +58,11 @@ public class AutoOrient extends CommandBase {
         }
 
         double targetPosX = target.getTargetPose_CameraSpace().getX();
+        double targetPosY = target.getTargetPose_CameraSpace().getY();
         double PIDPower = orientPID.calculate(targetPosX);
+        // arm.setTargetPosition(targetPosX, targetPosY);
         drive.tankDrive(PIDPower, -PIDPower);
+        arm.setTargetPosition(targetPosX, targetPosY);
     }
 
     public LimelightHelpers.LimelightTarget_Retro getMidTarget() {
