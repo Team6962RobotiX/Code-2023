@@ -33,7 +33,7 @@ public class AutoOrient extends CommandBase {
         this.camera = camera;
         this.drive = drive;
         this.level = level;
-        
+
         addRequirements(camera, drive);
     }
 
@@ -54,16 +54,16 @@ public class AutoOrient extends CommandBase {
         } else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
 
         }
-        
+
         double targetPosX = target.getTargetPose_CameraSpace().getX();
         double PIDPower = orientPID.calculate(targetPosX);
         drive.tankDrive(PIDPower, -PIDPower);
     }
-    
+
     public LimelightHelpers.LimelightTarget_Retro getMidTarget() {
         LimelightHelpers.LimelightTarget_Retro[] retro = camera.getTargetingResults().targets_Retro;
         LimelightHelpers.LimelightTarget_Retro midTarget = retro[0];
-        
+
         for (int i = 0; i < retro.length; i++) {
             if (retro[i].getTargetPose_CameraSpace().getY() + Constants.TOP_LIMELIGHT_HEIGHT < (Constants.NODE_TAPE_HEIGHT_MID + Constants.NODE_TAPE_HEIGHT_TOP) / 2) {
                 continue;
@@ -72,7 +72,7 @@ public class AutoOrient extends CommandBase {
                 midTarget = retro[i];
             }
         }
-    
+
         return midTarget;
     }
 
@@ -88,7 +88,7 @@ public class AutoOrient extends CommandBase {
                 topTarget = retro[i];
             }
         }
-    
+
         return topTarget;
     }
 

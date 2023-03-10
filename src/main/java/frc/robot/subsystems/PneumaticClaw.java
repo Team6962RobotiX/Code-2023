@@ -16,18 +16,18 @@ import frc.robot.Constants;
 
 public class PneumaticClaw extends SubsystemBase {
 
-  Compressor clawCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);;
-  DoubleSolenoid clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);;
+  Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);;
+  DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);;
 
   public PneumaticClaw() {
     if (!Constants.ENABLE_PNEUMATIC_CLAW) {
       System.out.println("Pneumatic Claw Disabled");
-      clawCompressor.disable();
+      compressor.disable();
       return;
     }
 
-    clawCompressor.enableDigital();
-    clawSolenoid.set(DoubleSolenoid.Value.kOff);
+    compressor.enableDigital();
+    solenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   @Override
@@ -41,10 +41,10 @@ public class PneumaticClaw extends SubsystemBase {
   }
 
   public CommandBase close() {
-    return this.runOnce(() -> clawSolenoid.set(DoubleSolenoid.Value.kForward));
+    return this.runOnce(() -> solenoid.set(DoubleSolenoid.Value.kForward));
   }
 
   public CommandBase open() {
-    return this.runOnce(() -> clawSolenoid.set(DoubleSolenoid.Value.kReverse));
+    return this.runOnce(() -> solenoid.set(DoubleSolenoid.Value.kReverse));
   }
 }

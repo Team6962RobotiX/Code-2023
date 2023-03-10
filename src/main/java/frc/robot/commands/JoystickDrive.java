@@ -13,16 +13,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class JoystickDrive extends CommandBase {
   private final Drive drive;
-  private final Supplier<Double> joystickStraight, joystickTurn;
+  private final Supplier<Joystick> joystickSupplier;
 
-  public JoystickDrive(Drive drive, Supplier<Double> joystickStraight, Supplier<Double> joystickTurn) {
+  public JoystickDrive(Drive drive, Supplier<Joystick> joystickSupplier) {
     this.drive = drive;
-    this.joystickStraight = joystickStraight;
-    this.joystickTurn = joystickTurn;
+    this.joystickSupplier = joystickSupplier;
 
     addRequirements(drive);
   }
@@ -35,11 +35,44 @@ public class JoystickDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double straightAxis = -joystickStraight.get();
-    double twistAxis = -joystickTurn.get();
+    Joystick joystick = joystickSupplier.get();
+
+    double straightAxis = -joystick.getRawAxis(1);
+    double twistAxis = -joystick.getRawAxis(0);
+
+    double POV = joystick.getPOV();
 
     double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
     double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
+
+    if (POV == 0) {
+      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 45) {
+      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 90) {
+      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 135) {
+      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 180) {
+      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 225) {
+      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 270) {
+      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    if (POV == 315) {
+      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+    }
 
     drive.arcadeDrive(straightPower, turningPower);
   }

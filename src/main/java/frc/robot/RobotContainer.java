@@ -47,12 +47,10 @@ public class RobotContainer {
   private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm();
   private final PneumaticClaw claw = new PneumaticClaw();
-  private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
-  private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick.getRawAxis(1), () -> driveJoystick.getRawAxis(2)));
+    drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
 
     // Configure the trigger bindings
     configureBindings();
@@ -64,15 +62,6 @@ public class RobotContainer {
 
     // new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, 0.4));
     // new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -0.4));
-
-    new POVButton(driveJoystick, 0  ).whileTrue(new POVDrive(drive, 0));
-    new POVButton(driveJoystick, 45 ).whileTrue(new POVDrive(drive, 45));
-    new POVButton(driveJoystick, 90 ).whileTrue(new POVDrive(drive, 90));
-    new POVButton(driveJoystick, 135).whileTrue(new POVDrive(drive, 135));
-    new POVButton(driveJoystick, 180).whileTrue(new POVDrive(drive, 180));
-    new POVButton(driveJoystick, 225).whileTrue(new POVDrive(drive, 225));
-    new POVButton(driveJoystick, 270).whileTrue(new POVDrive(drive, 270));
-    new POVButton(driveJoystick, 315).whileTrue(new POVDrive(drive, 315));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));

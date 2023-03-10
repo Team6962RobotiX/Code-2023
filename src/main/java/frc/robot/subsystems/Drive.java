@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -26,18 +28,18 @@ import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
 
-  CANSparkMax leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
-  CANSparkMax leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
-  CANSparkMax rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
-  CANSparkMax rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
+  private CANSparkMax leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
+  private CANSparkMax leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
+  private CANSparkMax rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
+  private CANSparkMax rightBank2 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
 
-  MotorControllerGroup rightBank = new MotorControllerGroup(rightBank1, rightBank2);
-  MotorControllerGroup leftBank = new MotorControllerGroup(leftBank1, leftBank2);
+  private MotorControllerGroup rightBank = new MotorControllerGroup(rightBank1, rightBank2);
+  private MotorControllerGroup leftBank = new MotorControllerGroup(leftBank1, leftBank2);
 
-  DifferentialDrive drive = new DifferentialDrive(leftBank, rightBank);
+  private DifferentialDrive drive = new DifferentialDrive(leftBank, rightBank);
 
-  RelativeEncoder leftBankEncoder = leftBank2.getEncoder();
-  RelativeEncoder rightBankEncoder = rightBank1.getEncoder();
+  private RelativeEncoder leftBankEncoder = leftBank2.getEncoder();
+  private RelativeEncoder rightBankEncoder = rightBank1.getEncoder();
 
   private DifferentialDriveOdometry odometry;
   private Field2d field = new Field2d();
@@ -75,6 +77,8 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
+
+
     // This method will be called once per scheduler run
   }
 
@@ -127,10 +131,6 @@ public class Drive extends SubsystemBase {
     }
 
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
-  }
-
-  public CommandBase arcadeDriveCmd(double straightPower, double turningPower) {
-    return this.runOnce(() -> arcadeDrive(straightPower, turningPower));
   }
 
   public void resetEncoders() {

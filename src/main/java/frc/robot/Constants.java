@@ -28,7 +28,7 @@ public final class Constants {
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
-  
+
   public static final double DRIVE_FINE_CONTROL_POWER = 0.3;
 
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
@@ -130,7 +130,7 @@ public final class Constants {
   // Limelight Config
   public static final String TOP_LIMELIGHT_NAME = "top_limelight";
   public static final String BOTTOM_LIMELIGHT_NAME = "bottom_limelight";
-  
+
   // Align Config
   public static final double PICK_UP_HEIGHT = 0.15;
   public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 2.0) * 0.0254;
@@ -140,12 +140,12 @@ public final class Constants {
   public static final double PLACING_OVER_NODE_HEIGHT = 0.25;
   public static final double TOP_LIMELIGHT_HEIGHT = 1.1811;
   public static final double BOTTOM_LIMELIGHT_HEIGHT = 0.1651;
-  
-  
+
+
   public static double mapPower(double power, double min, double max, double deadZone) {
     double sign = Math.signum(power);
     double absPower = Math.abs(power);
-    
+
     if (absPower < deadZone) {
       return 0.0;
     } else {
