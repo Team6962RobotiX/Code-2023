@@ -136,7 +136,7 @@ public class Arm extends SubsystemBase {
     // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
-    System.out.println(extendPID.getSetpoint() - getExtendMeters());
+    System.out.println(getMaxExtendMeters() - getExtendMeters());
     setExtendPower(extendPIDPower);
 
     // This method will be called once per scheduler run
@@ -181,7 +181,7 @@ public class Arm extends SubsystemBase {
   public double getMaxExtendMeters() {
     double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, (Constants.ARM_HEIGHT - Constants.ARM_PADDING_HEIGHT) / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
     if (getLiftAngle() > 90) {
-      maxExtension = Constants.ARM_MAX_LENGTH;
+      maxExtension = Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH;
     }
     return maxExtension;
     // return Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH;
