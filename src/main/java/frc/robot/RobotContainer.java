@@ -45,7 +45,7 @@ public class RobotContainer {
 
   private final IMU IMU = new IMU();
   private final Drive drive = new Drive(IMU);
-  private final Arm arm = new Arm();
+  private final Arm arm = new Arm(() -> driveJoystick);
   private final PneumaticClaw claw = new PneumaticClaw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,17 +59,17 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driveJoystick, 5).onTrue(claw.close());
     new JoystickButton(driveJoystick, 3).onTrue(claw.open());
-
-    // new POVButton(driveJoystick, 0).or(new POVButton(driveJoystick, 315)).or(new POVButton(driveJoystick, 45)).whileTrue(new SetArmExtensionPower(arm, 0.4));
-    // new POVButton(driveJoystick, 180).or(new POVButton(driveJoystick, 225)).or(new POVButton(driveJoystick, 135)).whileTrue(new SetArmExtensionPower(arm, -0.4));
+    
+    new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
+    new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
     // new JoystickButton(driveJoystick, 12).or(new JoystickButton(driveJoystick, 10)).onFalse(arm.setLiftPowerCmd(0));
 
-    new JoystickButton(driveJoystick, 11).whileTrue(new AutoBalance(IMU, drive));
-    new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
-    new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
+    new JoystickButton(driveJoystick, 2).whileTrue(new AutoBalance(IMU, drive));
+    // new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
+    // new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
 
   }
 
@@ -110,6 +110,10 @@ public class RobotContainer {
     // // Run path following command, then stop at the end.
     // return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
     return null;
+  }
+
+  public void disabledPeriodic() {
+    arm.resetPID();
   }
 
   // ExtendArm

@@ -19,9 +19,9 @@ public final class Constants {
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = false;
-  public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  public static final boolean ENABLE_ARM = true;
+  public static final boolean ENABLE_CLAW = true;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
   public static final boolean ENABLE_LIMELIGHT = false;
 
 
@@ -34,7 +34,7 @@ public final class Constants {
   public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
-  public static final double GEARBOX_RATIO = 1.0 / 10.71; // 10.71 for test chassis, 8.45 for main chassis
+  public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
   public static final double DRIVE_ORIENT_KP = 0;
@@ -54,10 +54,10 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 1; // 10 for Main Chassis, 1 For Test Chassis
-  public static final int CAN_LEFT_DRIVE_2 = 2; // 28 for Main Chassis, 2 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_1 = 3; // 7 for Main Chassis, 3 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_2 = 4; // 27 for Main Chassis, 4 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_1 = 10; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_2 = 28; // 28 for Main Chassis, 2 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_1 = 7; // 7 for Main Chassis, 3 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 13;
@@ -77,32 +77,34 @@ public final class Constants {
 
 
   // Arm Positioning
-  public static final double ARM_MAX_LENGTH = 1.8; // Meters from pivot when fully extended
+  public static final double ARM_MAX_LENGTH = 1.778; // Meters from pivot when fully extended
+  public static final double ARM_PADDING_HEIGHT = 0.15;
   public static final double ARM_STARTING_LENGTH = 1.05; // Meters from pivot when fully retracted
   public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
-
+  public static final double[] ARM_PRESET_MID_NODE = {1.0, 1.0};
+  public static final double[] ARM_PRESET_TOP_NODE = {1.0, 1.0};
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
   public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_MAX_POWER = 0.3; // Fastest speed arm will extend (0 - 1)
+  public static final double ARM_EXTEND_MAX_POWER = 0.4; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.05; // Meters of precision
 
 
   // Lifting
-  public static final double ARM_LIFT_MAX_POWER = 0.4; // Max arm lifting power
+  public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
   public static final double ARM_LIFT_POWER_INCREMENT = 0.005; // Arm lifting power increment each tick
-  public static final double ARM_LIFT_MIN_ANGLE = 35; // Min arm angle (degrees)
+  public static final double ARM_LIFT_MIN_ANGLE = 34; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
 
   // PID & FF Config
-  public static final double ARM_EXTEND_KP = 2.25;
-  public static final double ARM_EXTEND_KI = 0;
+  public static final double ARM_EXTEND_KP = 2.5;
+  public static final double ARM_EXTEND_KI = 1.5;
   public static final double ARM_EXTEND_KD = 0;
 
   // PID

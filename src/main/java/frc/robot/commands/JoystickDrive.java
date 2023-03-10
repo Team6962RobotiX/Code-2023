@@ -38,42 +38,29 @@ public class JoystickDrive extends CommandBase {
     Joystick joystick = joystickSupplier.get();
 
     double straightAxis = -joystick.getRawAxis(1);
-    double twistAxis = -joystick.getRawAxis(0);
+    double twistAxis = -joystick.getRawAxis(2);
 
     double POV = joystick.getPOV();
 
     double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
     double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
 
-    if (POV == 0) {
+    if (POV == 315 || POV == 0 || POV == 45) {
       straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 45) {
-      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
-      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 90) {
-      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 135) {
-      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 180) {
-      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 225) {
-      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 270) {
-      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
-    }
-    if (POV == 315) {
-      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
-      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
     }
 
+    if (POV == 135 || POV == 180 || POV == 225) {
+      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+
+    if (POV == 45 || POV == 90 || POV == 135) {
+      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+
+    if (POV == 225 || POV == 270 || POV == 315) {
+      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+    }
+    
     drive.arcadeDrive(straightPower, turningPower);
   }
 

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,8 +19,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Joystick;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
@@ -56,11 +59,15 @@ public class Arm extends SubsystemBase {
   private GenericEntry target = dashboard.add("Target Angle", 90).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", Constants.ARM_LIFT_MIN_ANGLE, "max", Constants.ARM_LIFT_MAX_ANGLE)).getEntry();
   private GenericEntry angle = dashboard.add("Current Angle", 90).getEntry();
 
-  public Arm() {
+  private final Supplier<Joystick> joystickSupplier;
+
+  public Arm(Supplier<Joystick> joystickSupplier) {
     if (!Constants.ENABLE_ARM) {
       System.out.println("Arm Disabled");
       return;
     }
+
+    this.joystickSupplier = joystickSupplier;
 
     lift1.restoreFactoryDefaults();
     lift2.restoreFactoryDefaults();
@@ -114,7 +121,7 @@ public class Arm extends SubsystemBase {
     liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
     liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
-    targetLiftAngle = target.getDouble(90);
+    targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
     
     setLiftAngle(targetLiftAngle);
     setExtendMeters(targetExtendMeters);
@@ -124,10 +131,29 @@ public class Arm extends SubsystemBase {
     setLiftPower(liftBasePower + liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
-    // setExtendPower(extendPIDPower);
 
-    System.out.println(getExtendMeters());
+    // System.out.println("getExtendMeters()");
+    // System.out.println(getExtendMeters());
+    // System.out.println("extendPID.getSetpoint()");
+    // System.out.println(extendPID.getSetpoint());
+    System.out.println(extendPID.getSetpoint() - getExtendMeters());
+    setExtendPower(extendPIDPower);
+
     // This method will be called once per scheduler run
+  }
+
+  public void fullyRetract() {
+    setExtendMeters(0);
+    setLiftAngle(getMinLiftAngle());
+  }
+
+  public CommandBase fullyRetractCmd() {
+    return this.runOnce(() -> fullyRetract());
+  }
+
+  public void resetPID() {
+    liftPID.reset();
+    extendPID.reset();
   }
 
   @Override
@@ -144,8 +170,8 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMinLiftAngle() {
-    double minAngle = Math.acos(Constants.ARM_HEIGHT / getExtendMeters());
-    if (minAngle < Constants.ARM_LIFT_MIN_ANGLE) {
+    double minAngle = Math.acos((Constants.ARM_HEIGHT - Constants.ARM_PADDING_HEIGHT) / (getExtendMeters() + Constants.ARM_STARTING_LENGTH)) / Math.PI * 180.0;
+    if (minAngle < Constants.ARM_LIFT_MIN_ANGLE || Double.isNaN(minAngle)) {
       minAngle = Constants.ARM_LIFT_MIN_ANGLE;
     }
     return minAngle;
@@ -153,7 +179,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMaxExtendMeters() {
-    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, (Constants.ARM_HEIGHT - Constants.ARM_PADDING_HEIGHT) / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
     if (getLiftAngle() > 90) {
       maxExtension = Constants.ARM_MAX_LENGTH;
     }
@@ -202,7 +228,7 @@ public class Arm extends SubsystemBase {
 
   private void setExtendMeters(double meters) {
     meters = Math.min(meters, getMaxExtendMeters());
-    meters = Math.max(meters, 0);
+    meters = Math.max(meters, 0.05);
 
     targetExtendMeters = meters;
 
