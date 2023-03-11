@@ -19,10 +19,10 @@ public final class Constants {
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = true;
-  public static final boolean ENABLE_CLAW = true;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
-  public static final boolean ENABLE_LIMELIGHT = false;
+  public static final boolean ENABLE_ARM = false;
+  public static final boolean ENABLE_CLAW = false;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  public static final boolean ENABLE_LIMELIGHT = true;
 
 
   // Drive Config
@@ -31,13 +31,15 @@ public final class Constants {
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.3;
 
-  public static final double DRIVE_BASE_POWER = 0; // Motor power required to get the chassis moving
+  public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
+  public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
-  public static final double DRIVE_ORIENT_KP = 0;
+  public static final double DRIVE_ORIENT_KP = 0.0075;
+
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
   public static final double DRIVE_POS_KD = 0.56287;
@@ -130,8 +132,8 @@ public final class Constants {
   public static final double AUTONOMOUS_RAMSETE_ZETA = 0;
 
   // Limelight Config
-  public static final String TOP_LIMELIGHT_NAME = "top_limelight";
-  public static final String BOTTOM_LIMELIGHT_NAME = "bottom_limelight";
+  public static final String TOP_LIMELIGHT_NAME = "limelight-top";
+  public static final String BOTTOM_LIMELIGHT_NAME = "limelight-bottom";
 
   // Align Config
   public static final double PICK_UP_HEIGHT = 0.15;

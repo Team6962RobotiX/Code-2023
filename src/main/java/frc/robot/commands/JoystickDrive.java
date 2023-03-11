@@ -43,7 +43,7 @@ public class JoystickDrive extends CommandBase {
     double POV = joystick.getPOV();
 
     double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
-    double turningPower = Constants.mapPower(twistAxis, 0, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
+    double turningPower = Constants.mapPower(twistAxis, Constants.DRIVE_BASE_TURN_POWER, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
 
     if (POV == 315 || POV == 0 || POV == 45) {
       straightPower += Constants.DRIVE_FINE_CONTROL_POWER;

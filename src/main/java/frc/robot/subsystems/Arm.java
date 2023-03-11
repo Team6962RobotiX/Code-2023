@@ -62,12 +62,12 @@ public class Arm extends SubsystemBase {
   private final Supplier<Joystick> joystickSupplier;
 
   public Arm(Supplier<Joystick> joystickSupplier) {
+    this.joystickSupplier = joystickSupplier;
+    
     if (!Constants.ENABLE_ARM) {
       System.out.println("Arm Disabled");
       return;
     }
-
-    this.joystickSupplier = joystickSupplier;
 
     lift1.restoreFactoryDefaults();
     lift2.restoreFactoryDefaults();
@@ -152,6 +152,10 @@ public class Arm extends SubsystemBase {
   }
 
   public void resetPID() {
+    if (!Constants.ENABLE_ARM) {
+      return;
+    }
+
     liftPID.reset();
     extendPID.reset();
   }

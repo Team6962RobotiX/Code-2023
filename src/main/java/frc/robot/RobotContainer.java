@@ -47,6 +47,8 @@ public class RobotContainer {
   private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm(() -> driveJoystick);
   private final PneumaticClaw claw = new PneumaticClaw();
+  private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
+  private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,6 +64,8 @@ public class RobotContainer {
     
     new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
     new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+
+    new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
