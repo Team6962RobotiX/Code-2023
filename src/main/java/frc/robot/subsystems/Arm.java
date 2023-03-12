@@ -64,7 +64,7 @@ public class Arm extends SubsystemBase {
 
   public Arm(Supplier<Joystick> joystickSupplier) {
     this.joystickSupplier = joystickSupplier;
-    
+
     if (!Constants.ENABLE_ARM) {
       System.out.println("Arm Disabled");
       return;
@@ -124,8 +124,8 @@ public class Arm extends SubsystemBase {
     liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
     liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
-    // targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
-    
+    targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
+
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
 
