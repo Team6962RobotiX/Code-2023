@@ -39,8 +39,15 @@ public final class Constants {
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
+<<<<<<< Updated upstream
   public static final double DRIVE_ORIENT_KP = 0.0075;
 
+=======
+  public static final double WHEEL_TO_CENTER = DRIVE_TRACK_WIDTH / 2.0; 
+  public static final double ROBOT_ROTATION_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_TO_CENTER;
+
+  public static final double DRIVE_ORIENT_KP = 0;
+>>>>>>> Stashed changes
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
   public static final double DRIVE_POS_KD = 0.56287;

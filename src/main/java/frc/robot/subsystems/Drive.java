@@ -77,9 +77,17 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
-
-
+    System.out.println(leftBankEncoder.getPosition());
+    System.out.println(rightBankEncoder.getPosition());
+    
     // This method will be called once per scheduler run
+  }
+
+  public double getLeftBankEncoder() {
+    return leftBankEncoder.getPosition();
+  }
+  public double getRightBankEncoder() {
+    return rightBankEncoder.getPosition();
   }
 
   public Pose2d getPose() {
