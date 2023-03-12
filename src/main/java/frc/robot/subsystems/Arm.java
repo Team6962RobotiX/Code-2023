@@ -124,8 +124,9 @@ public class Arm extends SubsystemBase {
     liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
     liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
-    targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
-
+    if (joystickSupplier.get().getRawButton(3)) {
+      targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
+    }
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
 
