@@ -94,11 +94,12 @@ public class Arm extends SubsystemBase {
     liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
     extendPID = new PIDController(Constants.ARM_EXTEND_KP, Constants.ARM_EXTEND_KI, Constants.ARM_EXTEND_KD);
 
+    // targetLiftAngle = getLiftAngle();
     targetLiftAngle = getLiftAngle();
     targetExtendMeters = getExtendMeters();
 
-    setLiftAngle(targetLiftAngle);
-    setLiftAngle(targetExtendMeters);
+    updateAngleSetpoint(targetLiftAngle);
+    updateExtendSetpoint(targetExtendMeters);
 
     liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE);
     extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
@@ -119,14 +120,14 @@ public class Arm extends SubsystemBase {
       return;
     }
 
+    System.out.println(getExtendMeters());
+
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
-    liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
-    liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
     if (joystickSupplier.get().getRawButton(3)) {
       targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
     }
+
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
 
@@ -136,8 +137,8 @@ public class Arm extends SubsystemBase {
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
 
-    // System.out.println("getExtendMeters()");
-    // System.out.println(getExtendMeters());
+    System.out.println("getExtendMeters()");
+    System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
@@ -229,7 +230,7 @@ public class Arm extends SubsystemBase {
     angle = Math.min(angle, Constants.ARM_LIFT_MAX_ANGLE);
     angle = Math.max(angle, getMinLiftAngle());
 
-    liftPID.setSetpoint(targetLiftAngle);
+    liftPID.setSetpoint(angle);
   }
 
   private void setLiftAngle(double angle) {
@@ -242,9 +243,9 @@ public class Arm extends SubsystemBase {
 
   private void updateExtendSetpoint(double meters) {
     meters = Math.min(meters, getMaxExtendMeters());
-    meters = Math.max(meters, 0.05);
+    meters = Math.max(meters, 0.02);
 
-    extendPID.setSetpoint(targetExtendMeters);
+    extendPID.setSetpoint(meters);
   }
 
   public void setIdleMode(CANSparkMax.IdleMode idleMode) {

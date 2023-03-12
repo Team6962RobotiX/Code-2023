@@ -30,7 +30,7 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     if (!Constants.ENABLE_LIMELIGHT) {
-      System.out.println("Vision Disabled");
+      // System.out.println("Vision Disabled");
       return;
     }
     limelightData = LimelightHelpers.getLatestResults(name);

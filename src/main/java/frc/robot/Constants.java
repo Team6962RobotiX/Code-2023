@@ -17,11 +17,11 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
   // Enabled Systems
-  public static final boolean ENABLE_DRIVE = false;
-  public static final boolean ENABLE_BALANCE = false;
+  public static final boolean ENABLE_DRIVE = true;
+  public static final boolean ENABLE_BALANCE = true;
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
   public static final boolean ENABLE_LIMELIGHT = false;
 
   // TODO: make sure arm is fully down before starting robot
@@ -30,7 +30,7 @@ public final class Constants {
   public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
 
-  public static final double DRIVE_FINE_CONTROL = 0.05;
+  public static final double DRIVE_FINE_CONTROL_POWER = 0.1;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
   public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
@@ -94,7 +94,7 @@ public final class Constants {
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
   public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.4; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.05; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 
 
   // Lifting
@@ -107,7 +107,7 @@ public final class Constants {
 
   // PID & FF Config
   public static final double ARM_EXTEND_KP = 2.5;
-  public static final double ARM_EXTEND_KI = 1.5;
+  public static final double ARM_EXTEND_KI = 4;
   public static final double ARM_EXTEND_KD = 0;
 
   // PID

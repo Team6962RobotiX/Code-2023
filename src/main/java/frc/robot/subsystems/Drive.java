@@ -47,11 +47,6 @@ public class Drive extends SubsystemBase {
   private IMU IMU;
 
   public Drive(IMU IMU) {
-    if (!Constants.ENABLE_DRIVE) {
-      System.out.println("Drive Disabled");
-      return;
-    }
-
     this.IMU = IMU;
 
     leftBank1.restoreFactoryDefaults();
@@ -77,7 +72,10 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
-
+    if (!Constants.ENABLE_DRIVE) {
+      drive.tankDrive(0, 0);
+      return;
+    }
 
     // This method will be called once per scheduler run
   }
