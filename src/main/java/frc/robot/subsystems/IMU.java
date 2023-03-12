@@ -40,6 +40,10 @@ public class IMU extends SubsystemBase {
     return IMU.getRoll();
   }
 
+  public AHRS getIMU() {
+    return IMU;
+  }
+
   public Rotation2d getRotation2d() {
     return IMU.getRotation2d();
   }

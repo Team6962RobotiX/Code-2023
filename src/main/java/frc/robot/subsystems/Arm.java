@@ -50,6 +50,7 @@ public class Arm extends SubsystemBase {
 
   double targetExtendMeters;
   double targetLiftAngle;
+  double clampedExtendMeters;
 
   private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
@@ -118,13 +119,15 @@ public class Arm extends SubsystemBase {
       return;
     }
 
+    setIdleMode(CANSparkMax.IdleMode.kBrake);
+
     liftPID.setP(P.getDouble(Constants.ARM_LIFT_KP));
     liftPID.setI(I.getDouble(Constants.ARM_LIFT_KI));
     liftPID.setD(D.getDouble(Constants.ARM_LIFT_KD));
-    targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
+    // targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
     
-    setLiftAngle(targetLiftAngle);
-    setExtendMeters(targetExtendMeters);
+    updateAngleSetpoint(targetLiftAngle);
+    updateExtendSetpoint(targetExtendMeters);
 
     double liftBasePower = liftFF.calculate(getLiftAngle(), 0, 0);
     double liftPIDPower = liftPID.calculate(getLiftAngle());
@@ -136,7 +139,7 @@ public class Arm extends SubsystemBase {
     // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
-    System.out.println(getMaxExtendMeters() - getExtendMeters());
+    // System.out.println(getMaxExtendMeters() - getExtendMeters());
     setExtendPower(extendPIDPower);
 
     // This method will be called once per scheduler run
@@ -221,20 +224,24 @@ public class Arm extends SubsystemBase {
     lift.set(power);
   }
 
-  private void setLiftAngle(double angle) {
+  private void updateAngleSetpoint(double angle) {
     angle = Math.min(angle, Constants.ARM_LIFT_MAX_ANGLE);
     angle = Math.max(angle, getMinLiftAngle());
-
-    targetLiftAngle = angle;
 
     liftPID.setSetpoint(targetLiftAngle);
   }
 
+  private void setLiftAngle(double angle) {
+    targetLiftAngle = angle;
+  }
+
   private void setExtendMeters(double meters) {
+    targetExtendMeters = meters;
+  }
+
+  private void updateExtendSetpoint(double meters) {
     meters = Math.min(meters, getMaxExtendMeters());
     meters = Math.max(meters, 0.05);
-
-    targetExtendMeters = meters;
 
     extendPID.setSetpoint(targetExtendMeters);
   }
@@ -249,7 +256,8 @@ public class Arm extends SubsystemBase {
     targetY -= Constants.ARM_HEIGHT;
 
     setExtendMeters(Math.sqrt(targetX * targetX + targetY * targetY) - Constants.ARM_STARTING_LENGTH);
-    setLiftAngle(Math.atan(targetY / targetX));
+    System.out.println(Math.atan(targetX / targetY) / Math.PI * 180);
+    setLiftAngle(Math.abs(Math.atan(targetX / targetY) / Math.PI * 180));
   }
 
   public CommandBase coast() {

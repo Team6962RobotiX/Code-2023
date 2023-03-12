@@ -59,11 +59,15 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driveJoystick, 5).onTrue(claw.close());
-    new JoystickButton(driveJoystick, 3).onTrue(claw.open());
+    new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
+    // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
     
-    new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
-    new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+    // new JoystickButton(driveJoystick, 7).onTrue(arm.toPosition(1.68, 1.4));
+    new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
+    new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
+
+    // new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
+    // new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
     new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(topLimelight, drive, arm));
 

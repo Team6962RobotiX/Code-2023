@@ -2,6 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -53,8 +57,6 @@ public class AutoOrient extends CommandBase {
             }
 
             LimelightHelpers.LimelightTarget_Retro target = camera.getTargetingResults().targets_Retro[0];
-            // targetPosZ = target.getTargetPose_CameraSpace().getZ();
-            // targetPosY = target.getTargetPose_CameraSpace().getY();
 
         } else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
             if (camera.getTargetingResults().targets_Detector.length == 0) {
@@ -70,11 +72,25 @@ public class AutoOrient extends CommandBase {
         double PIDPower = orientPID.calculate(tx);
         drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
 
-        double[] pose = LimelightHelpers.getTargetPose_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
+        double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
 
-        for (Double x : pose) {
-            System.out.println(x);
-        }
+        // System.out.println(pose.length);
+
+        Pose3d pose3D = new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(Units.degreesToRadians(pose[3]), Units.degreesToRadians(pose[4]), Units.degreesToRadians(pose[5])));
+
+        System.out.println(pose3D.getX());
+        System.out.println(pose3D.getY());
+        System.out.println(pose3D.getZ());
+
+        // double[] defaultPose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        
+        // double[] pose = NetworkTableInstance.getDefault().getTable(Constants.TOP_LIMELIGHT_NAME).getEntry("camerapose_targetspace").getDoubleArray(defaultPose);
+        
+        // System.out.println("Distance");
+        // System.out.println(Math.abs(pose[1]));
+        // System.out.println("Height");
+        // System.out.println(Math.abs(pose[0]) + Constants.TOP_LIMELIGHT_HEIGHT);
+        // System.out.println(pose[2]);
         
         // arm.setTargetPosition(targetPosX, targetPosY);
         // System.out.println("targetPosZ");

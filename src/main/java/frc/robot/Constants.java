@@ -19,9 +19,9 @@ public final class Constants {
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = false;
+  public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
   public static final boolean ENABLE_LIMELIGHT = true;
 
 
@@ -50,7 +50,7 @@ public final class Constants {
   public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
 
   // Joystick Dead-zones
-  public static final double TWIST_DEADZONE = 0.2; // Joystick deadzone for turning
+  public static final double TWIST_DEADZONE = 0.3; // Joystick deadzone for turning
   public static final double STRAIGHT_DEADZONE = 0.1; // Joystick deadzone for turning
   public static final double THROTTLE_DEADZONE = 0.1; // Joystick deadzone for arm lifting
 
@@ -80,7 +80,7 @@ public final class Constants {
 
   // Arm Positioning
   public static final double ARM_MAX_LENGTH = 1.778; // Meters from pivot when fully extended
-  public static final double ARM_PADDING_HEIGHT = 0.15;
+  public static final double ARM_PADDING_HEIGHT = 0.14;
   public static final double ARM_STARTING_LENGTH = 1.05; // Meters from pivot when fully retracted
   public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground

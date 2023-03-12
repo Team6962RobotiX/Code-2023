@@ -27,7 +27,7 @@ public class PneumaticClaw extends SubsystemBase {
     }
 
     compressor.enableDigital();
-    solenoid.set(DoubleSolenoid.Value.kOff);
+    solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   @Override
@@ -46,5 +46,9 @@ public class PneumaticClaw extends SubsystemBase {
 
   public CommandBase open() {
     return this.runOnce(() -> solenoid.set(DoubleSolenoid.Value.kReverse));
+  }
+
+  public CommandBase toggle() {
+    return this.runOnce(() -> solenoid.toggle());
   }
 }
