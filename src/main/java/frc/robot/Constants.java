@@ -17,13 +17,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
   // Enabled Systems
-  public static final boolean ENABLE_DRIVE = true;
-  public static final boolean ENABLE_BALANCE = true;
+  public static final boolean ENABLE_DRIVE = false;
+  public static final boolean ENABLE_BALANCE = false;
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
-  public static final boolean ENABLE_LIMELIGHT = true;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  public static final boolean ENABLE_LIMELIGHT = false;
 
+  // TODO: make sure arm is fully down before starting robot
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power

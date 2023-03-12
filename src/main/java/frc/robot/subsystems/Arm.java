@@ -140,7 +140,7 @@ public class Arm extends SubsystemBase {
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
-    // setExtendPower(extendPIDPower);
+    setExtendPower(extendPIDPower);
 
     // This method will be called once per scheduler run
   }
@@ -253,11 +253,12 @@ public class Arm extends SubsystemBase {
   }
 
   public void setTargetPosition(double targetX, double targetY) {
-    targetY -= Constants.ARM_HEIGHT;
-
-    setExtendMeters(Math.sqrt(targetX * targetX + targetY * targetY) - Constants.ARM_STARTING_LENGTH);
-    System.out.println(Math.atan(targetX / targetY) / Math.PI * 180);
-    setLiftAngle(Math.abs(Math.atan(targetX / targetY) / Math.PI * 180));
+    setExtendMeters(Math.sqrt(Math.pow(targetX, 2) + Math.pow(Constants.ARM_HEIGHT - targetY, 2)) - Constants.ARM_STARTING_LENGTH);
+    if (targetY > Constants.ARM_HEIGHT) {
+      setLiftAngle(90 - (Math.atan(targetX / (Constants.ARM_HEIGHT - targetY)) / Math.PI * 180));
+    } else {
+      setLiftAngle(Math.atan(targetX / (Constants.ARM_HEIGHT - targetY)) / Math.PI * 180);
+    }
   }
 
   public CommandBase coast() {

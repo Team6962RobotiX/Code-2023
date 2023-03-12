@@ -62,7 +62,7 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
     // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
-    // new JoystickButton(driveJoystick, 7).onTrue(arm.toPosition(1.68, 1.4));
+    new JoystickButton(driveJoystick, 7).onTrue(arm.toPosition(1.68, 1.4));
     // new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
     // new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
 
