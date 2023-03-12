@@ -42,25 +42,25 @@ public class JoystickDrive extends CommandBase {
 
     double POV = joystick.getPOV();
 
-    double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
-    double turningPower = Constants.mapPower(twistAxis, Constants.DRIVE_BASE_TURN_POWER, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
-    
     if (POV == 315 || POV == 0 || POV == 45) {
-      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
+      straightAxis += Constants.DRIVE_FINE_CONTROL;
     }
 
     if (POV == 135 || POV == 180 || POV == 225) {
-      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+      straightAxis -= Constants.DRIVE_FINE_CONTROL;
     }
 
     if (POV == 45 || POV == 90 || POV == 135) {
-      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+      twistAxis -= Constants.DRIVE_FINE_CONTROL;
     }
 
     if (POV == 225 || POV == 270 || POV == 315) {
-      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+      twistAxis += Constants.DRIVE_FINE_CONTROL;
     }
-    
+
+    double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
+    double turningPower = Constants.mapPower(twistAxis, Constants.DRIVE_BASE_TURN_POWER, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
+
     drive.arcadeDrive(straightPower, turningPower);
   }
 

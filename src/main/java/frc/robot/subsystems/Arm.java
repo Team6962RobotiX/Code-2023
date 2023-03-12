@@ -140,7 +140,7 @@ public class Arm extends SubsystemBase {
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
-    setExtendPower(extendPIDPower);
+    // setExtendPower(extendPIDPower);
 
     // This method will be called once per scheduler run
   }

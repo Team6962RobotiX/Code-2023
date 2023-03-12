@@ -29,7 +29,7 @@ public final class Constants {
   public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
 
-  public static final double DRIVE_FINE_CONTROL_POWER = 0.3;
+  public static final double DRIVE_FINE_CONTROL = 0.05;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
   public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
@@ -85,8 +85,8 @@ public final class Constants {
   public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
-  public static final double[] ARM_PRESET_MID_NODE = {1.0, 1.0};
-  public static final double[] ARM_PRESET_TOP_NODE = {1.0, 1.0};
+  public static final double[] ARM_PRESET_MID_NODE = { 1.0, 1.0 };
+  public static final double[] ARM_PRESET_TOP_NODE = { 1.0, 1.0 };
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
