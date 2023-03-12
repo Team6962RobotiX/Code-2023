@@ -255,11 +255,7 @@ public class Arm extends SubsystemBase {
 
   public void setTargetPosition(double targetX, double targetY) {
     setExtendMeters(Math.sqrt(Math.pow(targetX, 2) + Math.pow(Constants.ARM_HEIGHT - targetY, 2)) - Constants.ARM_STARTING_LENGTH);
-    if (targetY > Constants.ARM_HEIGHT) {
-      setLiftAngle(90 - (Math.atan(targetX / (Constants.ARM_HEIGHT - targetY)) / Math.PI * 180));
-    } else {
-      setLiftAngle(Math.atan(targetX / (Constants.ARM_HEIGHT - targetY)) / Math.PI * 180);
-    }
+    setLiftAngle((Math.atan((targetY - Constants.ARM_HEIGHT) / targetX) / Math.PI * 180) + 90);
   }
 
   public CommandBase coast() {
