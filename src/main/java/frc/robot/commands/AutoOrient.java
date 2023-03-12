@@ -29,6 +29,17 @@ public class AutoOrient extends CommandBase {
     private Arm arm;
     private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
+    private double cameraHeight = 0.0;
+    private double cameraAngle = 0.0;
+    private double cameraPixels = 0.0;
+    private double focalLength = 0.0;
+
+    private double heightMid = 0.0;
+    private double heightTall = 0.0;
+    private double realArea = 0.0;
+
+    private double dist = 0.0;
+
     /** An example command that uses an example subsystem. */
     public AutoOrient(Limelight camera, Drive drive, Arm arm) {
         this.camera = camera;
@@ -47,9 +58,11 @@ public class AutoOrient extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double targetPosZ = 0;
-        double targetPosY = 0;
-        double tx = 0;
+        double targetPosZ = 0.0;
+        double targetPosY = 0.0;
+        double tx = 0.0;
+        double ty = 0.0;
+        double ta = 0.0;
 
         if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
             if (camera.getTargetingResults().targets_Retro.length == 0) {
@@ -72,15 +85,31 @@ public class AutoOrient extends CommandBase {
         double PIDPower = orientPID.calculate(tx);
         drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
 
-        double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
+        // double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
 
         // System.out.println(pose.length);
 
-        Pose3d pose3D = new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(Units.degreesToRadians(pose[3]), Units.degreesToRadians(pose[4]), Units.degreesToRadians(pose[5])));
+        // ---------------------------------------------------------------
 
-        System.out.println(pose3D.getX());
-        System.out.println(pose3D.getY());
-        System.out.println(pose3D.getZ());
+        // Pose3d pose3D = new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(Units.degreesToRadians(pose[3]), Units.degreesToRadians(pose[4]), Units.degreesToRadians(pose[5])));
+
+        // System.out.println(pose3D.getX());
+        // System.out.println(pose3D.getY());
+        // System.out.println(pose3D.getZ());
+
+        // ---------------------------------------------------------------
+
+        ty = LimelightHelpers.getTY(camera.getName());
+        ta = LimelightHelpers.getTA(camera.getName());
+
+        double forwardDistanceApprox = getForwardDistanceApprox(ta);
+        System.out.println(forwardDistanceApprox);
+        double targetHeight = determineTargetHeight(forwardDistanceApprox, ty);
+        System.out.println(targetHeight);
+        double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
+        System.out.println(forwardDistancePrecise);
+
+        dist = forwardDistancePrecise;
 
         // double[] defaultPose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         
@@ -107,6 +136,37 @@ public class AutoOrient extends CommandBase {
         drive.arcadeDrive(0, 0);
     }
 
+    public double getForwardDistanceApprox(double areaPercentage) {
+        double forwardDistance = focalLength * Math.sqrt(realArea / (areaPercentage * cameraPixels));
+        return forwardDistance;
+    }
+
+    public double determineTargetHeight(double forwardDistanceApprox, double targetAngle) {
+        double targetAngleRad = targetAngle * (Math.PI / 180.0);
+        double cameraAngleRad = cameraAngle * (Math.PI / 180.0);
+
+        // (h2 - h1) = tan(a1 + a2) * d
+        double targetHeightApprox = (Math.tan(targetAngleRad + cameraAngleRad) * forwardDistanceApprox) + cameraHeight;
+
+        if (Math.abs(targetHeightApprox - heightTall) < Math.abs(targetHeightApprox - heightMid)) {
+            return heightTall;
+        } else {
+            return heightMid;
+        }
+    }
+
+    public double getForwardDistancePrecise(double targetHeight, double targetAngle) {
+        double targetAngleRad = targetAngle * (Math.PI / 180.0);
+        double cameraAngleRad = cameraAngle * (Math.PI / 180.0);
+
+        double forwardDistance = (targetHeight - cameraHeight) / Math.tan(targetAngleRad + cameraAngleRad);
+        return forwardDistance;
+    }
+
+    public double getForwardDistance() {
+        return dist;
+    }
+    
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
