@@ -23,11 +23,24 @@ public class DriveStraight extends CommandBase {
   private double drivePower;
   private boolean isFinished = false;
 
+  private boolean rollCheck = false;
+  private double rollCuttoff = 20.0;
+
   public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower) {
     this.drive = drive;
     this.imu = imu;
     this.drivePower = drivePower;
     this.desiredDistance = desiredDistance;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drive, imu);
+  }
+
+  public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower, boolean rollCheck) {
+    this.drive = drive;
+    this.imu = imu;
+    this.drivePower = drivePower;
+    this.desiredDistance = desiredDistance;
+    this.rollCheck = rollCheck;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive, imu);
   }
@@ -56,6 +69,11 @@ public class DriveStraight extends CommandBase {
     } else {
       isFinished = true;
     }
+
+    if (rollCheck && imu.getIMU().getRoll() > rollCuttoff || imu.getIMU().getRoll() < -rollCuttoff) {
+      isFinished = true;
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
