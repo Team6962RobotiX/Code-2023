@@ -86,7 +86,7 @@ public class RobotContainer {
 
     // testing
     return new SequentialCommandGroup(
-      new DriveStraight(drive, IMU, 2, 0.3, true)
+      new DriveStraight(drive, IMU, 1, 0.3)
     );
   }
 
