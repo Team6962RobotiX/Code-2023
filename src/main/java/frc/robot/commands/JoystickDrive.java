@@ -52,7 +52,6 @@ public class JoystickDrive extends CommandBase {
       }
       straightPower = Math.max(Math.abs(straightPower), Constants.DRIVE_BASE_POWER) * sign;
       straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
-      System.out.println(straightPower);
     }
 
     if (POV == 135 || POV == 180 || POV == 225) {

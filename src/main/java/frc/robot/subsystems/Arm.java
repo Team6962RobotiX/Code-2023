@@ -120,7 +120,6 @@ public class Arm extends SubsystemBase {
       return;
     }
 
-    System.out.println(getExtendMeters());
 
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -137,8 +136,8 @@ public class Arm extends SubsystemBase {
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
 
-    System.out.println("getExtendMeters()");
-    System.out.println(getExtendMeters());
+    // System.out.println("getExtendMeters()");
+    // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());

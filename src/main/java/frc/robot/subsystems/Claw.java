@@ -19,8 +19,8 @@ public class Claw extends SubsystemBase {
 
   CANSparkMax clawGrab = new CANSparkMax(Constants.CAN_CLAW_GRAB, CANSparkMax.MotorType.kBrushless);;
   DigitalInput clawStop = new DigitalInput(Constants.DIO_CLAW_GRAB_MICRO_SWITCH);;
-  RelativeEncoder clawGrabEncoder = clawGrab.getEncoder();;
-
+  RelativeEncoder clawGrabEncoder = clawGrab.getEncoder();
+  
   public Claw() {
     if (!Constants.ENABLE_CLAW) {
       System.out.println("Claw Disabled");

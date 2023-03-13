@@ -65,13 +65,14 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, 12).onTrue(arm.toPosition(1.15, 0.0)); // BOTTOM
     new JoystickButton(driveJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
     new JoystickButton(driveJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
+    new JoystickButton(driveJoystick,9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.2)); // DOUBLE SUBSTATION
     new JoystickButton(driveJoystick, 11).onTrue(arm.liftToAngle(0));
     new JoystickButton(driveJoystick, 11).onTrue(arm.extendToLength(0));
-
+    
     // new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
     // new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
-    new JoystickButton(driveJoystick, 9).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    new JoystickButton(driveJoystick, 7).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
