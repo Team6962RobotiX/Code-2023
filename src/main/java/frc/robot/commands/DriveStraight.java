@@ -24,7 +24,7 @@ public class DriveStraight extends CommandBase {
   private boolean isFinished = false;
 
   private boolean rollCheck = false;
-  private double rollCuttoff = 20.0;
+  private double rollCuttoff = 12.0;
 
   public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower) {
     this.drive = drive;
@@ -58,20 +58,22 @@ public class DriveStraight extends CommandBase {
   @Override
   public void execute() {      
 
-    // System.out.println((drive.getLeftBankEncoder() - startDistance) - desiredDistance);
-
-    if (drive.getLeftBankEncoder() - startDistance < (desiredDistance - distanceTolerance)) {
-      //System.out.println("Forward");
+    if (rollCheck) {
       drive.arcadeDrive(drivePower, 0);
-    } else if (drive.getLeftBankEncoder() - startDistance > (desiredDistance + distanceTolerance)) {
-      //System.out.println("Backward");
-      drive.arcadeDrive(-drivePower, 0);
-    } else {
-      isFinished = true;
+      if (imu.getIMU().getRoll() > rollCuttoff || imu.getIMU().getRoll() < -rollCuttoff) {
+        isFinished = true;
+      }
     }
-
-    if (rollCheck && imu.getIMU().getRoll() > rollCuttoff || imu.getIMU().getRoll() < -rollCuttoff) {
-      isFinished = true;
+    else {
+      if (drive.getLeftBankEncoder() - startDistance < (desiredDistance - distanceTolerance)) {
+        //System.out.println("Forward");
+        drive.arcadeDrive(drivePower, 0);
+      } else if (drive.getLeftBankEncoder() - startDistance > (desiredDistance + distanceTolerance)) {
+        //System.out.println("Backward");
+        drive.arcadeDrive(-drivePower, 0);
+      } else {
+        isFinished = true;
+      }
     }
     
   }
