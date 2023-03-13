@@ -13,25 +13,49 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DriveForward extends CommandBase {
+public class DriveStraight extends CommandBase {
   private final Drive drive;
+  private final IMU imu;
 
-  public DriveForward(Drive drive, double distance) {
+  private double startDistance;
+  private double distanceTolerance = 0.05;
+  private double desiredDistance = 0;
+  private double drivePower;
+  private boolean isFinished = false;
+
+  public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower) {
     this.drive = drive;
+    this.imu = imu;
+    this.drivePower = drivePower;
+    this.desiredDistance = desiredDistance;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
+    addRequirements(drive, imu);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    // drive.resetEncoders();
+    startDistance = drive.getLeftBankEncoder();
+    System.out.println("RUNNING");
   }
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    drive.arcadeDrive(0.1, 0);
+  public void execute() {      
+
+    // System.out.println((drive.getLeftBankEncoder() - startDistance) - desiredDistance);
+
+    if (drive.getLeftBankEncoder() - startDistance < (desiredDistance - distanceTolerance)) {
+      //System.out.println("Forward");
+      drive.arcadeDrive(drivePower, 0);
+    } else if (drive.getLeftBankEncoder() - startDistance > (desiredDistance + distanceTolerance)) {
+      //System.out.println("Backward");
+      drive.arcadeDrive(-drivePower, 0);
+    } else {
+      isFinished = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +67,6 @@ public class DriveForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drive.getLeftBankEncoder() > 1;
+    return isFinished;
   }
 }

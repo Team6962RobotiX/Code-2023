@@ -17,9 +17,9 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
   // Enabled Systems
-  public static final boolean ENABLE_DRIVE = false;
+  public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = false;
-  public static final boolean ENABLE_ARM = true;
+  public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
   public static final boolean ENABLE_LIMELIGHT = false;
@@ -36,18 +36,11 @@ public final class Constants {
   public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
-  public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
+  public static final double GEARBOX_RATIO = 1.0 / 10.71; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
-<<<<<<< Updated upstream
   public static final double DRIVE_ORIENT_KP = 0.0075;
 
-=======
-  public static final double WHEEL_TO_CENTER = DRIVE_TRACK_WIDTH / 2.0; 
-  public static final double ROBOT_ROTATION_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_TO_CENTER;
-
-  public static final double DRIVE_ORIENT_KP = 0;
->>>>>>> Stashed changes
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
   public static final double DRIVE_POS_KD = 0.56287;
@@ -64,10 +57,10 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 10; // 10 for Main Chassis, 1 For Test Chassis
-  public static final int CAN_LEFT_DRIVE_2 = 28; // 28 for Main Chassis, 2 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_1 = 7; // 7 for Main Chassis, 3 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_1 = 1; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_2 = 2; // 28 for Main Chassis, 2 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_1 = 3; // 7 for Main Chassis, 3 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_2 = 4; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 13;
