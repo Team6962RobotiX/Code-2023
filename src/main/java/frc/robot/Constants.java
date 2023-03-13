@@ -22,7 +22,7 @@ public final class Constants {
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
-  public static final boolean ENABLE_LIMELIGHT = false;
+  public static final boolean ENABLE_LIMELIGHT = true;
 
   // TODO: make sure arm is fully down before starting robot
 
@@ -133,7 +133,7 @@ public final class Constants {
   public static final double AUTONOMOUS_RAMSETE_ZETA = 0;
 
   // Limelight Config
-  public static final String TOP_LIMELIGHT_NAME = "limelight-top";
+  public static final String TOP_LIMELIGHT_NAME = "limelight-test";
   public static final String BOTTOM_LIMELIGHT_NAME = "limelight-bottom";
 
   // Align Config

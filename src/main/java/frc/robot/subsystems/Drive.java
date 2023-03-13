@@ -75,6 +75,9 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (!Constants.ENABLE_DRIVE) {
+      return;
+    }
     odometry.update(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
 

@@ -172,7 +172,7 @@ public class Arm extends SubsystemBase {
   public double getExtendMeters() {
     return extendEncoder.getPosition();
   }
-
+  
   public double getLiftAngle() {
     return liftEncoder.getDistance();
   }

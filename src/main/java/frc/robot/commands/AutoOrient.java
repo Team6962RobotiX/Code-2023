@@ -25,29 +25,30 @@ import java.lang.Math;
 public class AutoOrient extends CommandBase {
 
     private Limelight camera;
-    private Drive drive;
-    private Arm arm;
-    private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
+    // private Drive drive;
+    // private Arm arm;
+    // private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
-    private double cameraHeight = 0.0;
-    private double cameraAngle = 0.0;
-    private double cameraPixels = 0.0;
-    private double focalLength = 0.0;
+    private double cameraHeight = 0.76;
+    private double cameraAngle = 4.5;
+    private double cameraPixels = 640*480;
+    private double focalLength = 0.690;
 
-    private double heightMid = 0.0;
-    private double heightTall = 0.0;
-    private double realArea = 0.0;
+    private double heightMid = 0.606;
+    private double heightTall = 1.115;
+    private double realArea = (0.0318/2) * 0.1016;
 
     private double dist = 0.0;
 
     /** An example command that uses an example subsystem. */
-    public AutoOrient(Limelight camera, Drive drive, Arm arm) {
+    // reinsert drive and arm arguments
+    public AutoOrient(Limelight camera) {
         this.camera = camera;
-        this.drive = drive;
-        this.arm = arm;
-        orientPID.setTolerance(1);
-        orientPID.setSetpoint(0);
-        addRequirements(camera, drive, arm);
+        // this.drive = drive;
+        // this.arm = arm;
+        // orientPID.setTolerance(1);
+        // orientPID.setSetpoint(0);
+        addRequirements(camera);
     }
 
     // Called when the command is initially scheduled.
@@ -82,8 +83,8 @@ public class AutoOrient extends CommandBase {
 
         tx = LimelightHelpers.getTX(camera.getName());
         
-        double PIDPower = orientPID.calculate(tx);
-        drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
+        // double PIDPower = orientPID.calculate(tx);
+        // drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
 
         // double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
 
@@ -103,13 +104,14 @@ public class AutoOrient extends CommandBase {
         ta = LimelightHelpers.getTA(camera.getName());
 
         double forwardDistanceApprox = getForwardDistanceApprox(ta);
-        System.out.println(forwardDistanceApprox);
+        // System.out.println(forwardDistanceApprox);
         double targetHeight = determineTargetHeight(forwardDistanceApprox, ty);
-        System.out.println(targetHeight);
-        double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
-        System.out.println(forwardDistancePrecise);
+        // System.out.println(targetHeight);
+        double forwardDistancePrecise1 = getForwardDistancePrecise(heightMid, ty);
+        double forwardDistancePrecise2 = getForwardDistancePrecise(heightTall, ty);
+        System.out.println(forwardDistancePrecise1 + " " + forwardDistancePrecise2);
 
-        dist = forwardDistancePrecise;
+        dist = forwardDistancePrecise1;
 
         // double[] defaultPose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         
@@ -133,11 +135,11 @@ public class AutoOrient extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drive.arcadeDrive(0, 0);
+        // drive.arcadeDrive(0, 0);
     }
 
     public double getForwardDistanceApprox(double areaPercentage) {
-        double forwardDistance = focalLength * Math.sqrt(realArea / (areaPercentage * cameraPixels));
+        double forwardDistance = focalLength * Math.sqrt(realArea / ((areaPercentage / 100) * cameraPixels));
         return forwardDistance;
     }
 

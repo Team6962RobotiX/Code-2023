@@ -43,39 +43,49 @@ public class RobotContainer {
   private final Joystick driveJoystick = new Joystick(Constants.USB_DRIVE_JOYSTICK);
   private final Joystick utilityJoystick = new Joystick(Constants.USB_UTILITY_JOYSTICK);
 
-  private final IMU IMU = new IMU();
-  private final Drive drive = new Drive(IMU);
-  private final Arm arm = new Arm(() -> driveJoystick);
-  private final PneumaticClaw claw = new PneumaticClaw();
+  // private final IMU IMU = new IMU();
+  // private final Drive drive = new Drive(IMU);
+  // private final Arm arm = new Arm(() -> driveJoystick);
+  // private final PneumaticClaw claw = new PneumaticClaw();
   private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
-  private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
+  // private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
+    topLimelight.setDefaultCommand(new AutoOrient(topLimelight));
+    // if (Constants.ENABLE_DRIVE) {
+    //   drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
+    // }
 
     // Configure the trigger bindings
     configureBindings();
   }
 
   private void configureBindings() {
-    new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
-    // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
+    // if (Constants.ENABLE_CLAW) {
+    //   new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
+    // }
+    // // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
-    new JoystickButton(driveJoystick, 7).onTrue(arm.toPosition(1.68, 1.4));
-    // new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
-    // new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
+    // if (Constants.ENABLE_ARM) {
+    //   new JoystickButton(driveJoystick, 7).onTrue(arm.toPosition(1.68, 1.4));
+    //   // new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
+    //   // new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
 
-    new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
-    new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+    //   new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
+    //   new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+    // }
 
-    new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    // if (Constants.ENABLE_LIMELIGHT) {
+    //   new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    // }
 
-    // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
-    // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
-    // new JoystickButton(driveJoystick, 12).or(new JoystickButton(driveJoystick, 10)).onFalse(arm.setLiftPowerCmd(0));
-
-    new JoystickButton(driveJoystick, 2).whileTrue(new AutoBalance(IMU, drive));
+    // // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
+    // // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
+    // // new JoystickButton(driveJoystick, 12).or(new JoystickButton(driveJoystick, 10)).onFalse(arm.setLiftPowerCmd(0));
+    // if (Constants.ENABLE_DRIVE) {
+    //   new JoystickButton(driveJoystick, 2).whileTrue(new AutoBalance(IMU, drive));
+    // }
     // new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
     // new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
 
@@ -121,7 +131,9 @@ public class RobotContainer {
   }
 
   public void disabledPeriodic() {
-    arm.resetPID();
+    // if (Constants.ENABLE_ARM) {
+    //   arm.resetPID();
+    // }
   }
 
   // ExtendArm
