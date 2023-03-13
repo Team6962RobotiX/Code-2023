@@ -54,6 +54,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
+    // topLimelight.setDefaultCommand(new AutoOrient(topLimelight, drive, arm));
 
     // Configure the trigger bindings
     configureBindings();

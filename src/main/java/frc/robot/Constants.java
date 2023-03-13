@@ -22,7 +22,7 @@ public final class Constants {
   public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
-  public static final boolean ENABLE_LIMELIGHT = false;
+  public static final boolean ENABLE_LIMELIGHT = true;
 
   // TODO: make sure arm is fully down before starting robot
 
