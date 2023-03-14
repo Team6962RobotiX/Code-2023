@@ -30,14 +30,16 @@ public class AutoOrient extends CommandBase {
     private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
     private double cameraHeight = 1.19;
-    private double cameraAngle = 0.0;
+    private double cameraAngle = -0.5;
     private double cameraPixels = 640*480;
-    private double focalLength = 0.690;
+    // private double focalLength = 0.690;
 
-    private double heightMid = 0.606;
+    private double heightMid = 0.606; // Hopefully this is accurate to the arena but this value for now is just for testing with our PVC pipe construction of the game field (Applies to the next variable as well)
     private double heightTall = 1.115;
-    private double realArea = (0.0318/2) * 0.1016;
+    private double realArea = (0.0318/2) * 0.1016; // This value is also specific to our field element prototypes and not the actual game elements
+    private double nodeHeight = 0.0;
 
+    // following variable isn't really for the execute method in this class it's more arm related
     private double dist = 0.0;
 
     /** An example command that uses an example subsystem. */
@@ -112,6 +114,14 @@ public class AutoOrient extends CommandBase {
 
         dist = forwardDistancePrecise;
 
+        /* Upcoming commands:
+            (NOTE: NODE_TIP_HEIGHT_X is the height of the tip of the cone node, depending on the targetHeight, and distToArmJoint is the (vertical, so far) distance from the camera to the joint of the arm that needs to be moved)
+         *  double rotationNeeded = Math.atan((Constants.NODE_TIP_HEIGHT_X - (cameraHeight - distToArmJoint)) / dist) + (90 - startAngle) + EPSILON; <-- epsilon being a certain amount of extra angle we'd want to use to go OVER the node before dropping the game piece DOWN into it
+         *  double extensionNeeded = Math.sqrt(Math.pow(dist, 2) + Math.pow(Constants.NODE_TIP_HEIGHT_X - (cameraHeight - distToArmJoint), 2));
+         *  ---------- Next line is pure pseudocode; fill in with the real extension commands ---------- 
+         *  arm.extend(extensionNeeded, rotationNeeded) <-- polar form
+        */
+
         // double[] defaultPose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         
         // double[] pose = NetworkTableInstance.getDefault().getTable(Constants.TOP_LIMELIGHT_NAME).getEntry("camerapose_targetspace").getDoubleArray(defaultPose);
@@ -145,8 +155,10 @@ public class AutoOrient extends CommandBase {
 
         if (Math.abs(targetAngle) < 6.0) {
             return heightTall;
+            // nodeHeight = Constants.NODE_TIP_HEIGHT_TOP;
         } else {
             return heightMid;
+            // nodeHeight = Constants.NODE_TIP_HEIGHT_MID;
         }
     }
 
