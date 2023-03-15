@@ -27,8 +27,8 @@ public final class Constants {
   // TODO: make sure arm is fully down before starting robot
 
   // Drive Config
-  public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power
-  public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
+  public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power: 0.6
+  public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power: 0.5
 
   public static final double DRIVE_FINE_CONTROL = 0.05;
 

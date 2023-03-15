@@ -103,6 +103,10 @@ public class LimelightHelpers {
         @JsonProperty("ts")
         public double ts;
 
+        // // inserted code
+        // @JsonProperty("pts")
+        // public double[] pts;
+
         public LimelightTarget_Retro() {
             cameraPose_TargetSpace = new double[6];
             robotPose_FieldSpace = new double[6];
@@ -262,6 +266,10 @@ public class LimelightHelpers {
 
         @JsonProperty("typ")
         public double ty_pixels;
+
+        // inserted code
+        // @JsonProperty("pts")
+        // public double[] pts;
 
         public LimelightTarget_Detector() {
         }
@@ -449,6 +457,11 @@ public class LimelightHelpers {
     public static double getTA(String limelightName) {
         return getLimelightNTDouble(limelightName, "ta");
     }
+
+    // inserted code
+    // public static double[] getPTS(String limelightName) {
+    //     return getLimelightNTDoubleArray(limelightName, "pts");
+    // }
 
     public static double getLatency_Pipeline(String limelightName) {
         return getLimelightNTDouble(limelightName, "tl");

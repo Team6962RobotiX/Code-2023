@@ -15,7 +15,6 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightResults;
-
 import frc.robot.subsystems.*;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -31,9 +30,10 @@ public class AutoOrient extends CommandBase {
 
     private double cameraHeight = 1.19;
     private double cameraAngle = -0.5;
-    private double cameraPixels = 640*480;
+    // private double cameraPixels = 2592*1944;
     // private double focalLength = 0.690;
 
+    private double targetHeight;
     private double heightMid = 0.606; // Hopefully this is accurate to the arena but this value for now is just for testing with our PVC pipe construction of the game field (Applies to the next variable as well)
     private double heightTall = 1.115;
     private double realArea = (0.0318/2) * 0.1016; // This value is also specific to our field element prototypes and not the actual game elements
@@ -105,12 +105,32 @@ public class AutoOrient extends CommandBase {
         ty = LimelightHelpers.getTY(camera.getName());
         ta = LimelightHelpers.getTA(camera.getName());
 
-        double targetHeight = determineTargetHeight(ty);
+        if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
+            // System.out.println(LimelightHelpers.getLatestResults(Constants.BOTTOM_LIMELIGHT_NAME).targetingResults.targets_Retro[0]);
+        }
+        else if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
+            System.out.println(LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME).targetingResults.targets_Detector[0].ty);
+            // try {
+            //     wait();
+            // } catch (InterruptedException e) {
+            //     // TODO Auto-generated catch block
+            //     e.printStackTrace();
+            // }
+            // JSONParser parser = new JSONParser();
+            // JSONObject json = (JSONObject) parser.parse(stringToParse)
+            // objectMapper.readTree(Limel);
+            // System.out.println(llresults);
+            // System.out.println("Points: " + points);
+            // System.out.println("JSON !!!!! " + LimelightHelpers.getJSONDump(Constants.TOP_LIMELIGHT_NAME));
+        }
+
+        determineTargetHeight(ty);
         // System.out.println(targetHeight);
+
         double forwardDistancePrecise1 = getForwardDistancePrecise(heightMid, ty);
         double forwardDistancePrecise2 = getForwardDistancePrecise(heightTall, ty);
         double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
-        System.out.println("Distance: " + forwardDistancePrecise + ", Node Height: " + targetHeight);
+        // System.out.println("Distance: " + forwardDistancePrecise + ", Target Height: " + targetHeight);
 
         dist = forwardDistancePrecise;
 
@@ -146,19 +166,24 @@ public class AutoOrient extends CommandBase {
     //     return forwardDistance;
     // }
 
-    public double determineTargetHeight(double targetAngle) {
+    public void determineTargetHeight(double targetAngle) {
         // double targetAngleRad = targetAngle * (Math.PI / 180.0);
         // double cameraAngleRad = cameraAngle * (Math.PI / 180.0);
 
         // (h2 - h1) = tan(a1 + a2) * d
         // double targetHeightApprox = (Math.tan(targetAngleRad + cameraAngleRad) * forwardDistanceApprox) + cameraHeight;
 
-        if (Math.abs(targetAngle) < 6.0) {
-            return heightTall;
-            // nodeHeight = Constants.NODE_TIP_HEIGHT_TOP;
-        } else {
-            return heightMid;
-            // nodeHeight = Constants.NODE_TIP_HEIGHT_MID;
+        if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
+            if (Math.abs(targetAngle) < 6.0) {
+                targetHeight = heightTall;
+                // nodeHeight = Constants.NODE_TIP_HEIGHT_TOP;
+            } else {
+                targetHeight = heightMid;
+                // nodeHeight = Constants.NODE_TIP_HEIGHT_MID;
+            }
+        }
+        else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
+            targetHeight = 0.325;
         }
     }
 
