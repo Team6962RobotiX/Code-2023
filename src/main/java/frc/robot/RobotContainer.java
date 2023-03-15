@@ -87,7 +87,13 @@ public class RobotContainer {
 
     // testing
     return new SequentialCommandGroup(
-      new DriveStraight(drive, IMU, .3, 0.4, true),
+      new ParallelCommandGroup (
+        new DriveStraight(drive, IMU, -.1, 0.4, true), new ToggleClaw(), new ExtendArm(1.15, 0.0)
+      ),
+      new DriveStraight(drive, IMU, 2, 0.4, true),
+      new ToggleClaw(),
+      new ExtendArm(1.6, 1.7),
+      
       new AutoBalance(IMU, drive)
     );
   }
