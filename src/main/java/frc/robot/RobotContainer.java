@@ -53,35 +53,28 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
+    arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
 
     // Configure the trigger bindings
     configureBindings();
   }
 
   private void configureBindings() {
-    new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
-    // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
+    // MAIN DRIVER
 
-    new JoystickButton(driveJoystick, 12).onTrue(arm.toPosition(1.15, 0.0)); // BOTTOM
-    new JoystickButton(driveJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
-    new JoystickButton(driveJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
-    new JoystickButton(driveJoystick,9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.2)); // DOUBLE SUBSTATION
-    new JoystickButton(driveJoystick, 11).onTrue(arm.liftToAngle(0));
-    new JoystickButton(driveJoystick, 11).onTrue(arm.extendToLength(0));
-    
-    // new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
-    // new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+    new JoystickButton(driveJoystick, 12).whileTrue(new AutoBalance(IMU, drive));
+    new JoystickButton(driveJoystick, 1).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
-    new JoystickButton(driveJoystick, 7).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
-    // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
-    // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
-    // new JoystickButton(driveJoystick, 12).or(new JoystickButton(driveJoystick, 10)).onFalse(arm.setLiftPowerCmd(0));
+    // UTILITY DRIVER
+    new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
 
-    new JoystickButton(driveJoystick, 2).whileTrue(new AutoBalance(IMU, drive));
-    // new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
-    // new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
-
+    new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.0)); // BOTTOM
+    new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
+    new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.2)); // DOUBLE SUBSTATION
+    new JoystickButton(utilityJoystick, 11).onTrue(arm.liftToAngle(0));
+    new JoystickButton(utilityJoystick, 11).onTrue(arm.extendToLength(0));
   }
 
   public Command getAutonomousCommand() {

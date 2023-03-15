@@ -36,7 +36,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void execute() {
     double roll = IMU.getRoll();
-    System.out.println(drive.getWheelSpeeds().leftMetersPerSecond);
+
     if (Math.abs(roll) > Constants.BALANCE_LEVEL_ANGLE_RANGE) {
       double power = -((roll / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(roll)));
       if (Math.abs(drive.getWheelSpeeds().leftMetersPerSecond) < speed) {

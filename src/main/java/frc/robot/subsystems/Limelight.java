@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,6 +20,7 @@ import java.lang.Math;
 public class Limelight extends SubsystemBase {
   private LimelightHelpers.LimelightResults limelightData;
   private String name;
+  private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
   public Limelight(String name) {
     if (!Constants.ENABLE_LIMELIGHT) {
@@ -25,6 +28,7 @@ public class Limelight extends SubsystemBase {
       return;
     }
     this.name = name;
+    dashboard.addCamera(name, name, "http://" + name + ".local:5800");
   }
 
   @Override

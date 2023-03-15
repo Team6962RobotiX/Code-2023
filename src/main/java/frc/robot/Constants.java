@@ -92,18 +92,20 @@ public final class Constants {
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
-  public static final double ARM_EXTEND_POWER = 0.2; // Slowest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_MAX_POWER = 0.4; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 
+  public static final double ARM_EXTEND_SPEED = 0.2; // m/s
+  public static final double ARM_EXTEND_SPEED_FINE = 0.05; // m/s
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
-  public static final double ARM_LIFT_POWER_INCREMENT = 0.005; // Arm lifting power increment each tick
   public static final double ARM_LIFT_MIN_ANGLE = 34; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
+  public static final double ARM_LIFT_SPEED = 10; // degrees/s
+  public static final double ARM_LIFT_SPEED_FINE = 2; // degrees/s
 
   // PID & FF Config
   public static final double ARM_EXTEND_KP = 2.5;

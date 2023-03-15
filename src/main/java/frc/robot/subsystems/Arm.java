@@ -54,12 +54,6 @@ public class Arm extends SubsystemBase {
 
   private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
-  private GenericEntry P = dashboard.add("P", Constants.ARM_LIFT_KP).getEntry();
-  private GenericEntry I = dashboard.add("I", Constants.ARM_LIFT_KI).getEntry();
-  private GenericEntry D = dashboard.add("D", Constants.ARM_LIFT_KD).getEntry();
-  private GenericEntry target = dashboard.add("Target Angle", 90).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", Constants.ARM_LIFT_MIN_ANGLE, "max", Constants.ARM_LIFT_MAX_ANGLE)).getEntry();
-  private GenericEntry angle = dashboard.add("Current Angle", 90).getEntry();
-
   private final Supplier<Joystick> joystickSupplier;
 
   public Arm(Supplier<Joystick> joystickSupplier) {
@@ -195,7 +189,7 @@ public class Arm extends SubsystemBase {
     // return Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH;
   }
 
-  public void setExtendPower(double power) {
+  private void setExtendPower(double power) {
     double extendPos = getExtendMeters();
 
     if (extendPos > getMaxExtendMeters()) {
@@ -210,7 +204,7 @@ public class Arm extends SubsystemBase {
     extend.set(power);
   }
 
-  public void setLiftPower(double power) {
+  private void setLiftPower(double power) {
     double liftAngle = getLiftAngle();
 
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
@@ -280,5 +274,13 @@ public class Arm extends SubsystemBase {
 
   public CommandBase toPosition(double targetX, double targetY) {
     return this.runOnce(() -> setTargetPosition(targetX, targetY));
+  }
+
+  public void incrementLiftAngle(double increment) {
+    updateAngleSetpoint(liftPID.getSetpoint() + increment);
+  }
+
+  public void incrementExtendMeters(double increment) {
+    updateExtendSetpoint(extendPID.getSetpoint() + increment);
   }
 }

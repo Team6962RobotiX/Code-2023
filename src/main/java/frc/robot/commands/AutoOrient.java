@@ -68,7 +68,7 @@ public class AutoOrient extends CommandBase {
         }
 
         tx = LimelightHelpers.getTX(camera.getName());
-        
+
         double PIDPower = orientPID.calculate(tx);
         drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
 
@@ -78,20 +78,20 @@ public class AutoOrient extends CommandBase {
 
         Pose3d pose3D = new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(Units.degreesToRadians(pose[3]), Units.degreesToRadians(pose[4]), Units.degreesToRadians(pose[5])));
 
-        System.out.println(pose3D.getX());
-        System.out.println(pose3D.getY());
-        System.out.println(pose3D.getZ());
+        // System.out.println(pose3D.getX());
+        // System.out.println(pose3D.getY());
+        // System.out.println(pose3D.getZ());
 
         // double[] defaultPose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        
+
         // double[] pose = NetworkTableInstance.getDefault().getTable(Constants.TOP_LIMELIGHT_NAME).getEntry("camerapose_targetspace").getDoubleArray(defaultPose);
-        
+
         // System.out.println("Distance");
         // System.out.println(Math.abs(pose[1]));
         // System.out.println("Height");
         // System.out.println(Math.abs(pose[0]) + Constants.TOP_LIMELIGHT_HEIGHT);
         // System.out.println(pose[2]);
-        
+
         // arm.setTargetPosition(targetPosX, targetPosY);
         // System.out.println("targetPosZ");
         // System.out.println(targetPosZ);
