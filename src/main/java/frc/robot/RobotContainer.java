@@ -63,8 +63,8 @@ public class RobotContainer {
     // MAIN DRIVER
 
     new JoystickButton(driveJoystick, 12).whileTrue(new AutoBalance(IMU, drive));
-    new JoystickButton(driveJoystick, 1).whileTrue(new AutoOrient(topLimelight, drive, arm));
-
+    new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
+    new JoystickButton(driveJoystick, 6).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
     // UTILITY DRIVER
     new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
