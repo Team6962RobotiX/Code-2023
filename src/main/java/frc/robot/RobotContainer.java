@@ -54,7 +54,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
-    //arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
+    arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
 
     // Configure the trigger bindings
     configureBindings();
@@ -96,12 +96,12 @@ public class RobotContainer {
       
       //Strategy 2
       
-      //new DriveStraight(drive, IMU, -.1, 0.4), 
-      //new DriveStraight(drive, IMU, 2.2, 0.4),
-      //new DriveStraight(drive, IMU, 1.5, 0.2),
-      new RotateDrive(drive, IMU, 180)
-      //new DriveStraight(drive, IMU, -1.5, 0.4),
-      //new AutoBalance(IMU, drive)
+      new DriveStraight(drive, IMU, -.2, 0.6), 
+      new DriveStraight(drive, IMU, 2.2, 0.4),
+      new DriveStraight(drive, IMU, 1.8, 0.4),
+      new RotateDrive(drive, IMU, 180),
+      new DriveStraight(drive, IMU, 2.1, 0.4),
+      new AutoBalance(IMU, drive)
 
       //Strategy 3
       //new DriveStraight(drive, IMU, -.1, 0.4),
