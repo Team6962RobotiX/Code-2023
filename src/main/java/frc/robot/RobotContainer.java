@@ -27,6 +27,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -51,10 +52,56 @@ public class RobotContainer {
   private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
   private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
+
+  private final Command simpleauto1 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    claw.toggle(),
+    new DriveStraight(drive, IMU, 1.7, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+  
+  private final Command complexauto1 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    new DriveStraight(drive, IMU, 2.2, 0.4),
+    new DriveStraight(drive, IMU, 1.8, 0.4),
+    new RotateDrive(drive, IMU, 180),
+    new DriveStraight(drive, IMU, 2.1, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+
+  private final Command auto2 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6),
+    new DriveStraight(drive, IMU, 5, 0.6)
+  );
+
+  private final Command auto3 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    new DriveStraight(drive, IMU, 4, 0.4),
+    claw.toggle(),
+    arm.toPosition(1.6, 1.7),
+    claw.toggle(),
+    arm.toPosition(0, 0),
+    new RotateDrive(drive, IMU, 180),
+    new DriveStraight(drive, IMU, 2.1, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+  SendableChooser<Command> chooser = new SendableChooser<>();
+  
+  
+
+  
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    chooser.setDefaultOption("Complex Auto 1", complexauto1);
+    chooser.addOption("Simple Auto 1", simpleauto1);
+    chooser.addOption("Auto 2", auto2);
+    chooser.addOption("Auto 3", auto3);
+
+    SmartDashboard.putData(chooser);
+    
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
-    arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
+    //arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
 
     // Configure the trigger bindings
     configureBindings();
@@ -84,38 +131,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    
-    return new SequentialCommandGroup(
-      // Strategy 1
-      /* 
-      new DriveStraight(drive, IMU, -.1, 0.4), 
-      claw.toggle(),
-      new DriveStraight(drive, IMU, 1.7, 0.4),
-      new AutoBalance(IMU, drive)
-      */
-      
-      //Strategy 2
-      
-      new DriveStraight(drive, IMU, -.2, 0.6), 
-      new DriveStraight(drive, IMU, 2.2, 0.4),
-      new DriveStraight(drive, IMU, 1.8, 0.4),
-      new RotateDrive(drive, IMU, 180),
-      new DriveStraight(drive, IMU, 2.1, 0.4),
-      new AutoBalance(IMU, drive)
-
-      //Strategy 3
-      //new DriveStraight(drive, IMU, -.1, 0.4),
-      //new DriveStraight(drive, IMU, 5, 0.6),
-      
-      //Strategy 4
-      //arm.toPosition(1.6, 1.7),
-      //claw.toggle()
-      
-      //arm.toPosition(1.6, 1.7),
-      //claw.toggle()
-      //arm.extendToLength(0),
-      //arm.liftToAngle(0) 
-    );
+    return chooser.getSelected();
   }
 
   public void disabledPeriodic() {
