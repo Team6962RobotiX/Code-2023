@@ -54,11 +54,7 @@ public class Arm extends SubsystemBase {
 
   private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
-  private final Supplier<Joystick> joystickSupplier;
-
-  public Arm(Supplier<Joystick> joystickSupplier) {
-    this.joystickSupplier = joystickSupplier;
-
+  public Arm() {
     if (!Constants.ENABLE_ARM) {
       System.out.println("Arm Disabled");
       return;
