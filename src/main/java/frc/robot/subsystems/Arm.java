@@ -72,6 +72,10 @@ public class Arm extends SubsystemBase {
     lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+    lift1.setSmartCurrentLimit(30);
+    lift2.setSmartCurrentLimit(30);
+    extend.setSmartCurrentLimit(30);
+
     lift2.setInverted(true);
 
     extend.setInverted(true);
