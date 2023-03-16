@@ -45,7 +45,7 @@ public class RobotContainer {
 
   private final IMU IMU = new IMU();
   private final Drive drive = new Drive(IMU);
-  private final Arm arm = new Arm(() -> driveJoystick);
+  private final Arm arm = new Arm(() -> utilityJoystick);
   private final PneumaticClaw claw = new PneumaticClaw();
   private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
   private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);

@@ -114,6 +114,10 @@ public class Arm extends SubsystemBase {
       return;
     }
 
+    System.out.println("--------");
+    System.out.println("OUTPUT CURRENT");
+    System.out.println(extend.getOutputCurrent());
+    System.out.println("--------");
 
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -201,7 +205,10 @@ public class Arm extends SubsystemBase {
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
 
-    System.out.println(power);
+    // System.out.println("-----------");
+    // System.out.println("POWER");
+    // System.out.println(power);
+    // System.out.println("-----------");
 
     extend.set(power);
   }
