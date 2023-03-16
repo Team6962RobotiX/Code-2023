@@ -60,8 +60,11 @@ public class JoystickArm extends CommandBase {
       liftSpeed -= Constants.ARM_LIFT_SPEED_FINE;
     }
 
-    arm.incrementLiftAngle(liftSpeed * (20 / 1000));
-    arm.incrementExtendMeters(extendSpeed * (20 / 1000));
+    System.out.println(liftSpeed * (20 / 1000));
+    System.out.println(extendSpeed * (20 / 1000));
+
+    // arm.incrementLiftAngle(liftSpeed * (20 / 1000));
+    // arm.incrementExtendMeters(extendSpeed * (20 / 1000));
   }
 
   // Called once the command ends or is interrupted.
