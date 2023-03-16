@@ -201,6 +201,8 @@ public class Arm extends SubsystemBase {
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
 
+    System.out.println(power);
+
     extend.set(power);
   }
 
@@ -248,6 +250,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setTargetPosition(double targetX, double targetY) {
+    resetPID();
     setExtendMeters(Math.sqrt(Math.pow(targetX, 2) + Math.pow(Constants.ARM_HEIGHT - targetY, 2)) - Constants.ARM_STARTING_LENGTH);
     setLiftAngle((Math.atan((targetY - Constants.ARM_HEIGHT) / targetX) / Math.PI * 180) + 90);
   }
