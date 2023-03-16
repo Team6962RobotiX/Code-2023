@@ -63,7 +63,7 @@ public final class Constants {
   public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
-  public static final int CAN_ARM_EXTEND = 2;
+  public static final int CAN_ARM_EXTEND = 2; // changed from 13 after burning 
   public static final int CAN_CLAW_GRAB = 16;
 
   public static final int DIO_CLAW_GRAB_MICRO_SWITCH = 1;
