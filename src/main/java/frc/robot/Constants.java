@@ -86,8 +86,6 @@ public final class Constants {
   public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
-  public static final double[] ARM_PRESET_MID_NODE = { 1.0, 1.0 };
-  public static final double[] ARM_PRESET_TOP_NODE = { 1.0, 1.0 };
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)

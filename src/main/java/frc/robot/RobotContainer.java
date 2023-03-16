@@ -53,7 +53,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
-    arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
+    if (Constants.ENABLE_ARM) {
+      arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
+    }
 
     // Configure the trigger bindings
     configureBindings();
