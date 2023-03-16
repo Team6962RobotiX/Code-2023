@@ -19,7 +19,11 @@ import frc.robot.subsystems.*;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
+//import org.json.simple.parser.JSONParser;
+//import org.json.simple.parser.ParseException;
+
 import java.lang.Math;
+import java.util.Arrays;
 
 public class AutoOrient extends CommandBase {
 
@@ -29,13 +33,13 @@ public class AutoOrient extends CommandBase {
     private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
     private double cameraHeight = 1.19;
-    private double cameraAngle = -0.5;
+    private double cameraAngle = 0.0;
     // private double cameraPixels = 2592*1944;
     // private double focalLength = 0.690;
 
     private double targetHeight;
-    private double heightMid = 0.606; // Hopefully this is accurate to the arena but this value for now is just for testing with our PVC pipe construction of the game field (Applies to the next variable as well)
-    private double heightTall = 1.115;
+    private double heightMid = Constants.NODE_TAPE_HEIGHT_MID; // Hopefully this is accurate to the arena but this value for now is just for testing with our PVC pipe construction of the game field (Applies to the next variable as well)
+    private double heightTall = Constants.NODE_TAPE_HEIGHT_TOP;
     private double realArea = (0.0318/2) * 0.1016; // This value is also specific to our field element prototypes and not the actual game elements
     private double nodeHeight = 0.0;
 
@@ -65,28 +69,39 @@ public class AutoOrient extends CommandBase {
         double targetPosY = 0.0;
         double tx = 0.0;
         double ty = 0.0;
+        double typ = 0.0;
         double ta = 0.0;
 
         if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
-            if (camera.getTargetingResults().targets_Retro.length == 0) {
-                return;
-            }
+            // if (camera.getTargetingResults().targets_Retro.length == 0) {
+            //     return;
+            // }
+            double [] corners = LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME);
+            System.out.println("TOP:" + Arrays.toString(corners));
 
-            LimelightHelpers.LimelightTarget_Retro target = camera.getTargetingResults().targets_Retro[0];
+           // System.out.println(LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME)[0]);
 
         } else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
-            if (camera.getTargetingResults().targets_Detector.length == 0) {
-                return;
-            }
+            // if (camera.getTargetingResults().targets_Detector.length == 0) {
+            //     return;
+            // }
 
+            double [] corners = LimelightHelpers.getCorners(Constants.BOTTOM_LIMELIGHT_NAME);
+            System.out.println("BOTTOM:" + Arrays.toString(corners));
+
+            
             targetPosZ = 1;
             targetPosY = 0;
         }
 
+        double [] corners = LimelightHelpers.getCorners(camera.getName());
+        System.out.println(camera.getName() + " " + Arrays.toString(corners));
+
         tx = LimelightHelpers.getTX(camera.getName());
+        System.out.println("tx: " + tx);        
         
         double PIDPower = orientPID.calculate(tx);
-        drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
+        //drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
 
         // double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
 
@@ -104,12 +119,23 @@ public class AutoOrient extends CommandBase {
 
         ty = LimelightHelpers.getTY(camera.getName());
         ta = LimelightHelpers.getTA(camera.getName());
+        
+        int num_detected = camera.getTargetingResults().targets_Detector.length;
 
+        System.out.println("Num detected: " + num_detected);
+        if (num_detected > 0) {
+            typ = camera.getTargetingResults().targets_Detector[0].ty_pixels; // LimelightHelpers.getTYP(camera.getName());
+            double[] pts = camera.getTargetingResults().targets_Detector[0].pts;
+            System.out.println(pts.toString());
+        }
+     
+      // ty = getBottomAngle(ty, typ, LimelightHelpers.getCorners(camera.getName()));
+        
         if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
-            // System.out.println(LimelightHelpers.getLatestResults(Constants.BOTTOM_LIMELIGHT_NAME).targetingResults.targets_Retro[0]);
+            //System.out.println(ty);
         }
         else if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
-            System.out.println(LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME).targetingResults.targets_Detector[0].ty);
+           // System.out.println(LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME).targetingResults.targets_Detector[0].ty);
             // try {
             //     wait();
             // } catch (InterruptedException e) {
@@ -127,10 +153,10 @@ public class AutoOrient extends CommandBase {
         determineTargetHeight(ty);
         // System.out.println(targetHeight);
 
-        double forwardDistancePrecise1 = getForwardDistancePrecise(heightMid, ty);
-        double forwardDistancePrecise2 = getForwardDistancePrecise(heightTall, ty);
+        // double forwardDistancePrecise1 = getForwardDistancePrecise(heightMid, ty);
+        // double forwardDistancePrecise2 = getForwardDistancePrecise(heightTall, ty);
         double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
-        // System.out.println("Distance: " + forwardDistancePrecise + ", Target Height: " + targetHeight);
+        System.out.println("Distance: " + forwardDistancePrecise + ", Target Height: " + targetHeight);
 
         dist = forwardDistancePrecise;
 
@@ -183,7 +209,7 @@ public class AutoOrient extends CommandBase {
             }
         }
         else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
-            targetHeight = 0.325;
+            targetHeight = 0.0;
         }
     }
 
@@ -193,6 +219,38 @@ public class AutoOrient extends CommandBase {
 
         double forwardDistance = (targetHeight - cameraHeight) / Math.tan(targetAngleRad + cameraAngleRad);
         return forwardDistance;
+    }
+
+    public double getBottomAngle(double ty, double typ, double[] pointsArray) {
+
+        double xShort1 = pointsArray[0];
+        double yShort1 = pointsArray[1];
+
+        double xLong1 = pointsArray[2];
+        double yShort2 = pointsArray[3];
+
+        double xShort2 = pointsArray[4];
+        double yLong1 = pointsArray[5];
+
+        double xLong2 = pointsArray[6];
+        double yLong2 = pointsArray[7];
+
+        double xShort = (xShort1 + xShort2) / 2;
+        double xLong = (xLong1 + xLong2) / 2;
+
+        double yShort = (yShort1 + yShort2) / 2;
+        double yLong = (yLong1 + yLong2) / 2;
+
+        double centerPieceX = (xShort + xLong) / 2;
+        double centerPieceY = (yShort + yLong) / 2;
+
+        double crosshairY = centerPieceY + typ;
+
+        double tyBottom = yLong - crosshairY;
+
+        double newTY = Math.atan((tyBottom / typ) * Math.tan(ty));
+        return newTY;
+
     }
 
     // Called once the command ends or is interrupted.
@@ -206,5 +264,6 @@ public class AutoOrient extends CommandBase {
     public boolean isFinished() {
         return false;
     }
+
 
 }

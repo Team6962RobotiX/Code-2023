@@ -272,6 +272,7 @@ public class LimelightHelpers {
         // public double[] pts;
 
         public LimelightTarget_Detector() {
+            //pts = new double[8];
         }
     }
 
@@ -490,6 +491,8 @@ public class LimelightHelpers {
         return getLimelightNTDoubleArray(limelightName, "botpose");
     }
 
+
+
     /**
      * Switch to getBotPose_wpiRed
      * 
@@ -514,6 +517,10 @@ public class LimelightHelpers {
 
     public static double[] getBotPose(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "botpose");
+    }
+
+    public static double[] getCorners(String limelightName){
+        return getLimelightNTDoubleArray(limelightName, "tcornxy");
     }
 
     public static double[] getBotPose_wpiRed(String limelightName) {

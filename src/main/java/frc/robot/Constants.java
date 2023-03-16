@@ -18,8 +18,8 @@ public final class Constants {
 
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
-  public static final boolean ENABLE_BALANCE = false;
-  public static final boolean ENABLE_ARM = true;
+  public static final boolean ENABLE_BALANCE = true;
+  public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
   public static final boolean ENABLE_LIMELIGHT = true;
@@ -57,10 +57,10 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 10; // 10 for Main Chassis, 1 For Test Chassis
-  public static final int CAN_LEFT_DRIVE_2 = 28; // 28 for Main Chassis, 2 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_1 = 7; // 7 for Main Chassis, 3 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_1 = 1; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_2 = 2; // 28 for Main Chassis, 2 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_1 = 3; // 7 for Main Chassis, 3 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_2 = 4; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 13;
@@ -134,12 +134,12 @@ public final class Constants {
 
   // Limelight Config
   public static final String TOP_LIMELIGHT_NAME = "limelight-top";
-  public static final String BOTTOM_LIMELIGHT_NAME = "limelight-bottom";
+  public static final String BOTTOM_LIMELIGHT_NAME = "limelight-test";
 
   // Align Config
   public static final double PICK_UP_HEIGHT = 0.15;
-  public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 2.0) * 0.0254;
-  public static final double NODE_TAPE_HEIGHT_TOP = (41.125 + 2.0) * 0.0254;
+  public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 0.0) * 0.0254;
+  public static final double NODE_TAPE_HEIGHT_TOP = (41.125 + 0.0) * 0.0254;
   public static final double NODE_TIP_HEIGHT_MID = (22.125 + 4.0 + 8.0) * 0.0254;
   public static final double NODE_TIP_HEIGHT_TOP = (41.125 + 4.0 + (3.0 / 16.0)) * 0.0254;
   public static final double PLACING_OVER_NODE_HEIGHT = 0.25;

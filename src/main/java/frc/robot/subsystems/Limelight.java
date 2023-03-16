@@ -33,6 +33,7 @@ public class Limelight extends SubsystemBase {
       return;
     }
     limelightData = LimelightHelpers.getLatestResults(name);
+    System.out.println("Limelightdata: " + limelightData);
   }
 
   public LimelightHelpers.Results getTargetingResults() {
