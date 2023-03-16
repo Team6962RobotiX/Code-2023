@@ -114,11 +114,6 @@ public class Arm extends SubsystemBase {
       return;
     }
 
-    System.out.println("--------");
-    System.out.println("OUTPUT CURRENT");
-    System.out.println(extend.getOutputCurrent());
-    System.out.println("--------");
-
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // if (joystickSupplier.get().getRawButton(3)) {
@@ -209,6 +204,19 @@ public class Arm extends SubsystemBase {
     // System.out.println("POWER");
     // System.out.println(power);
     // System.out.println("-----------");
+
+    
+    // System.out.println("--------");
+    // System.out.println("OUTPUT CURRENT");
+    // System.out.println(extend.getOutputCurrent());
+    // System.out.println("--------");
+
+    System.out.println("------");
+    System.out.print(power + " - ");
+    System.out.println(extend.getOutputCurrent());
+    System.out.println("------");
+    
+
 
     extend.set(power);
   }
