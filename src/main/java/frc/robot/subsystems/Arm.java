@@ -278,9 +278,11 @@ public class Arm extends SubsystemBase {
 
   public void incrementLiftAngle(double increment) {
     updateAngleSetpoint(liftPID.getSetpoint() + increment);
+    targetLiftAngle = liftPID.getSetpoint();
   }
 
   public void incrementExtendMeters(double increment) {
     updateExtendSetpoint(extendPID.getSetpoint() + increment);
+    targetExtendMeters = extendPID.getSetpoint();
   }
 }
