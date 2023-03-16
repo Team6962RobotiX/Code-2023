@@ -117,9 +117,9 @@ public class Arm extends SubsystemBase {
 
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    // if (joystickSupplier.get().getRawButton(3)) {
-    //   targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
-    // }
+    /*if (joystickSupplier.get().getRawButton(3)) {
+      targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
+    }*/
 
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);

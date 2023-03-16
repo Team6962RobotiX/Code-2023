@@ -54,28 +54,33 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
-    arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
+    //arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
 
     // Configure the trigger bindings
     configureBindings();
   }
 
   private void configureBindings() {
-    // MAIN DRIVER
+    new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
+    // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
-    new JoystickButton(driveJoystick, 12).whileTrue(new AutoBalance(IMU, drive));
-    new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
-    new JoystickButton(driveJoystick, 6).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    new JoystickButton(driveJoystick, 7).onTrue(new DriveStraight(drive, IMU, -1, 0.3));
+    // new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
+    // new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
 
-    // UTILITY DRIVER
-    new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
+    new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
+    new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
-    new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.0)); // BOTTOM
-    new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
-    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
-    new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.2)); // DOUBLE SUBSTATION
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.liftToAngle(0));
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.extendToLength(0));
+    new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(topLimelight, drive, arm));
+
+    // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
+    // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
+    // new JoystickButton(driveJoystick, 12).or(new JoystickButton(driveJoystick, 10)).onFalse(arm.setLiftPowerCmd(0));
+
+    new JoystickButton(driveJoystick, 2).whileTrue(new AutoBalance(IMU, drive));
+    // new JoystickButton(driveJoystick, 2).onTrue(arm.coast());
+    // new JoystickButton(driveJoystick, 2).onFalse(arm.brake());
+    new JoystickButton(driveJoystick, 11).onTrue(new RotateDrive(drive, IMU, 180));
   }
 
   public Command getAutonomousCommand() {
@@ -90,16 +95,19 @@ public class RobotContainer {
       */
       
       //Strategy 2
-      /* 
-      new DriveStraight(drive, IMU, -.1, 0.4), 
-      claw.toggle(),
-      new DriveStraight(drive, IMU, 1.9, 0.4),
-      new DriveStraight(drive, IMU, 1.55, 0.4),
-      arm.toPosition(1.15, 0),
-      claw.toggle()
-      */
       
+      //new DriveStraight(drive, IMU, -.1, 0.4), 
+      //new DriveStraight(drive, IMU, 2.2, 0.4),
+      //new DriveStraight(drive, IMU, 1.5, 0.2),
+      new RotateDrive(drive, IMU, 180)
+      //new DriveStraight(drive, IMU, -1.5, 0.4),
+      //new AutoBalance(IMU, drive)
+
       //Strategy 3
+      //new DriveStraight(drive, IMU, -.1, 0.4),
+      //new DriveStraight(drive, IMU, 5, 0.6),
+      
+      //Strategy 4
       //arm.toPosition(1.6, 1.7),
       //claw.toggle()
       

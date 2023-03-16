@@ -18,7 +18,7 @@ public class RotateDrive extends CommandBase {
   private final IMU IMU;
 
   private float angle;
-  private double threshold = 0.05;
+  private double threshold = 10;
 
   private float initialYaw;
   private float desiredYaw;
@@ -47,33 +47,46 @@ public class RotateDrive extends CommandBase {
   @Override
   public void initialize() {
     initialYaw = IMU.getIMU().getYaw();
-    desiredYaw = angle+initialYaw;
+    if (initialYaw+angle > 180){
+      desiredYaw = (angle-initialYaw)*-1;
+    }
+    else {
+      desiredYaw = initialYaw+angle;
+    }
+    System.out.println("DesiredYaw" + desiredYaw + " initalYaw " + initialYaw);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled. 
   @Override
   public void execute() {
     float yaw = IMU.getIMU().getYaw();
+    System.out.println("YAW: " + yaw);
+    /* 
     if (yaw < desiredYaw-threshold) {
-      drive.arcadeDrive(0, drivingPower);
-    } else if (yaw > desiredYaw+threshold) {
-      drive.arcadeDrive(0, -drivingPower);
-    }
-
-    System.out.println(IMU.getIMU().getYaw());
-    drive.arcadeDrive(0, 0);
+      System.out.println("Left");
+      drive.arcadeDrive(0,-drivingPower);
+    } 
+    else if (yaw > desiredYaw+threshold) {
+      System.out.println("Right");
+      drive.arcadeDrive(0,-drivingPower);
+    */
+    drive.arcadeDrive(0,-0.6);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.tankDrive(0, 0);
+    drive.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drive.getLeftBankEncoder() > 1;
-  }
+    float yaw = IMU.getIMU().getYaw();
+    return (yaw < desiredYaw+threshold && yaw > desiredYaw-threshold);
+  } 
 }
+
 
