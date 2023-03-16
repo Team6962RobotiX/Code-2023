@@ -93,8 +93,8 @@ public final class Constants {
   public static final double ARM_EXTEND_MAX_POWER = 0.4; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 
-  public static final double ARM_EXTEND_SPEED = 0.2; // m/s
-  public static final double ARM_EXTEND_SPEED_FINE = 0.05; // m/s
+  public static final double ARM_EXTEND_SPEED = 0.4; // m/s
+  public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
@@ -102,8 +102,8 @@ public final class Constants {
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
-  public static final double ARM_LIFT_SPEED = 10; // degrees/s
-  public static final double ARM_LIFT_SPEED_FINE = 2; // degrees/s
+  public static final double ARM_LIFT_SPEED = 10.0; // degrees/s
+  public static final double ARM_LIFT_SPEED_FINE = 5.0; // degrees/s
 
   // PID & FF Config
   public static final double ARM_EXTEND_KP = 2.5;

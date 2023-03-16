@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase {
   double targetLiftAngle;
   double clampedExtendMeters;
 
-  private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
+  private ShuffleboardTab dashboard = Shuffleboard.getTab("SmartDashboard");
 
   public Arm() {
     if (!Constants.ENABLE_ARM) {
@@ -68,13 +68,12 @@ public class Arm extends SubsystemBase {
     lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    lift1.setSmartCurrentLimit(30);
-    lift2.setSmartCurrentLimit(30);
-    extend.setSmartCurrentLimit(30);
+    lift1.setSmartCurrentLimit(60);
+    lift2.setSmartCurrentLimit(60);
+    extend.setSmartCurrentLimit(60);
 
     lift2.setInverted(true);
 
-    extend.setInverted(true);
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH));
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
 
@@ -105,7 +104,6 @@ public class Arm extends SubsystemBase {
       lift1.close();
       lift2.close();
     }
-
   }
 
   @Override
@@ -113,6 +111,9 @@ public class Arm extends SubsystemBase {
     if (!Constants.ENABLE_ARM) {
       return;
     }
+
+    SmartDashboard.putNumber("Arm Lift", Constants.mapNumber(getLiftAngle(), getMinLiftAngle(), Constants.ARM_LIFT_MAX_ANGLE, 0, 1));
+    SmartDashboard.putNumber("Arm Extend", Constants.mapNumber(getExtendMeters(), 0, getMaxExtendMeters(), 0, 1));
 
     setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -128,14 +129,13 @@ public class Arm extends SubsystemBase {
     setLiftPower(liftBasePower + liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
-
+    
     // System.out.println("getExtendMeters()");
     // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
     setExtendPower(extendPIDPower);
-
     // This method will be called once per scheduler run
   }
 
@@ -180,7 +180,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getMaxExtendMeters() {
-    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, (Constants.ARM_HEIGHT - Constants.ARM_PADDING_HEIGHT) / Math.cos(getLiftAngle() / 180 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
+    double maxExtension = Math.min(Constants.ARM_MAX_LENGTH, (Constants.ARM_HEIGHT - Constants.ARM_PADDING_HEIGHT) / Math.cos(getLiftAngle() / 180.0 * Math.PI)) - Constants.ARM_STARTING_LENGTH;
     if (getLiftAngle() > 90) {
       maxExtension = Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH;
     }
@@ -199,24 +199,6 @@ public class Arm extends SubsystemBase {
     }
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
-
-    // System.out.println("-----------");
-    // System.out.println("POWER");
-    // System.out.println(power);
-    // System.out.println("-----------");
-
-    
-    // System.out.println("--------");
-    // System.out.println("OUTPUT CURRENT");
-    // System.out.println(extend.getOutputCurrent());
-    // System.out.println("--------");
-
-    System.out.println("------");
-    System.out.print(power + " - ");
-    System.out.println(extend.getOutputCurrent());
-    System.out.println("------");
-    
-
 
     extend.set(power);
   }
@@ -295,12 +277,10 @@ public class Arm extends SubsystemBase {
   }
 
   public void incrementLiftAngle(double increment) {
-    updateAngleSetpoint(liftPID.getSetpoint() + increment);
-    targetLiftAngle = liftPID.getSetpoint();
+    targetLiftAngle += increment;
   }
 
   public void incrementExtendMeters(double increment) {
-    updateExtendSetpoint(extendPID.getSetpoint() + increment);
-    targetExtendMeters = extendPID.getSetpoint();
+    targetExtendMeters += increment;
   }
 }

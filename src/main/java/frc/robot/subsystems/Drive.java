@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,7 +46,7 @@ public class Drive extends SubsystemBase {
   private DifferentialDriveOdometry odometry;
   private Field2d field = new Field2d();
 
-  private IMU IMU;
+  private IMU IMU;  
 
   public Drive(IMU IMU) {
     this.IMU = IMU;
@@ -64,8 +66,7 @@ public class Drive extends SubsystemBase {
     resetEncoders();
     odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
 
-    SmartDashboard.putData("Field", field);
-    SmartDashboard.putData("Differential Drive", drive);
+    // SmartDashboard.putData("Field", field);
   }
 
   @Override
@@ -76,7 +77,7 @@ public class Drive extends SubsystemBase {
       drive.tankDrive(0, 0);
       return;
     }
-
+    SmartDashboard.putData("Differential Drive", drive);
     // This method will be called once per scheduler run
   }
 

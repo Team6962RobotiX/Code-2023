@@ -20,7 +20,7 @@ import java.lang.Math;
 public class Limelight extends SubsystemBase {
   private LimelightHelpers.LimelightResults limelightData;
   private String name;
-  private ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
+  private ShuffleboardTab dashboard = Shuffleboard.getTab("SmartDashboard");
 
   public Limelight(String name) {
     if (!Constants.ENABLE_LIMELIGHT) {
