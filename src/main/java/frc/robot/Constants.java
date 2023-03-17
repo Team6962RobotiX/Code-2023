@@ -98,7 +98,7 @@ public final class Constants {
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
-  public static final double ARM_LIFT_MIN_ANGLE = 34; // Min arm angle (degrees)
+  public static final double ARM_LIFT_MIN_ANGLE = 33; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 

@@ -71,15 +71,17 @@ public class Arm extends SubsystemBase {
     lift1.setSmartCurrentLimit(60);
     lift2.setSmartCurrentLimit(60);
     extend.setSmartCurrentLimit(60);
-
+    
     lift2.setInverted(true);
+    extend.setInverted(true);
 
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH));
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
-
+    
     extendEncoder = extend.getEncoder();
     extendEncoder.setPositionConversionFactor(1 / Constants.ARM_EXTEND_TICKS_PER_METER);
     liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
+    
     liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
     liftEncoder.setDistancePerRotation(360.0);
 
@@ -199,7 +201,9 @@ public class Arm extends SubsystemBase {
     }
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
-
+    // System.out.println(extend.getOutputCurrent());
+    // System.out.println(power);
+    // System.out.println(getExtendMeters());
     extend.set(power);
   }
 
