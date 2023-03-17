@@ -126,18 +126,18 @@ public class Arm extends SubsystemBase {
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
 
-    double liftBasePower = liftFF.calculate(getLiftAngle(), 0, 0);
     double liftPIDPower = liftPID.calculate(getLiftAngle());
-    setLiftPower(liftBasePower + liftPIDPower);
+    setLiftPower(liftPIDPower);
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
+    setExtendPower(extendPIDPower);
     
     // System.out.println("getExtendMeters()");
     // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
     // System.out.println(extendPID.getSetpoint());
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
-    setExtendPower(extendPIDPower);
+    // System.out.println(getLiftAngle());
     // This method will be called once per scheduler run
   }
 
@@ -202,7 +202,6 @@ public class Arm extends SubsystemBase {
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
     // System.out.println(extend.getOutputCurrent());
-    // System.out.println(power);
     // System.out.println(getExtendMeters());
     extend.set(power);
   }
@@ -212,13 +211,16 @@ public class Arm extends SubsystemBase {
 
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       power = Math.min(0, power);
+      targetLiftAngle = Constants.ARM_LIFT_MAX_ANGLE;
     }
     if (liftAngle < getMinLiftAngle()) {
       power = Math.max(0, power);
+      targetLiftAngle = getMinLiftAngle();
     }
 
     power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
-
+    System.out.println(getLiftAngle());
+    System.out.println(getMinLiftAngle());
     lift.set(power);
   }
 
@@ -239,7 +241,7 @@ public class Arm extends SubsystemBase {
 
   private void updateExtendSetpoint(double meters) {
     meters = Math.min(meters, getMaxExtendMeters());
-    meters = Math.max(meters, 0.02);
+    meters = Math.max(meters, 0);
 
     extendPID.setSetpoint(meters);
   }
@@ -281,10 +283,22 @@ public class Arm extends SubsystemBase {
   }
 
   public void incrementLiftAngle(double increment) {
+    if (targetLiftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
+      increment = Math.min(0, increment);
+    }
+    if (targetLiftAngle < getMinLiftAngle()) {
+      increment = Math.max(0, increment);
+    }
     targetLiftAngle += increment;
   }
 
   public void incrementExtendMeters(double increment) {
+    if (targetExtendMeters > getMaxExtendMeters()) {
+      increment = Math.min(0, increment);
+    }
+    if (targetExtendMeters < 0) {
+      increment = Math.max(0, increment);
+    }
     targetExtendMeters += increment;
   }
 }
