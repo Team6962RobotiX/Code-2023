@@ -30,6 +30,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,8 +54,50 @@ public class RobotContainer {
   private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
   private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
+  private final Command simpleauto1 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    claw.toggle(),
+    new DriveStraight(drive, IMU, 1.7, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+
+  private final Command complexauto1 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    new DriveStraight(drive, IMU, 2.2, 0.4),
+    new DriveStraight(drive, IMU, 1.8, 0.4),
+    new RotateDrive(drive, IMU, 180),
+    new DriveStraight(drive, IMU, 2.1, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+
+  private final Command auto2 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6),
+    new DriveStraight(drive, IMU, 5, 0.6)
+  );
+
+  private final Command auto3 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2, 0.6), 
+    new DriveStraight(drive, IMU, 4, 0.4),
+    claw.toggle(),
+    arm.toPosition(1.6, 1.7),
+    claw.toggle(),
+    arm.toPosition(0, 0),
+    new RotateDrive(drive, IMU, 180),
+    new DriveStraight(drive, IMU, 2.1, 0.4),
+    new AutoBalance(IMU, drive)
+  );
+  SendableChooser<Command> chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    chooser.setDefaultOption("Complex Auto 1", complexauto1);
+    chooser.addOption("Simple Auto 1", simpleauto1);
+    chooser.addOption("Auto 2", auto2);
+    chooser.addOption("Auto 3", auto3);
+
+    SmartDashboard.putData(chooser);
+
+
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
     if (Constants.ENABLE_ARM) {
       arm.setDefaultCommand(new JoystickArm(arm, () -> utilityJoystick));
@@ -80,42 +126,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // // Create a voltage constraint to ensure we don't accelerate too fast
-    // var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, 10);
-
-    // // Create config for trajectory
-    // TrajectoryConfig config = new TrajectoryConfig(Constants.AUTONOMOUS_MAX_SPEED, Constants.AUTONOMOUS_MAX_ACCELERATION)
-    //     // Add kinematics to ensure max speed is actually obeyed
-    //     .setKinematics(Constants.DRIVE_KINEMATICS)
-    //     // Apply the voltage constraint
-    //     .addConstraint(autoVoltageConstraint);
-
-    // // An example trajectory to follow.  All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-
-    //     // Start at the origin facing the +X direction
-    //     new Pose2d(0, 0, new Rotation2d(0)),
-
-    //     // Pass through these two interior waypoints, making an 's' curve path
-    //     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-
-    //     // End 3 meters straight ahead of where we started, facing forward
-    //     new Pose2d(3, 0, new Rotation2d(0)),
-
-    //     // Pass config
-    //     config);
-
-    // RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, drive::getPose, new RamseteController(Constants.AUTONOMOUS_RAMSETE_B, Constants.AUTONOMOUS_RAMSETE_ZETA), new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV, Constants.DRIVE_KA), Constants.DRIVE_KINEMATICS, drive::getWheelSpeeds, new PIDController(Constants.DRIVE_KP, 0, 0), new PIDController(Constants.DRIVE_KP, 0, 0),
-
-    //     // RamseteCommand passes volts to the callback
-    //     drive::tankDriveVolts, drive);
-
-    // // Reset odometry to the starting pose of the trajectory.
-    // drive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // // Run path following command, then stop at the end.
-    // return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
-    return null;
+    return chooser.getSelected();
   }
 
   public void disabledPeriodic() {

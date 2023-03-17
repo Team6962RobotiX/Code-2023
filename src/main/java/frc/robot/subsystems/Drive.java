@@ -136,4 +136,8 @@ public class Drive extends SubsystemBase {
     leftBankEncoder.setPosition(0);
     rightBankEncoder.setPosition(0);
   }
+
+  public double getLeftBankEncoder() {
+    return leftBankEncoder.getPosition();
+  }
 }
