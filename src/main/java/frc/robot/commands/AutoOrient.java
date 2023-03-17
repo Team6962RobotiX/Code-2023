@@ -32,7 +32,7 @@ public class AutoOrient extends CommandBase {
     private Arm arm;
     private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
-    private double cameraHeight = 1.19;
+    private double cameraHeight;
     private double cameraAngle = 0.0;
     // private double cameraPixels = 2592*1944;
     // private double focalLength = 0.690;
@@ -50,6 +50,13 @@ public class AutoOrient extends CommandBase {
     // reinsert drive and arm arguments
     public AutoOrient(Limelight camera, Drive drive, Arm arm) {
         this.camera = camera;
+        if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
+            cameraHeight = Constants.BOTTOM_LIMELIGHT_HEIGHT;
+        } else 
+        // if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME))
+        {
+            cameraHeight = Constants.TOP_LIMELIGHT_HEIGHT;
+        }
         this.drive = drive;
         this.arm = arm;
         orientPID.setTolerance(1);
@@ -72,36 +79,52 @@ public class AutoOrient extends CommandBase {
         double typ = 0.0;
         double ta = 0.0;
 
-        if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
-            // if (camera.getTargetingResults().targets_Retro.length == 0) {
-            //     return;
-            // }
-            double [] corners = LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME);
-            System.out.println("TOP:" + Arrays.toString(corners));
+        // if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
+        //     // // if (camera.getTargetingResults().targets_Retro.length == 0) {
+        //     // //     return;
+        //     // // }
+        //     // double [] corners = LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME);
+        //     // System.out.println("TOP:" + Arrays.toString(corners));
 
-           // System.out.println(LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME)[0]);
+        //    // System.out.println(LimelightHelpers.getCorners(Constants.TOP_LIMELIGHT_NAME)[0]);
 
-        } else if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
+        // } 
+        if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
             // if (camera.getTargetingResults().targets_Detector.length == 0) {
             //     return;
             // }
 
-            double [] corners = LimelightHelpers.getCorners(Constants.BOTTOM_LIMELIGHT_NAME);
-            System.out.println("BOTTOM:" + Arrays.toString(corners));
+            // double [] corners = LimelightHelpers.getCorners(Constants.BOTTOM_LIMELIGHT_NAME);
+            // System.out.println("BOTTOM:" + Arrays.toString(corners));
 
             
-            targetPosZ = 1;
+            targetPosZ = Constants.NODE_TAPE_HEIGHT_MID;
             targetPosY = 0;
         }
-
-        double [] corners = LimelightHelpers.getCorners(camera.getName());
-        System.out.println(camera.getName() + " " + Arrays.toString(corners));
 
         tx = LimelightHelpers.getTX(camera.getName());
         System.out.println("tx: " + tx);        
         
-        double PIDPower = orientPID.calculate(tx);
+        //double PIDPower = orientPID.calculate(tx);
         //drive.arcadeDrive(0, Constants.DRIVE_BASE_TURN_POWER * Math.signum(PIDPower) + PIDPower);
+        
+        int num_detected = camera.getTargetingResults().targets_Detector.length;
+
+        ty = LimelightHelpers.getTY(camera.getName());
+
+
+        if (num_detected > 0){
+            double [] corners = LimelightHelpers.getCorners(camera.getName());
+            System.out.println(camera.getName() + " " + Arrays.toString(corners));
+            double angle = getBottomAngle(ty, typ, corners);
+            determineTargetHeight(targetPosY);
+            double distance = getForwardDistancePrecise(targetHeight, angle);
+            System.out.println("Distance: " + distance + "meters");
+        }
+
+
+
+    
 
         // double[] pose = LimelightHelpers.getCameraPose_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
 
@@ -117,48 +140,24 @@ public class AutoOrient extends CommandBase {
 
         // ---------------------------------------------------------------
 
-        ty = LimelightHelpers.getTY(camera.getName());
-        ta = LimelightHelpers.getTA(camera.getName());
-        
-        int num_detected = camera.getTargetingResults().targets_Detector.length;
-
-        System.out.println("Num detected: " + num_detected);
-        if (num_detected > 0) {
-            typ = camera.getTargetingResults().targets_Detector[0].ty_pixels; // LimelightHelpers.getTYP(camera.getName());
-            double[] pts = camera.getTargetingResults().targets_Detector[0].pts;
-            System.out.println(pts.toString());
-        }
+        // if (num_detected > 0) {
+        //     typ = camera.getTargetingResults().targets_Detector[0].ty_pixels; // LimelightHelpers.getTYP(camera.getName());
+        //     double[] pts = camera.getTargetingResults().targets_Detector[0].pts;
+        //     System.out.println(pts.toString());
+        // }
      
       // ty = getBottomAngle(ty, typ, LimelightHelpers.getCorners(camera.getName()));
         
-        if (camera.getName().equals(Constants.BOTTOM_LIMELIGHT_NAME)) {
-            //System.out.println(ty);
-        }
-        else if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
-           // System.out.println(LimelightHelpers.getLatestResults(Constants.TOP_LIMELIGHT_NAME).targetingResults.targets_Detector[0].ty);
-            // try {
-            //     wait();
-            // } catch (InterruptedException e) {
-            //     // TODO Auto-generated catch block
-            //     e.printStackTrace();
-            // }
-            // JSONParser parser = new JSONParser();
-            // JSONObject json = (JSONObject) parser.parse(stringToParse)
-            // objectMapper.readTree(Limel);
-            // System.out.println(llresults);
-            // System.out.println("Points: " + points);
-            // System.out.println("JSON !!!!! " + LimelightHelpers.getJSONDump(Constants.TOP_LIMELIGHT_NAME));
-        }
+       
 
-        determineTargetHeight(ty);
         // System.out.println(targetHeight);
 
         // double forwardDistancePrecise1 = getForwardDistancePrecise(heightMid, ty);
         // double forwardDistancePrecise2 = getForwardDistancePrecise(heightTall, ty);
-        double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
-        System.out.println("Distance: " + forwardDistancePrecise + ", Target Height: " + targetHeight);
+        // double forwardDistancePrecise = getForwardDistancePrecise(targetHeight, ty);
+        // System.out.println("Distance: " + forwardDistancePrecise + ", Target Height: " + targetHeight);
 
-        dist = forwardDistancePrecise;
+        // dist = forwardDistancePrecise;
 
         /* Upcoming commands:
             (NOTE: NODE_TIP_HEIGHT_X is the height of the tip of the cone node, depending on the targetHeight, and distToArmJoint is the (vertical, so far) distance from the camera to the joint of the arm that needs to be moved)
@@ -200,7 +199,7 @@ public class AutoOrient extends CommandBase {
         // double targetHeightApprox = (Math.tan(targetAngleRad + cameraAngleRad) * forwardDistanceApprox) + cameraHeight;
 
         if (camera.getName().equals(Constants.TOP_LIMELIGHT_NAME)) {
-            if (Math.abs(targetAngle) < 6.0) {
+            if (Math.abs(targetAngle) < 7.0) {
                 targetHeight = heightTall;
                 // nodeHeight = Constants.NODE_TIP_HEIGHT_TOP;
             } else {
@@ -214,41 +213,59 @@ public class AutoOrient extends CommandBase {
     }
 
     public double getForwardDistancePrecise(double targetHeight, double targetAngle) {
-        double targetAngleRad = targetAngle * (Math.PI / 180.0);
-        double cameraAngleRad = cameraAngle * (Math.PI / 180.0);
+        double targetAngleRad = Math.toRadians(targetAngle); 
+        double cameraAngleRad = Math.toDegrees(cameraAngle); 
 
+        //Trig
         double forwardDistance = (targetHeight - cameraHeight) / Math.tan(targetAngleRad + cameraAngleRad);
         return forwardDistance;
     }
 
     public double getBottomAngle(double ty, double typ, double[] pointsArray) {
 
+
+        //Top Left
         double xShort1 = pointsArray[0];
         double yShort1 = pointsArray[1];
 
+        //Top Right
         double xLong1 = pointsArray[2];
         double yShort2 = pointsArray[3];
 
+        //Bottom Left
         double xShort2 = pointsArray[4];
         double yLong1 = pointsArray[5];
 
+        //Bottom Right
         double xLong2 = pointsArray[6];
         double yLong2 = pointsArray[7];
 
+        //Averaging values
         double xShort = (xShort1 + xShort2) / 2;
         double xLong = (xLong1 + xLong2) / 2;
 
         double yShort = (yShort1 + yShort2) / 2;
         double yLong = (yLong1 + yLong2) / 2;
 
+        //Finding the center with relation to the top left
         double centerPieceX = (xShort + xLong) / 2;
         double centerPieceY = (yShort + yLong) / 2;
 
+        //Finding the y position of the crosshair with respect to the top left
         double crosshairY = centerPieceY + typ;
 
-        double tyBottom = yLong - crosshairY;
+      
+        double tyRadians = Math.toRadians(ty);
 
-        double newTY = Math.atan((tyBottom / typ) * Math.tan(ty));
+        //Finding typ with respect to the crosshair
+        double typBottom = yLong - crosshairY;
+
+        //Converting from pixels to angles
+        double newTY = Math.toDegrees(Math.atan((typBottom / typ) * Math.tan(tyRadians)));
+
+        // TEST
+        //double phi = typ + 0.5*Math.abs(yLong - yShort);
+        //double netTY = Math.atan((phi / typ) * Math.tan(tyRadians))
         return newTY;
 
     }

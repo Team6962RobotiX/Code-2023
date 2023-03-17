@@ -135,17 +135,22 @@ public final class Constants {
   // Limelight Config
   public static final String TOP_LIMELIGHT_NAME = "limelight-top";
   public static final String BOTTOM_LIMELIGHT_NAME = "limelight-test";
-
-  // Align Config
-  public static final double PICK_UP_HEIGHT = 0.15;
-  public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 0.0) * 0.0254;
-  public static final double NODE_TAPE_HEIGHT_TOP = (41.125 + 0.0) * 0.0254;
-  public static final double NODE_TIP_HEIGHT_MID = (22.125 + 4.0 + 8.0) * 0.0254;
-  public static final double NODE_TIP_HEIGHT_TOP = (41.125 + 4.0 + (3.0 / 16.0)) * 0.0254;
-  public static final double PLACING_OVER_NODE_HEIGHT = 0.25;
   public static final double TOP_LIMELIGHT_HEIGHT = 1.1811;
   public static final double BOTTOM_LIMELIGHT_HEIGHT = 0.1651;
   public static final double TOP_LIMELIGHT_VFOV = 49.7;
+ 
+  // Align Config
+  public static final double PICK_UP_GROUND_HEIGHT = 0;
+  public static final double PLACING_OVER_NODE_HEIGHT = 0.25;
+  
+  //Bottom edge of the tape
+  public static final double NODE_TAPE_HEIGHT_MID = (22.125 + 0.0) * 0.0254;
+  public static final double NODE_TAPE_HEIGHT_TOP = (41.125 + 0.0) * 0.0254;
+
+  //Top Edge of the tape
+  public static final double NODE_TIP_HEIGHT_MID = (22.125 + 4.0 + 8.0) * 0.0254;
+  public static final double NODE_TIP_HEIGHT_TOP = (41.125 + 4.0 + (3.0 / 16.0)) * 0.0254;
+
 
 
   public static double mapPower(double power, double min, double max, double deadZone) {

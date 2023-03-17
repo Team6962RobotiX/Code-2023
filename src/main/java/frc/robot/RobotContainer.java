@@ -71,7 +71,11 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
     new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
+    //Orient with an object
     new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
+
+    //Orient with vision targets
+    new JoystickButton(utilityJoystick, 9).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
