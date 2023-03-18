@@ -81,6 +81,8 @@ public class JoystickDrive extends CommandBase {
       turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
     }
 
+    System.out.println(turningPower);
+
     drive.arcadeDrive(straightPower, turningPower);
   }
 

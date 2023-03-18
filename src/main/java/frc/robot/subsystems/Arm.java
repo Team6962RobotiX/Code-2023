@@ -190,7 +190,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getExtendMeters() {
-    return extendEncoder.getPosition();
+    return extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
   }
 
   public double getLiftAngle() {

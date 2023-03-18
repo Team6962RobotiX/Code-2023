@@ -86,7 +86,7 @@ public final class Constants {
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
-  public static final double ARM_EXTEND_PADDING = 0.2; // Padding to prevent overshooting limits (measured in percent 0 - 1)
+  public static final double ARM_EXTEND_PADDING = 0.025; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 0.5; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 

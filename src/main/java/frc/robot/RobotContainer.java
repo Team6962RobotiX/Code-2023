@@ -125,7 +125,7 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0));
     new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
     new JoystickButton(utilityJoystick, 5).onTrue(arm.extendToLength(0)); // STOW
-    new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(60)); // STOW
+    new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(90)); // STOW
 
   }
 
