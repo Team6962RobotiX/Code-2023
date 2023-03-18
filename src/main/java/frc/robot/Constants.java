@@ -22,13 +22,10 @@ public final class Constants {
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = true;
-  public static final boolean ENABLE_LIMELIGHT = false;
-
-  // TODO: make sure arm is fully down before starting robot
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
-  public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
+  public static final double DRIVE_TURN_POWER_LIMIT = 0.7; // Hard limit on turning power
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.15;
 
@@ -39,7 +36,7 @@ public final class Constants {
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
 
-  public static final double DRIVE_ORIENT_KP = 0.0075;
+  public static final double DRIVE_ORIENT_KP = 0.02;
 
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;

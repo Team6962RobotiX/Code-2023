@@ -244,6 +244,10 @@ public class Arm extends SubsystemBase {
     power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
     // System.out.println(getLiftAngle());
     // System.out.println(getMinLiftAngle());
+    if (liftEncoder.getDistance() < 0) {
+      return;
+    }
+
     lift.set(power);
   }
 
@@ -316,12 +320,12 @@ public class Arm extends SubsystemBase {
   }
 
   public void incrementExtendMeters(double increment) {
-    if (nextLiftAngle > getMaxExtendMeters()) {
+    if (nextExtendMeters > getMaxExtendMeters()) {
       increment = Math.min(0, increment);
     }
-    if (nextLiftAngle < 0) {
+    if (nextExtendMeters < 0) {
       increment = Math.max(0, increment);
     }
-    nextLiftAngle += increment;
+    nextExtendMeters += increment;
   }
 }

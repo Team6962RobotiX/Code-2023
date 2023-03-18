@@ -54,8 +54,6 @@ public class RobotContainer {
   private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm();
   private final PneumaticClaw claw = new PneumaticClaw();
-  private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
-  private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
   private final Command simpleauto1 = new SequentialCommandGroup(
     new DriveStraight(drive, IMU, -.2, 0.6), 
@@ -74,19 +72,15 @@ public class RobotContainer {
 
   private final Command auto2 = new SequentialCommandGroup(
     new DriveStraight(drive, IMU, -.2, 0.6),
-    new DriveStraight(drive, IMU, 5, 0.6)
+    new DriveStraight(drive, IMU, 4.5, 0.6)
   );
 
   private final Command auto3 = new SequentialCommandGroup(
-    new DriveStraight(drive, IMU, -.2, 0.6), 
-    new DriveStraight(drive, IMU, 4, 0.4),
-    claw.toggle(),
-    arm.toPosition(1.6, 1.7),
-    claw.toggle(),
-    arm.toPosition(0, 0),
     new RotateDrive(drive, IMU, 180),
-    new DriveStraight(drive, IMU, 2.1, 0.4),
-    new AutoBalance(IMU, drive)
+    arm.toPosition(1.6, 0.7),
+    claw.toggle(),
+    new DriveStraight(drive, IMU, -0.5, 0.4),
+    new RotateDrive(drive, IMU, 180)
   );
 
   private final Command noauto = new SequentialCommandGroup();
@@ -116,8 +110,8 @@ public class RobotContainer {
     // MAIN DRIVER
 
     new JoystickButton(driveJoystick, 12).whileTrue(new AutoBalance(IMU, drive));
-    new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
-    new JoystickButton(driveJoystick, 6).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    new JoystickButton(driveJoystick, 3).whileTrue(new AutoOrient(Constants.BOTTOM_LIMELIGHT_NAME, drive));
+    new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(Constants.TOP_LIMELIGHT_NAME, drive));
 
     // UTILITY DRIVER
     new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
@@ -131,7 +125,7 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0));
     new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
     new JoystickButton(utilityJoystick, 5).onTrue(arm.extendToLength(0)); // STOW
-    new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(50)); // STOW
+    new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(60)); // STOW
 
   }
 
