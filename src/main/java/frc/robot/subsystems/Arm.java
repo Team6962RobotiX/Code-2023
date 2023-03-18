@@ -156,15 +156,14 @@ public class Arm extends SubsystemBase {
         targetLiftAngle = nextLiftAngle;
       }
     }
-    // System.out.println(getLiftAngle() - targetLiftAngle);
   } 
 
   private boolean doneLifting() {
-    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE * 20 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE * 20;
+    return getLiftAngle() > targetLiftAngle - 8 && getLiftAngle() < targetLiftAngle + 8;
   }
 
   private boolean doneExtending() {
-    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE * 3 && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE * 3;
+    return getExtendMeters() > targetExtendMeters - 0.2 && getExtendMeters() < targetExtendMeters + 0.2;
   }
 
   public void fullyRetract() {
@@ -307,22 +306,22 @@ public class Arm extends SubsystemBase {
   }
 
   public void incrementLiftAngle(double increment) {
-    if (targetLiftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
+    if (nextLiftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       increment = Math.min(0, increment);
     }
-    if (targetLiftAngle < getMinLiftAngle()) {
+    if (nextLiftAngle < getMinLiftAngle()) {
       increment = Math.max(0, increment);
     }
-    targetLiftAngle += increment;
+    nextLiftAngle += increment;
   }
 
   public void incrementExtendMeters(double increment) {
-    if (targetExtendMeters > getMaxExtendMeters()) {
+    if (nextLiftAngle > getMaxExtendMeters()) {
       increment = Math.min(0, increment);
     }
-    if (targetExtendMeters < 0) {
+    if (nextLiftAngle < 0) {
       increment = Math.max(0, increment);
     }
-    targetExtendMeters += increment;
+    nextLiftAngle += increment;
   }
 }

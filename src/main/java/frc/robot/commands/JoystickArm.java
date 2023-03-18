@@ -53,11 +53,11 @@ public class JoystickArm extends CommandBase {
     }
 
     if (joystick.getRawButton(6)) {
-      liftSpeed += Constants.ARM_LIFT_SPEED_FINE;
+      liftSpeed += Constants.mapNumber(joystick.getThrottle(), -1, 1, Constants.ARM_LIFT_SPEED_FINE * 4, Constants.ARM_LIFT_SPEED_FINE);
     }
 
     if (joystick.getRawButton(4)) {
-      liftSpeed -= Constants.ARM_LIFT_SPEED_FINE;
+      liftSpeed -= Constants.mapNumber(joystick.getThrottle(), -1, 1, Constants.ARM_LIFT_SPEED_FINE * 4, Constants.ARM_LIFT_SPEED_FINE * 3);
     }
 
     arm.incrementLiftAngle(liftSpeed * (20.0 / 1000.0));

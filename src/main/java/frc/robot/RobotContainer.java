@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
+
 import edu.wpi.first.hal.ConstantsJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -65,8 +67,8 @@ public class RobotContainer {
     new DriveStraight(drive, IMU, -.2, 0.6), 
     new DriveStraight(drive, IMU, 2.2, 0.5),
     new DriveStraight(drive, IMU, 1.8, 0.4),
-    new WaitCommand(1),
-    new DriveStraight(drive, IMU, -1.8, 0.5),
+    new RotateDrive(drive, IMU, 180),
+    new DriveStraight(drive, IMU, 1.8, 0.5),
     new AutoBalance(IMU, drive)
   );
 
@@ -86,6 +88,8 @@ public class RobotContainer {
     new DriveStraight(drive, IMU, 2.1, 0.4),
     new AutoBalance(IMU, drive)
   );
+
+  private final Command noauto = new SequentialCommandGroup();
   SendableChooser<Command> chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -94,6 +98,7 @@ public class RobotContainer {
     chooser.addOption("Simple Auto 1", simpleauto1);
     chooser.addOption("Auto 2", auto2);
     chooser.addOption("Auto 3", auto3);
+    chooser.addOption("No Auto", noauto);
 
     SmartDashboard.putData(chooser);
 
