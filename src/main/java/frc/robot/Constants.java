@@ -27,10 +27,10 @@ public final class Constants {
   // TODO: make sure arm is fully down before starting robot
 
   // Drive Config
-  public static final double DRIVE_POWER_LIMIT = 0.6; // Hard limit on power
+  public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
 
-  public static final double DRIVE_FINE_CONTROL_POWER = 0.1;
+  public static final double DRIVE_FINE_CONTROL_POWER = 0.15;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
   public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
@@ -98,12 +98,12 @@ public final class Constants {
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
-  public static final double ARM_LIFT_MIN_ANGLE = 28; // Min arm angle (degrees)
+  public static final double ARM_LIFT_MIN_ANGLE = 28.5; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 0.25; // Degrees of precision
 
   public static final double ARM_LIFT_SPEED = 10.0; // degrees/s
-  public static final double ARM_LIFT_SPEED_FINE = 5.0; // degrees/s
+  public static final double ARM_LIFT_SPEED_FINE = 10.0; // degrees/s
 
   // PID & FF Config
   public static final double ARM_EXTEND_KP = 2.5;

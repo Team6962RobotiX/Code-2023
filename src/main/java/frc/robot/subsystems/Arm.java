@@ -52,6 +52,9 @@ public class Arm extends SubsystemBase {
   double targetLiftAngle;
   double clampedExtendMeters;
 
+  double nextExtendMeters;
+  double nextLiftAngle;
+
   private ShuffleboardTab dashboard = Shuffleboard.getTab("SmartDashboard");
 
   public Arm() {
@@ -92,6 +95,8 @@ public class Arm extends SubsystemBase {
     // targetLiftAngle = getLiftAngle();
     targetLiftAngle = getLiftAngle();
     targetExtendMeters = getExtendMeters();
+    nextLiftAngle = targetLiftAngle;
+    nextExtendMeters = targetExtendMeters;
 
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
@@ -139,6 +144,27 @@ public class Arm extends SubsystemBase {
     // System.out.println(getMaxExtendMeters() - getExtendMeters());
     // System.out.println(getLiftAngle());
     // This method will be called once per scheduler run
+
+    if (nextExtendMeters > targetExtendMeters) { // Extending
+      targetLiftAngle = nextLiftAngle;
+      if (doneLifting()) {
+        targetExtendMeters = nextExtendMeters;
+      }
+    } else { // Retracting
+      targetExtendMeters = nextExtendMeters;
+      if (doneExtending()) {
+        targetLiftAngle = nextLiftAngle;
+      }
+    }
+    // System.out.println(getLiftAngle() - targetLiftAngle);
+  } 
+
+  private boolean doneLifting() {
+    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE * 20 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE * 20;
+  }
+
+  private boolean doneExtending() {
+    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE * 3 && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE * 3;
   }
 
   public void fullyRetract() {
@@ -196,7 +222,7 @@ public class Arm extends SubsystemBase {
     if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
     }
-    if (extendPos < 0) {
+    if (extendPos < -0.02) {
       power = Math.max(0, power);
     }
 
@@ -211,16 +237,14 @@ public class Arm extends SubsystemBase {
 
     if (liftAngle > Constants.ARM_LIFT_MAX_ANGLE) {
       power = Math.min(0, power);
-      targetLiftAngle = Constants.ARM_LIFT_MAX_ANGLE;
     }
     if (liftAngle < getMinLiftAngle()) {
       power = Math.max(0, power);
-      targetLiftAngle = getMinLiftAngle();
     }
 
     power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
-    System.out.println(getLiftAngle());
-    System.out.println(getMinLiftAngle());
+    // System.out.println(getLiftAngle());
+    // System.out.println(getMinLiftAngle());
     lift.set(power);
   }
 
@@ -232,11 +256,11 @@ public class Arm extends SubsystemBase {
   }
 
   private void setLiftAngle(double angle) {
-    targetLiftAngle = angle;
+    nextLiftAngle = angle;
   }
 
   private void setExtendMeters(double meters) {
-    targetExtendMeters = meters;
+    nextExtendMeters = meters;
   }
 
   private void updateExtendSetpoint(double meters) {

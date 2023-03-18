@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
@@ -56,17 +57,16 @@ public class RobotContainer {
 
   private final Command simpleauto1 = new SequentialCommandGroup(
     new DriveStraight(drive, IMU, -.2, 0.6), 
-    claw.toggle(),
     new DriveStraight(drive, IMU, 1.7, 0.4),
     new AutoBalance(IMU, drive)
   );
 
   private final Command complexauto1 = new SequentialCommandGroup(
     new DriveStraight(drive, IMU, -.2, 0.6), 
-    new DriveStraight(drive, IMU, 2.2, 0.4),
+    new DriveStraight(drive, IMU, 2.2, 0.5),
     new DriveStraight(drive, IMU, 1.8, 0.4),
-    new RotateDrive(drive, IMU, 180),
-    new DriveStraight(drive, IMU, 2.1, 0.4),
+    new WaitCommand(1),
+    new DriveStraight(drive, IMU, -1.8, 0.5),
     new AutoBalance(IMU, drive)
   );
 
@@ -117,12 +117,17 @@ public class RobotContainer {
     // UTILITY DRIVER
     new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
 
-    new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.0)); // BOTTOM
+    new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.3)); // BOTTOM CONE
+    new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.1)); // BOTTOM CUBE
     new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
     new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
-    new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.2)); // DOUBLE SUBSTATION
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.liftToAngle(0));
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.extendToLength(0));
+    new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.25)); // DOUBLE SUBSTATION
+    new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(0));
+    new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0));
+    new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
+    new JoystickButton(utilityJoystick, 5).onTrue(arm.extendToLength(0)); // STOW
+    new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(50)); // STOW
+
   }
 
   public Command getAutonomousCommand() {
