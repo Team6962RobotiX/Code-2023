@@ -28,14 +28,14 @@ public class AutoOrient extends CommandBase {
     private String name;
     private Drive drive;
     private NetworkTable table = null;
-    private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
+    private PIDController orientPID = new PIDController(0.002, 0.0002, 0);
 
     /** An example command that uses an example subsystem. */
     public AutoOrient(String name, Drive drive) {
         this.name = name;
         this.drive = drive;
         table = NetworkTableInstance.getDefault().getTable(name);
-        orientPID.setTolerance(1);
+        orientPID.setTolerance(2);
         orientPID.setSetpoint(0);
         addRequirements(drive);
     }

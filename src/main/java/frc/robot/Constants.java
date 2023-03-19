@@ -30,13 +30,11 @@ public final class Constants {
   public static final double DRIVE_FINE_CONTROL_POWER = 0.15;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
-  public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
+  public static final double DRIVE_BASE_TURN_POWER = 0.15; // Motor power required to get the chassis turning
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
-
-  public static final double DRIVE_ORIENT_KP = 0.02;
 
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
@@ -86,7 +84,7 @@ public final class Constants {
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
-  public static final double ARM_EXTEND_PADDING = 0.025; // Padding to prevent overshooting limits (measured in meters)
+  public static final double ARM_EXTEND_PADDING = 0.02; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 0.5; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 
