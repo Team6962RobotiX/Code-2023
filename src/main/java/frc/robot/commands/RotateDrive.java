@@ -71,7 +71,7 @@ public class RotateDrive extends CommandBase {
       System.out.println("Right");
       drive.arcadeDrive(0,-drivingPower);
     */
-    drive.arcadeDrive(0,-0.4);
+    drive.arcadeDrive(0,-0.5);
     
   }
 

@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class AutoBalance extends CommandBase {
   private final IMU IMU;
   private final Drive drive;
-  private double boost = 0.0;
-  private double speed = 30; // m/s
+  // private double boost = 0.0;
+  // private double speed = 20;
 
   public AutoBalance(IMU IMU, Drive drive) {
     this.IMU = IMU;
@@ -39,12 +39,12 @@ public class AutoBalance extends CommandBase {
 
     if (Math.abs(roll) > Constants.BALANCE_LEVEL_ANGLE_RANGE) {
       double power = -((roll / 360 * Constants.BALANCE_ANGLE_POWER_MULTIPLE) + (Constants.BALANCE_BASE_POWER * Math.signum(roll)));
-      if (Math.abs(drive.getWheelSpeeds().leftMetersPerSecond) < speed) {
-        boost += 0.003;
-      } else {
-        boost = Math.max(boost - 0.003, 0);
-      }
-      power += boost * Math.signum(power);
+      // if (Math.abs(drive.getWheelSpeeds().leftMetersPerSecond) < speed) {
+      //   boost += 0.003;
+      // } else {
+      //   boost = Math.max(boost - 0.003, 0);
+      // }
+      // power += boost * Math.signum(power);
       drive.arcadeDrive(power, 0);
       return;
     }

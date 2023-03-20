@@ -27,10 +27,11 @@ public final class Constants {
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.7; // Hard limit on turning power
 
-  public static final double DRIVE_FINE_CONTROL_POWER = 0.15;
+  public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
+  public static final double TURN_FINE_CONTROL_POWER = 0.2;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
-  public static final double DRIVE_BASE_TURN_POWER = 0.15; // Motor power required to get the chassis turning
+  public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis

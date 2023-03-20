@@ -65,8 +65,8 @@ public class RobotContainer {
     new DriveStraight(drive, IMU, -.2, 0.6), 
     new DriveStraight(drive, IMU, 2.2, 0.5),
     new DriveStraight(drive, IMU, 1.8, 0.4),
-    new RotateDrive(drive, IMU, 180),
-    new DriveStraight(drive, IMU, 1.8, 0.5),
+    new RotateDrive(drive, IMU, 175),
+    new DriveStraight(drive, IMU, 2.0, 0.5),
     new AutoBalance(IMU, drive)
   );
 
@@ -78,9 +78,10 @@ public class RobotContainer {
   private final Command auto3 = new SequentialCommandGroup(
     new RotateDrive(drive, IMU, 180),
     arm.toPosition(1.6, 0.7),
-    claw.toggle(),
-    new DriveStraight(drive, IMU, -0.5, 0.4),
-    new RotateDrive(drive, IMU, 180)
+    new WaitCommand(3),
+    claw.toggle()
+    //new DriveStraight(drive, IMU, -0.5, 0.4),
+    //new RotateDrive(drive, IMU, 180)
   );
 
   private final Command noauto = new SequentialCommandGroup();

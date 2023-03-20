@@ -69,7 +69,7 @@ public class JoystickDrive extends CommandBase {
         sign = -1;
       }
       turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
-      turningPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower -= Constants.TURN_FINE_CONTROL_POWER;
     }
 
     if (POV == 225 || POV == 270 || POV == 315) {
@@ -78,7 +78,7 @@ public class JoystickDrive extends CommandBase {
         sign = 1;
       }
       turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
-      turningPower += Constants.DRIVE_FINE_CONTROL_POWER;
+      turningPower += Constants.TURN_FINE_CONTROL_POWER;
     }
 
     System.out.println(turningPower);
