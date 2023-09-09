@@ -61,6 +61,7 @@ public final class Constants {
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 9; // changed from 13 after burning 
   public static final int CAN_CLAW_GRAB = 16;
+  public static final int CAN_INTAKE = 22;
 
   public static final int DIO_CLAW_GRAB_MICRO_SWITCH = 1;
   public static final int DIO_ARM_LIFT_ENCODER = 0;
