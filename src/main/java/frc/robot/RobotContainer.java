@@ -53,7 +53,6 @@ public class RobotContainer {
   private final IMU IMU = new IMU();
   private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm();
-  private final PneumaticClaw claw = new PneumaticClaw();
 
   private final Command simpleauto1 = new SequentialCommandGroup(
     new DriveStraight(drive, IMU, -.2, 0.6), 
@@ -78,8 +77,8 @@ public class RobotContainer {
   private final Command auto3 = new SequentialCommandGroup(
     new RotateDrive(drive, IMU, 180),
     arm.toPosition(1.6, 0.7),
-    new WaitCommand(3),
-    claw.toggle()
+    new WaitCommand(3)
+    // claw.toggle()
     //new DriveStraight(drive, IMU, -0.5, 0.4),
     //new RotateDrive(drive, IMU, 180)
   );
@@ -115,7 +114,7 @@ public class RobotContainer {
     // new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(Constants.TOP_LIMELIGHT_NAME, drive));
 
     // UTILITY DRIVER
-    new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
+    // new JoystickButton(utilityJoystick, 1).onTrue(claw.toggle());
 
     new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.3)); // BOTTOM CONE
     new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.15)); // BOTTOM CUBE
