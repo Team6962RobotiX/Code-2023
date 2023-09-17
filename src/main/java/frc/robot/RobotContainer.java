@@ -46,8 +46,8 @@ public class RobotContainer {
 
   private final IMU IMU = new IMU();
   private final Drive drive = new Drive(IMU);
-  private final Arm arm = new Arm(() -> driveJoystick);
-  private final PneumaticClaw claw = new PneumaticClaw();
+  // private final Arm arm = new Arm(() -> driveJoystick);
+  // private final PneumaticClaw claw = new PneumaticClaw();
   private final Limelight topLimelight = new Limelight(Constants.TOP_LIMELIGHT_NAME);
   private final Limelight bottomLimelight = new Limelight(Constants.BOTTOM_LIMELIGHT_NAME);
 
@@ -61,21 +61,21 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
+    // new JoystickButton(driveJoystick, 5).onTrue(claw.toggle());
     // new JoystickButton(driveJoystick, 3).onTrue(claw.open());
 
     new JoystickButton(driveJoystick, 7).onTrue(new DriveStraight(drive, IMU, -1, 0.3));
     // new JoystickButton(driveJoystick, 9).onTrue(arm.liftToAngle(0));
     // new JoystickButton(driveJoystick, 9).onTrue(arm.extendToLength(0));
 
-    new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
-    new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
+    // new JoystickButton(driveJoystick, 6).onTrue(arm.extendToLength(1.8 - Constants.ARM_STARTING_LENGTH));
+    // new JoystickButton(driveJoystick, 4).onTrue(arm.extendToLength(1 - Constants.ARM_STARTING_LENGTH));
 
     //Orient with an object
-    new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
+    // new JoystickButton(driveJoystick, 8).whileTrue(new AutoOrient(bottomLimelight, drive, arm));
 
     //Orient with vision targets
-    new JoystickButton(utilityJoystick, 9).whileTrue(new AutoOrient(topLimelight, drive, arm));
+    // new JoystickButton(utilityJoystick, 9).whileTrue(new AutoOrient(topLimelight, drive, arm));
 
     // new JoystickButton(driveJoystick, 12).onTrue(arm.setLiftPowerCmd(-0.4));
     // new JoystickButton(driveJoystick, 10).onTrue(arm.setLiftPowerCmd(0.4));
@@ -97,7 +97,7 @@ public class RobotContainer {
   }
 
   public void disabledPeriodic() {
-    arm.resetPID();
+    // arm.resetPID();
   }
 
   // ExtendArm

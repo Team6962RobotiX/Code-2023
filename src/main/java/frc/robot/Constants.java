@@ -17,8 +17,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
   // Enabled Systems
-  public static final boolean ENABLE_DRIVE = true;
-  public static final boolean ENABLE_BALANCE = true;
+  public static final boolean ENABLE_DRIVE = false;
+  public static final boolean ENABLE_BALANCE = false;
   public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
