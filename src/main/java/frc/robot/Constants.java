@@ -19,9 +19,9 @@ public final class Constants {
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
-  public static final boolean ENABLE_ARM = true;
+  public static final boolean ENABLE_ARM = false;
   public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
@@ -53,10 +53,10 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 10; // 10 for Main Chassis, 1 For Test Chassis
-  public static final int CAN_LEFT_DRIVE_2 = 28; // 28 for Main Chassis, 2 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_1 = 7; // 7 for Main Chassis, 3 For Test Chassis
-  public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_1 = 1; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_2 = 2; // 28 for Main Chassis, 2 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_1 = 3; // 7 for Main Chassis, 3 For Test Chassis
+  public static final int CAN_RIGHT_DRIVE_2 = 4; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
   public static final int CAN_ARM_EXTEND = 9; // changed from 13 after burning 
