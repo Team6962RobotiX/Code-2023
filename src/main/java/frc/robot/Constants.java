@@ -60,7 +60,7 @@ public final class Constants {
   public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
-  public static final int CAN_ARM_EXTEND = 9; // changed from 13 after burning 
+  public static final int CAN_ARM_EXTEND = 20; // changed from 13 after burning 
   public static final int CAN_CLAW_GRAB = 16;
   public static final int CAN_INTAKE = 22;
 
@@ -82,7 +82,7 @@ public final class Constants {
   public static final double ARM_PADDING_HEIGHT = 0.14;
   public static final double ARM_STARTING_LENGTH = 1.05; // Meters from pivot when fully retracted
   public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
-  public static final double ARM_LIFT_ENCODER_OFFSET = 242; // Offset so encoder reads 90 degrees when parallel to ground
+  public static final double ARM_LIFT_ENCODER_OFFSET = 330.0 + 90.0; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
 
   // Extension
@@ -96,7 +96,7 @@ public final class Constants {
 
   // Lifting
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
-  public static final double ARM_LIFT_MIN_ANGLE = 28.5; // Min arm angle (degrees)
+  public static final double ARM_LIFT_MIN_ANGLE = 30.0; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
   public static final double ARM_LIFT_ANGLE_TOLERANCE = 0.25; // Degrees of precision
 

@@ -83,10 +83,10 @@ public class Arm extends SubsystemBase {
     
     extendEncoder = extend.getEncoder();
     extendEncoder.setPositionConversionFactor(1 / Constants.ARM_EXTEND_TICKS_PER_METER);
-    liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
     
-    liftEncoder.setPositionOffset(Constants.ARM_LIFT_ENCODER_OFFSET / 360.0);
+    liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
     liftEncoder.setDistancePerRotation(360.0);
+
 
     liftFF = new ArmFeedforward(Constants.ARM_LIFT_KS, Constants.ARM_LIFT_KG, Constants.ARM_LIFT_KV);
     liftPID = new PIDController(Constants.ARM_LIFT_KP, Constants.ARM_LIFT_KI, Constants.ARM_LIFT_KD);
@@ -194,7 +194,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getLiftAngle() {
-    return liftEncoder.getDistance();
+    return ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
   }
 
   public double getMinLiftAngle() {
@@ -244,7 +244,7 @@ public class Arm extends SubsystemBase {
     power = Math.min(Constants.ARM_LIFT_MAX_POWER, Math.abs(power)) * Math.signum(power);
     // System.out.println(getLiftAngle());
     // System.out.println(getMinLiftAngle());
-    if (liftEncoder.getDistance() < 0) {
+    if (getLiftAngle() < 0) {
       return;
     }
 
