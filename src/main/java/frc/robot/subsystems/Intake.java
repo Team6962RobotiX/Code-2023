@@ -15,10 +15,6 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotor = new CANSparkMax(Constants.CAN_INTAKE, CANSparkMax.MotorType.kBrushless);
-  private double speed = 0.15;
-  boolean intakeOn;
-  boolean outputOn;
-  long toggleTime;
 
   /** Creates a new ExampleSubsystem. */
   public Intake() {
@@ -28,12 +24,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    if (intakeOn) {
-      intake();
-    } else {
-      output(toggleTime, System.currentTimeMillis());
-    }
+    setSpeed(0.0);
   }
 
   @Override
@@ -41,19 +32,19 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  private void intake() {
+  private void setSpeed(double speed) {
     intakeMotor.set(speed);
   }
 
-  private void output(long callTime, long currentTime) {
-    if (currentTime - callTime < 10000) {
-      intakeMotor.set(-speed);
-    } else {
-      intakeMotor.set(0);
-    }
+  public CommandBase intake() {
+    return this.run(() -> {
+      setSpeed(Constants.INTAKE_SPEED);
+    });
   }
 
-  public CommandBase toggle() {
-    return this.runOnce(() -> intakeOn = !intakeOn);
+  public CommandBase output() {
+    return this.run(() -> {
+      setSpeed(-Constants.INTAKE_SPEED);
+    });
   }
 }

@@ -115,7 +115,8 @@ public class RobotContainer {
     // new JoystickButton(driveJoystick, 5).whileTrue(new AutoOrient(Constants.TOP_LIMELIGHT_NAME, drive));
 
     // UTILITY DRIVER
-    new JoystickButton(utilityJoystick, 1).onTrue(intake.toggle());
+    new JoystickButton(utilityJoystick, 1).onTrue(intake.output());
+    new JoystickButton(utilityJoystick, 2).onTrue(intake.intake());
 
     new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.3)); // BOTTOM CONE
     new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.15)); // BOTTOM CUBE
@@ -124,7 +125,7 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.25)); // DOUBLE SUBSTATION
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(0));
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0));
-    new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
+    // new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
     new JoystickButton(utilityJoystick, 5).onTrue(arm.extendToLength(0)); // STOW
     new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(55)); // STOW
 
