@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -11,8 +13,14 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 
 public class ExampleSubsystem extends SubsystemBase {
+
+  private CANSparkMax testMotor = new CANSparkMax(13, CANSparkMax.MotorType.kBrushless);
+
+
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
+    testMotor.restoreFactoryDefaults();
+
   }
 
   /**
@@ -40,6 +48,8 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    testMotor.set(0.1);
+    
     // This method will be called once per scheduler run
   }
 

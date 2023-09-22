@@ -29,7 +29,6 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
-
   private CANSparkMax leftBank1 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_1, CANSparkMax.MotorType.kBrushless);
   private CANSparkMax leftBank2 = new CANSparkMax(Constants.CAN_LEFT_DRIVE_2, CANSparkMax.MotorType.kBrushless);
   private CANSparkMax rightBank1 = new CANSparkMax(Constants.CAN_RIGHT_DRIVE_1, CANSparkMax.MotorType.kBrushless);

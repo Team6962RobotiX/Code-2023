@@ -21,7 +21,7 @@ public final class Constants {
   public static final boolean ENABLE_BALANCE = true;
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
-  public static final boolean ENABLE_PNEUMATIC_CLAW = true;
+  public static final boolean ENABLE_PNEUMATIC_CLAW = false;
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
@@ -54,15 +54,15 @@ public final class Constants {
 
 
   // Channels
-  public static final int CAN_LEFT_DRIVE_1 = 10; // 10 for Main Chassis, 1 For Test Chassis
+  public static final int CAN_LEFT_DRIVE_1 = 13; // 10 for Main Chassis, 1 For Test Chassis
   public static final int CAN_LEFT_DRIVE_2 = 28; // 28 for Main Chassis, 2 For Test Chassis
   public static final int CAN_RIGHT_DRIVE_1 = 7; // 7 for Main Chassis, 3 For Test Chassis
   public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
-  public static final int CAN_ARM_EXTEND = 20; // changed from 13 after burning 
-  public static final int CAN_CLAW_GRAB = 16;
-  public static final int CAN_INTAKE = 22;
+  public static final int CAN_ARM_EXTEND = 16; // changed from 13 after burning 
+  public static final int CAN_CLAW_GRAB = 100;
+  public static final int CAN_INTAKE = 17;
 
   public static final int DIO_CLAW_GRAB_MICRO_SWITCH = 1;
   public static final int DIO_ARM_LIFT_ENCODER = 0;
@@ -77,16 +77,18 @@ public final class Constants {
   public static final double BALANCE_BASE_POWER = 0.15; // Base balancing speed
 
 
+  double x = (1.79/1.63)*36;
+
   // Arm Positioning
-  public static final double ARM_MAX_LENGTH = 1.778; // Meters from pivot when fully extended
+  public static final double ARM_MAX_LENGTH = 0.57 + 1.22; // Meters from pivot when fully extended
   public static final double ARM_PADDING_HEIGHT = 0.14;
-  public static final double ARM_STARTING_LENGTH = 1.05; // Meters from pivot when fully retracted
-  public static final double ARM_HEIGHT = 1.08; // Meters above ground from pivot
+  public static final double ARM_STARTING_LENGTH = 0.97; // Meters from pivot when fully retracted
+  public static final double ARM_HEIGHT = 1.07; // Meters above ground from pivot
   public static final double ARM_LIFT_ENCODER_OFFSET = 330.0 + 90.0; // Offset so encoder reads 90 degrees when parallel to ground
   public static final double ARM_EXTEND_TICKS_PER_METER = Constants.ARM_MAX_EXTEND_TICKS / (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH);
 
   // Extension
-  public static final double ARM_MAX_EXTEND_TICKS = 36; // Arm extend limit (measured in encoder ticks)
+  public static final double ARM_MAX_EXTEND_TICKS = 43; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.02; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 0.5; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision

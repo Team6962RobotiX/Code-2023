@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import javax.swing.plaf.basic.BasicComboPopup.InvocationKeyHandler;
 
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
@@ -14,12 +15,10 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private CANSparkMax intakeMotor = new CANSparkMax(Constants.CAN_INTAKE, CANSparkMax.MotorType.kBrushless);
+  private PWMSparkMax intakeMotor = new PWMSparkMax(0);
 
   /** Creates a new ExampleSubsystem. */
   public Intake() {
-    intakeMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    intakeMotor.setSmartCurrentLimit(40);
   }
 
   @Override
@@ -38,13 +37,13 @@ public class Intake extends SubsystemBase {
 
   public CommandBase intake() {
     return this.run(() -> {
-      setSpeed(Constants.INTAKE_SPEED);
+      setSpeed(-0.5);
     });
   }
 
   public CommandBase output() {
     return this.run(() -> {
-      setSpeed(-Constants.INTAKE_SPEED);
+      setSpeed(1.0);
     });
   }
 }
