@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class JoystickDrive extends CommandBase {
   private final Drive drive;
   private final Supplier<Joystick> joystickSupplier;
+  private final SlewRateLimiter slewLimiter = new SlewRateLimiter(Constants.SLEW_LIMIT);
 
   public JoystickDrive(Drive drive, Supplier<Joystick> joystickSupplier) {
     this.drive = drive;
@@ -81,6 +83,7 @@ public class JoystickDrive extends CommandBase {
       turningPower += Constants.TURN_FINE_CONTROL_POWER;
     }
 
+    straightPower = slewLimiter.calculate(straightPower);
 
     drive.arcadeDrive(straightPower, turningPower);
   }
