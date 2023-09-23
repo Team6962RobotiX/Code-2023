@@ -77,7 +77,7 @@ public final class Constants {
   public static final double BALANCE_BASE_POWER = 0.15; // Base balancing speed
 
 
-  double x = (1.79/1.63)*36;
+  double x = (1.79 / 1.63) * 36;
 
   // Arm Positioning
   public static final double ARM_MAX_LENGTH = 0.57 + 1.22; // Meters from pivot when fully extended
@@ -89,7 +89,7 @@ public final class Constants {
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 43; // Arm extend limit (measured in encoder ticks)
-  public static final double ARM_EXTEND_PADDING = 0.02; // Padding to prevent overshooting limits (measured in meters)
+  public static final double ARM_EXTEND_PADDING = 0.05; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 0.5; // Fastest speed arm will extend (0 - 1)
   public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 

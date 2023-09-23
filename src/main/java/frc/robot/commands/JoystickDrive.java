@@ -42,52 +42,44 @@ public class JoystickDrive extends CommandBase {
 
     double POV = joystick.getPOV();
 
-    double straightPower = 0.0;
-    double turningPower = 0.0;
+    double straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
+    double turningPower = Constants.mapPower(twistAxis, Constants.DRIVE_BASE_TURN_POWER, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
 
-    if (joystick.getTrigger()) {
-      straightPower = Constants.mapPower(straightAxis, 0.0, Constants.DRIVE_FINE_CONTROL_POWER, Constants.STRAIGHT_DEADZONE);
-      turningPower = Constants.mapPower(twistAxis, 0.0, Constants.TURN_FINE_CONTROL_POWER, Constants.TWIST_DEADZONE);
-    } else {
-      straightPower = Constants.mapPower(straightAxis, Constants.DRIVE_BASE_POWER, Constants.DRIVE_POWER_LIMIT, Constants.STRAIGHT_DEADZONE);
-      turningPower = Constants.mapPower(twistAxis, Constants.DRIVE_BASE_TURN_POWER, Constants.DRIVE_TURN_POWER_LIMIT, Constants.TWIST_DEADZONE);
+    if (POV == 315 || POV == 0 || POV == 45) {
+      double sign = Math.signum(straightPower);
+      if (Math.signum(straightPower) == 0) {
+        sign = 1;
+      }
+      straightPower = Math.max(Math.abs(straightPower), Constants.DRIVE_BASE_POWER) * sign;
+      straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
     }
 
-    // if (POV == 315 || POV == 0 || POV == 45) {
-    //   double sign = Math.signum(straightPower);
-    //   if (Math.signum(straightPower) == 0) {
-    //     sign = 1;
-    //   }
-    //   straightPower = Math.max(Math.abs(straightPower), Constants.DRIVE_BASE_POWER) * sign;
-    //   straightPower += Constants.DRIVE_FINE_CONTROL_POWER;
-    // }
+    if (POV == 135 || POV == 180 || POV == 225) {
+      double sign = Math.signum(straightPower);
+      if (Math.signum(straightPower) == 0) {
+        sign = -1;
+      }
+      straightPower = Math.max(Math.abs(straightPower), Constants.DRIVE_BASE_POWER) * sign;
+      straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
+    }
 
-    // if (POV == 135 || POV == 180 || POV == 225) {
-    //   double sign = Math.signum(straightPower);
-    //   if (Math.signum(straightPower) == 0) {
-    //     sign = -1;
-    //   }
-    //   straightPower = Math.max(Math.abs(straightPower), Constants.DRIVE_BASE_POWER) * sign;
-    //   straightPower -= Constants.DRIVE_FINE_CONTROL_POWER;
-    // }
+    if (POV == 45 || POV == 90 || POV == 135) {
+      double sign = Math.signum(turningPower);
+      if (Math.signum(turningPower) == 0) {
+        sign = -1;
+      }
+      turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
+      turningPower -= Constants.TURN_FINE_CONTROL_POWER;
+    }
 
-    // if (POV == 45 || POV == 90 || POV == 135) {
-    //   double sign = Math.signum(turningPower);
-    //   if (Math.signum(turningPower) == 0) {
-    //     sign = -1;
-    //   }
-    //   turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
-    //   turningPower -= Constants.TURN_FINE_CONTROL_POWER;
-    // }
-
-    // if (POV == 225 || POV == 270 || POV == 315) {
-    //   double sign = Math.signum(turningPower);
-    //   if (Math.signum(turningPower) == 0) {
-    //     sign = 1;
-    //   }
-    //   turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
-    //   turningPower += Constants.TURN_FINE_CONTROL_POWER;
-    // }
+    if (POV == 225 || POV == 270 || POV == 315) {
+      double sign = Math.signum(turningPower);
+      if (Math.signum(turningPower) == 0) {
+        sign = 1;
+      }
+      turningPower = Math.max(Math.abs(turningPower), Constants.DRIVE_BASE_POWER) * sign;
+      turningPower += Constants.TURN_FINE_CONTROL_POWER;
+    }
 
 
     drive.arcadeDrive(straightPower, turningPower);
