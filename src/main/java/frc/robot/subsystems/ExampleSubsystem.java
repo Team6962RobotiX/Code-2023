@@ -14,12 +14,12 @@ import frc.robot.Constants;
 
 public class ExampleSubsystem extends SubsystemBase {
 
-  private CANSparkMax testMotor = new CANSparkMax(13, CANSparkMax.MotorType.kBrushless);
+  // private CANSparkMax testMotor = new CANSparkMax(13, CANSparkMax.MotorType.kBrushless);
 
 
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
-    testMotor.restoreFactoryDefaults();
+    // testMotor.restoreFactoryDefaults();
 
   }
 
@@ -48,7 +48,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    testMotor.set(0.1);
+    // testMotor.set(0.1);
     
     // This method will be called once per scheduler run
   }

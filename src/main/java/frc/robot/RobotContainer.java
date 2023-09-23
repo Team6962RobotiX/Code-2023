@@ -119,19 +119,19 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 1).whileTrue(intake.output());
     new JoystickButton(utilityJoystick, 2).whileTrue(intake.intake());
 
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.liftToAngle(90));
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.extendToLength(0));
-
-    // new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.15, 0.3)); // BOTTOM CONE
-    // new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.15)); // BOTTOM CUBE
-    // new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.22, 1.3)); // MIDDLE
-    // new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(1.6, 1.7)); // TOP
-    // new JoystickButton(utilityJoystick, 9).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.25)); // DOUBLE SUBSTATION
-    new JoystickButton(utilityJoystick, 7).onTrue(arm.toPosition(Constants.ARM_MAX_LENGTH, Constants.ARM_HEIGHT));
-    // new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0));
-    // new JoystickButton(utilityJoystick, 2).onTrue(arm.extendToLength(0));
-    // new JoystickButton(utilityJoystick, 5).onTrue(arm.extendToLength(0)); // STOW
-    // new JoystickButton(utilityJoystick, 5).onTrue(arm.liftToAngle(55)); // STOW
+    new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.4)); // FLOOR
+    
+    new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.22, 1.15)); // MIDDLE
+    
+    new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.6, 1.55)); // TOP
+    
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.25)); // DOUBLE SUBSTATION
+    
+    new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
+    new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));
+    
+    new JoystickButton(utilityJoystick, 9).onTrue(arm.extendToLength(0)); // STOW
+    new JoystickButton(utilityJoystick, 9).onTrue(arm.liftToAngle(55)); // STOW
 
   }
 

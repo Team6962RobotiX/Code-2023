@@ -37,13 +37,13 @@ public class Intake extends SubsystemBase {
 
   public CommandBase intake() {
     return this.run(() -> {
-      setSpeed(-0.5);
+      setSpeed(-0.4);
     });
   }
 
   public CommandBase output() {
     return this.run(() -> {
-      setSpeed(1.0);
+      setSpeed(0.6);
     });
   }
 }

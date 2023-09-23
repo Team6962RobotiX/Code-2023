@@ -104,18 +104,17 @@ public class Arm extends SubsystemBase {
     liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE);
     extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
     liftPID.setSetpoint(targetLiftAngle);
-
-
-    if (lift1.getFaults() != 0 || lift2.getFaults() != 0) {
-      System.out.println("ARM LIFT MOTOR CONTROLLERS NOT WORKING");
-      lift1.close();
-      lift2.close();
-    }
   }
 
   @Override
   public void periodic() {
     if (!Constants.ENABLE_ARM) {
+      return;
+    }
+
+    if (lift1.getFaults() != 0 || lift2.getFaults() != 0) {
+      System.out.println("ARM LIFT MOTOR CONTROLLERS NOT WORKING");
+      lift.set(0.0);
       return;
     }
 
@@ -221,7 +220,7 @@ public class Arm extends SubsystemBase {
     if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
     }
-    if (extendPos < -0.02) {
+    if (extendPos < -Constants.ARM_EXTEND_PADDING) {
       power = Math.max(0, power);
     }
 
