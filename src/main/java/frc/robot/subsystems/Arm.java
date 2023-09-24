@@ -75,6 +75,10 @@ public class Arm extends SubsystemBase {
     lift2.setSmartCurrentLimit(40);
     extend.setSmartCurrentLimit(40);
 
+    extend.setOpenLoopRampRate(0.1);
+    lift1.setOpenLoopRampRate(0.1);
+    lift2.setOpenLoopRampRate(0.1);
+
     lift2.setInverted(true);
     extend.setInverted(true);
 
@@ -117,6 +121,11 @@ public class Arm extends SubsystemBase {
       lift.set(0.0);
       return;
     }
+
+    SmartDashboard.putNumber("Arm Extend Temp (Celsius)", extend.getMotorTemperature());
+    SmartDashboard.putNumber("Arm Extend Current (Amps)", extend.getOutputCurrent());
+    SmartDashboard.putNumber("Arm Extend Voltage (Volts)", extend.getBusVoltage());
+    SmartDashboard.putNumber("Arm Extend Applied Power (0-1)", extend.get());
 
     SmartDashboard.putNumber("Arm Lift", Constants.mapNumber(getLiftAngle(), getMinLiftAngle(), Constants.ARM_LIFT_MAX_ANGLE, 0, 1));
     SmartDashboard.putNumber("Arm Extend", Constants.mapNumber(getExtendMeters(), 0, getMaxExtendMeters(), 0, 1));
