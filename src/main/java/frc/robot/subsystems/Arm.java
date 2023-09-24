@@ -71,19 +71,19 @@ public class Arm extends SubsystemBase {
     lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    lift1.setSmartCurrentLimit(60);
-    lift2.setSmartCurrentLimit(60);
-    extend.setSmartCurrentLimit(60);
-    
+    lift1.setSmartCurrentLimit(40);
+    lift2.setSmartCurrentLimit(40);
+    extend.setSmartCurrentLimit(40);
+
     lift2.setInverted(true);
     extend.setInverted(true);
 
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) (Constants.ARM_MAX_LENGTH - Constants.ARM_STARTING_LENGTH));
     extend.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) 0);
-    
+
     extendEncoder = extend.getEncoder();
     extendEncoder.setPositionConversionFactor(1 / Constants.ARM_EXTEND_TICKS_PER_METER);
-    
+
     liftEncoder = new DutyCycleEncoder(Constants.DIO_ARM_LIFT_ENCODER);
     liftEncoder.setDistancePerRotation(360.0);
 
@@ -135,7 +135,7 @@ public class Arm extends SubsystemBase {
 
     double extendPIDPower = extendPID.calculate(getExtendMeters());
     setExtendPower(extendPIDPower);
-    
+
     // System.out.println("getExtendMeters()");
     // System.out.println(getExtendMeters());
     // System.out.println("extendPID.getSetpoint()");
@@ -155,7 +155,7 @@ public class Arm extends SubsystemBase {
         targetLiftAngle = nextLiftAngle;
       }
     }
-  } 
+  }
 
   private boolean doneLifting() {
     return getLiftAngle() > targetLiftAngle - 8 && getLiftAngle() < targetLiftAngle + 8;
@@ -227,7 +227,11 @@ public class Arm extends SubsystemBase {
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
     // System.out.println(extend.getOutputCurrent());
     // System.out.println(getExtendMeters());
-    extend.set(power);
+    if (doneExtending()) {
+      extend.set(0.0);
+    } else {
+      extend.set(power);
+    }
   }
 
   private void setLiftPower(double power) {
