@@ -29,6 +29,9 @@ public final class Constants {
   public static final double INTAKE_SPEED = 0.15;
   public static final double SLEW_LIMIT = 0.2;
 
+  public static final int ARM_STALL_CURRENT = 10;
+  public static final int ARM_CURRENT_LIMIT = 40;
+
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
   public static final double TURN_FINE_CONTROL_POWER = 0.2;
 
@@ -92,7 +95,7 @@ public final class Constants {
   public static final double ARM_MAX_EXTEND_TICKS = 43; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.03; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 0.5; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.2; // Meters of precision
 
   public static final double ARM_EXTEND_SPEED = 0.4; // m/s
   public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
@@ -101,7 +104,7 @@ public final class Constants {
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
   public static final double ARM_LIFT_MIN_ANGLE = 30.0; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
-  public static final double ARM_LIFT_ANGLE_TOLERANCE = 0.25; // Degrees of precision
+  public static final double ARM_LIFT_ANGLE_TOLERANCE = 4; // Degrees of precision
 
   public static final double ARM_LIFT_SPEED = 10.0; // degrees/s
   public static final double ARM_LIFT_SPEED_FINE = 10.0; // degrees/s

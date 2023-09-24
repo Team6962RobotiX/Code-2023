@@ -71,9 +71,9 @@ public class Arm extends SubsystemBase {
     lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    lift1.setSmartCurrentLimit(40);
-    lift2.setSmartCurrentLimit(40);
-    extend.setSmartCurrentLimit(40);
+    lift1.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+    lift2.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+    extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
 
     extend.setOpenLoopRampRate(0.1);
     lift1.setOpenLoopRampRate(0.1);
@@ -167,11 +167,11 @@ public class Arm extends SubsystemBase {
   }
 
   private boolean doneLifting() {
-    return getLiftAngle() > targetLiftAngle - 8 && getLiftAngle() < targetLiftAngle + 8;
+    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE;
   }
 
   private boolean doneExtending() {
-    return getExtendMeters() > targetExtendMeters - 0.2 && getExtendMeters() < targetExtendMeters + 0.2;
+    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE;
   }
 
   public void fullyRetract() {
@@ -229,7 +229,7 @@ public class Arm extends SubsystemBase {
     if (extendPos > getMaxExtendMeters()) {
       power = Math.min(0, power);
     }
-    if (extendPos < -Constants.ARM_EXTEND_PADDING) {
+    if (extendPos < 0.0) {
       power = Math.max(0, power);
     }
 
@@ -237,10 +237,11 @@ public class Arm extends SubsystemBase {
     // System.out.println(extend.getOutputCurrent());
     // System.out.println(getExtendMeters());
     if (doneExtending()) {
-      extend.set(0.0);
+      extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT);
     } else {
-      extend.set(power);
+      extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
     }
+    extend.set(power);
   }
 
   private void setLiftPower(double power) {
@@ -259,7 +260,11 @@ public class Arm extends SubsystemBase {
     if (getLiftAngle() < 0) {
       return;
     }
-
+    if (doneLifting()) {
+      extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT);
+    } else {
+      extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+    }
     lift.set(power);
   }
 
