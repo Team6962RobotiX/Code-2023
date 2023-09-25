@@ -238,8 +238,10 @@ public class Arm extends SubsystemBase {
     // System.out.println(getExtendMeters());
     if (doneExtending()) {
       extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT);
+      SmartDashboard.putNumber("Arm Extend Current Limit (Amps)", Constants.ARM_STALL_CURRENT);
     } else {
       extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+      SmartDashboard.putNumber("Arm Extend Current Limit (Amps)", Constants.ARM_CURRENT_LIMIT);
     }
     extend.set(power);
   }
