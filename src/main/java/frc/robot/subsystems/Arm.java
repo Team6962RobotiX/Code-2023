@@ -55,6 +55,9 @@ public class Arm extends SubsystemBase {
   double nextExtendMeters;
   double nextLiftAngle;
 
+  double liftAngle = 0.0;
+  double extendMeters = 0.0;
+
   private ShuffleboardTab dashboard = Shuffleboard.getTab("SmartDashboard");
 
   public Arm() {
@@ -71,9 +74,9 @@ public class Arm extends SubsystemBase {
     lift2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     extend.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    lift1.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
-    lift2.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
-    extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+    lift1.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT, Constants.ARM_CURRENT_LIMIT);
+    lift2.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT, Constants.ARM_CURRENT_LIMIT);
+    extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT, Constants.ARM_CURRENT_LIMIT);
 
     extend.setOpenLoopRampRate(0.1);
     lift1.setOpenLoopRampRate(0.1);
@@ -122,6 +125,9 @@ public class Arm extends SubsystemBase {
       return;
     }
 
+    liftAngle = ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
+    extendMeters = extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
+
     SmartDashboard.putNumber("Arm Extend Temp (Celsius)", extend.getMotorTemperature());
     SmartDashboard.putNumber("Arm Extend Current (Amps)", extend.getOutputCurrent());
     SmartDashboard.putNumber("Arm Extend Voltage (Volts)", extend.getBusVoltage());
@@ -130,7 +136,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm Lift", Constants.mapNumber(getLiftAngle(), getMinLiftAngle(), Constants.ARM_LIFT_MAX_ANGLE, 0, 1));
     SmartDashboard.putNumber("Arm Extend", Constants.mapNumber(getExtendMeters(), 0, getMaxExtendMeters(), 0, 1));
 
-    setIdleMode(CANSparkMax.IdleMode.kBrake);
+    // setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // if (joystickSupplier.get().getRawButton(3)) {
     //   targetLiftAngle = Constants.mapNumber(joystickSupplier.get().getThrottle(), -1, 1, Constants.ARM_LIFT_MAX_ANGLE, getMinLiftAngle());
@@ -198,11 +204,11 @@ public class Arm extends SubsystemBase {
   }
 
   public double getExtendMeters() {
-    return extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
+    return extendMeters;
   }
 
   public double getLiftAngle() {
-    return ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
+    return liftAngle;
   }
 
   public double getMinLiftAngle() {
@@ -234,15 +240,19 @@ public class Arm extends SubsystemBase {
     }
 
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
+
+    SmartDashboard.putBoolean("doneExtending()", doneExtending());
+    SmartDashboard.putNumber("targetExtendMeters", targetExtendMeters);
+    SmartDashboard.putNumber("extendMeters", extendMeters);
+
+    if (doneExtending()) {
+      extend.set(0.0);
+      extendPID.reset();
+      return;
+    }
+    
     // System.out.println(extend.getOutputCurrent());
     // System.out.println(getExtendMeters());
-    if (doneExtending()) {
-      extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT);
-      SmartDashboard.putNumber("Arm Extend Current Limit (Amps)", Constants.ARM_STALL_CURRENT);
-    } else {
-      extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
-      SmartDashboard.putNumber("Arm Extend Current Limit (Amps)", Constants.ARM_CURRENT_LIMIT);
-    }
     extend.set(power);
   }
 
@@ -262,11 +272,13 @@ public class Arm extends SubsystemBase {
     if (getLiftAngle() < 0) {
       return;
     }
+
     if (doneLifting()) {
-      extend.setSmartCurrentLimit(Constants.ARM_STALL_CURRENT);
-    } else {
-      extend.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT);
+      lift.set(0.0);
+      liftPID.reset();
+      return;
     }
+
     lift.set(power);
   }
 
