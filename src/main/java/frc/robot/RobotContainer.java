@@ -54,6 +54,7 @@ public class RobotContainer {
   private final Drive drive = new Drive(IMU);
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
+  private final Logger logger = new Logger(drive, arm, intake, IMU);
   // private final ExampleSubsystem tester = new ExampleSubsystem();
 
   private final Command simpleauto1 = new SequentialCommandGroup(
@@ -142,6 +143,10 @@ public class RobotContainer {
 
   public void disabledPeriodic() {
     arm.resetPID();
+  }
+
+  public Logger getLogger() {
+    return logger;
   }
 
   // ExtendArm

@@ -35,9 +35,9 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
 
-  CANSparkMax lift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
-  CANSparkMax lift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
-  CANSparkMax extend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
+  public CANSparkMax lift1 = new CANSparkMax(Constants.CAN_ARM_LIFT_1, CANSparkMax.MotorType.kBrushless);
+  public CANSparkMax lift2 = new CANSparkMax(Constants.CAN_ARM_LIFT_2, CANSparkMax.MotorType.kBrushless);
+  public CANSparkMax extend = new CANSparkMax(Constants.CAN_ARM_EXTEND, CANSparkMax.MotorType.kBrushless);
 
   MotorControllerGroup lift = new MotorControllerGroup(lift1, lift2);
 
@@ -48,15 +48,15 @@ public class Arm extends SubsystemBase {
   PIDController liftPID;
   ArmFeedforward liftFF;
 
-  double targetExtendMeters;
-  double targetLiftAngle;
+  public double targetExtendMeters;
+  public double targetLiftAngle;
   double clampedExtendMeters;
 
-  double nextExtendMeters;
-  double nextLiftAngle;
+  public double nextExtendMeters;
+  public double nextLiftAngle;
 
-  double liftAngle = 0.0;
-  double extendMeters = 0.0;
+  public double liftAngle = 0.0;
+  public double extendMeters = 0.0;
 
   private ShuffleboardTab dashboard = Shuffleboard.getTab("SmartDashboard");
 
@@ -128,13 +128,13 @@ public class Arm extends SubsystemBase {
     liftAngle = ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
     extendMeters = extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
 
-    SmartDashboard.putNumber("Arm Extend Temp (Celsius)", extend.getMotorTemperature());
-    SmartDashboard.putNumber("Arm Extend Current (Amps)", extend.getOutputCurrent());
-    SmartDashboard.putNumber("Arm Extend Voltage (Volts)", extend.getBusVoltage());
-    SmartDashboard.putNumber("Arm Extend Applied Power (0-1)", extend.get());
+    // SmartDashboard.putNumber("Arm Extend Temp (Celsius)", extend.getMotorTemperature());
+    // SmartDashboard.putNumber("Arm Extend Current (Amps)", extend.getOutputCurrent());
+    // SmartDashboard.putNumber("Arm Extend Voltage (Volts)", extend.getBusVoltage());
+    // SmartDashboard.putNumber("Arm Extend Applied Power (0-1)", extend.get());
 
-    SmartDashboard.putNumber("Arm Lift", Constants.mapNumber(getLiftAngle(), getMinLiftAngle(), Constants.ARM_LIFT_MAX_ANGLE, 0, 1));
-    SmartDashboard.putNumber("Arm Extend", Constants.mapNumber(getExtendMeters(), 0, getMaxExtendMeters(), 0, 1));
+    // SmartDashboard.putNumber("Arm Lift", Constants.mapNumber(getLiftAngle(), getMinLiftAngle(), Constants.ARM_LIFT_MAX_ANGLE, 0, 1));
+    // SmartDashboard.putNumber("Arm Extend", Constants.mapNumber(getExtendMeters(), 0, getMaxExtendMeters(), 0, 1));
 
     // setIdleMode(CANSparkMax.IdleMode.kBrake);
 

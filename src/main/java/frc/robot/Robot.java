@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
+import frc.robot.Constants.*;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +29,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    addPeriodic(() -> {
+      robotContainer.getLogger().logAll();
+    }, Logging.LOGGING_PERIOD);
   }
 
   /**
@@ -50,6 +53,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    robotContainer.getLogger().inTeleop = false;
   }
 
   @Override
@@ -75,6 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    robotContainer.getLogger().inTeleop = true;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

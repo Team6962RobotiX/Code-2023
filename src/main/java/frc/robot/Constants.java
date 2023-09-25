@@ -15,13 +15,23 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+  
   // Enabled Systems
   public static final boolean ENABLE_DRIVE = true;
   public static final boolean ENABLE_BALANCE = true;
   public static final boolean ENABLE_ARM = true;
   public static final boolean ENABLE_CLAW = false;
   public static final boolean ENABLE_PNEUMATIC_CLAW = false;
+  
+  public final class Logging {
+    public static final boolean ENABLE_DRIVE = true;
+    public static final boolean ENABLE_ARM = true;
+    public static final boolean ENABLE_INTAKE = true;
+    public static final boolean ENABLE_PDP = true;
+    public static final boolean ENABLE_ROBOT_CONTROLLER = true;
+    public static final boolean ENABLE_DRIVER_STATION = true;
+    public static final double LOGGING_PERIOD = 0.1;
+  }
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power

@@ -15,7 +15,7 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private PWMSparkMax intakeMotor = new PWMSparkMax(0);
+  public PWMSparkMax intakeMotor = new PWMSparkMax(0);
 
   /** Creates a new ExampleSubsystem. */
   public Intake() {
