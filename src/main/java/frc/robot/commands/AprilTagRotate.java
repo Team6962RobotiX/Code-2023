@@ -39,21 +39,22 @@ public class AprilTagRotate extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    LimelightHelpers.setPipelineIndex(getName(), 0);
+    LimelightHelpers.setPipelineIndex(Constants.TOP_LIMELIGHT_NAME, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    targetPos = LimelightHelpers.getTargetPose3d_CameraSpace(getName());
-    camPos = LimelightHelpers.getCameraPose3d_TargetSpace(getName());
+    targetPos = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
+    camPos = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
     double xc = camPos.getX();
     double zc = camPos.getZ();
     double beta = targetPos.getRotation().getY();
     double alpha = Math.atan2(xc, zc);
     double gamma = Math.atan2(xt-xc, zc);
-    double total_rotate = beta+alpha;
+    double total_rotate = beta+alpha+gamma;
     RotateDrive rotatoer = new RotateDrive(drive, imu, total_rotate);
+    System.out.println(total_rotate);
     rotatoer.schedule();
     //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
   }

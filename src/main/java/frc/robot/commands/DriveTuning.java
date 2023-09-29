@@ -31,7 +31,6 @@ public class DriveTuning extends CommandBase {
     this.drive = drive;
     this.imu = imu;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive, imu);
   }
 
   // Called when the command is initially scheduled.

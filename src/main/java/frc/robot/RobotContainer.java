@@ -134,6 +134,8 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 9).onTrue(arm.extendToLength(0)); // STOW
     new JoystickButton(utilityJoystick, 9).onTrue(arm.liftToAngle(55)); // STOW
 
+    new JoystickButton(driveJoystick, 8).onTrue(new AprilTagRotate(drive, arm, IMU)); // STOW
+
   }
 
   public Command getAutonomousCommand() {
