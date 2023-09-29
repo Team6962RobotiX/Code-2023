@@ -25,7 +25,7 @@ public class AprilTagRotate extends CommandBase {
   private Arm arm;
   private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
 
-  private double xt = 2;
+  private double xt = 0.99;
 
   private Pose3d targetPos;
   private Pose3d camPos;
