@@ -36,6 +36,12 @@ public class AprilTagRotate extends CommandBase {
     addRequirements(drive);
   }
 
+  public AprilTagRotate(Limelight camera, Drive drive, Arm arm, IMU imu) {
+    this.drive = drive;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drive);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -52,6 +58,9 @@ public class AprilTagRotate extends CommandBase {
     double beta = targetPos.getRotation().getY();
     double alpha = Math.atan2(xc, zc);
     double gamma = Math.atan2(xt-xc, zc);
+    double total_rotate = beta+alpha+gamma;
+    RotateDrive rotatoer = RotateDrive(drive, total_rotate);
+    //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
   }
 
   // Called once the command ends or is interrupted.
