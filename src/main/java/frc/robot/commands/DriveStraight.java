@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -17,30 +18,15 @@ public class DriveStraight extends CommandBase {
   private final Drive drive;
   private final IMU imu;
 
-  private double startDistance;
-  private double distanceTolerance = 0.05;
-  private double desiredDistance = 0;
-  private double drivePower;
   private boolean isFinished = false;
+  private double endMeters;
+  private double startMeters;
+  private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(Constants.AUTONOMOUS_ACCELERATION);
 
-  private boolean rollCheck = false;
-  private double rollCuttoff = 12.0;
-
-  public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower) {
+  public DriveStraight(Drive drive, IMU imu, double meters) {
     this.drive = drive;
     this.imu = imu;
-    this.drivePower = drivePower;
-    this.desiredDistance = desiredDistance;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive, imu);
-  }
-
-  public DriveStraight(Drive drive, IMU imu, double desiredDistance, double drivePower, boolean rollCheck) {
-    this.drive = drive;
-    this.imu = imu;
-    this.drivePower = drivePower;
-    this.desiredDistance = desiredDistance;
-    this.rollCheck = rollCheck;
+    this.endMeters = meters;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive, imu);
   }
@@ -48,34 +34,26 @@ public class DriveStraight extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // drive.resetEncoders();
-    startDistance = drive.getLeftBankEncoder();
-    System.out.println("RUNNING");
+    startMeters = drive.getAvgEncoderDistance();
   }
   
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {      
-
-    if (rollCheck) {
-      drive.arcadeDrive(drivePower, 0);
-      if (imu.getIMU().getRoll() > rollCuttoff || imu.getIMU().getRoll() < -rollCuttoff) {
-        isFinished = true;
-      }
-    }
-    else {
-      if (drive.getLeftBankEncoder() - startDistance < (desiredDistance - distanceTolerance)) {
-        //System.out.println("Forward");
-        drive.arcadeDrive(drivePower, 0);
-      } else if (drive.getLeftBankEncoder() - startDistance > (desiredDistance + distanceTolerance)) {
-        //System.out.println("Backward");
-        drive.arcadeDrive(-drivePower, 0);
-      } else {
-        isFinished = true;
-      }
-    }
+  public void execute() {
+    double meters = drive.getAvgEncoderDistance() - startMeters;
+    double currentVelocity = (drive.getWheelSpeeds().leftMetersPerSecond + drive.getWheelSpeeds().rightMetersPerSecond) / 2;
     
+    // Account for acceleration
+    double timeToStop = currentVelocity / (Constants.AUTONOMOUS_ACCELERATION * -Math.signum(currentVelocity));
+    double metersToStop = (currentVelocity * timeToStop) + (0.5 * Constants.AUTONOMOUS_ACCELERATION * -Math.signum(currentVelocity) * Math.pow(timeToStop, 2));
+    
+    double velocity = 0.0;
+    if (Math.abs(endMeters - meters) > Math.abs(metersToStop)) {
+      velocity = Constants.AUTONOMOUS_SPEED * Math.signum(endMeters - meters);
+    }
+    velocity = accelerationLimiter.calculate(velocity);
+    drive.driveMetersPerSecond(velocity, velocity);
   }
 
   // Called once the command ends or is interrupted.

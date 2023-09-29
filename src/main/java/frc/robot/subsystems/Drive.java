@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
@@ -60,7 +61,10 @@ public class Drive extends SubsystemBase {
     rightBank.setInverted(true);
 
     leftBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
+    leftBankEncoder.setVelocityConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION / 60.0);
     rightBankEncoder.setPositionConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION);
+    rightBankEncoder.setVelocityConversionFactor(Constants.DRIVE_METERS_PER_REVOLUTION / 60.0);
+
 
     resetEncoders();
     odometry = new DifferentialDriveOdometry(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition());
@@ -80,6 +84,10 @@ public class Drive extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public DifferentialDriveKinematics getKinematics() {
+    return new DifferentialDriveKinematics(Constants.TRACKWIDTH);
+  }
+
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
@@ -92,13 +100,17 @@ public class Drive extends SubsystemBase {
     return IMU.getRotation2d().getDegrees();
   }
 
+  public void driveMetersPerSecond(double left, double right) {
+    tankDrive(left / Constants.MAX_DRIVE_SPEED, right / Constants.MAX_DRIVE_SPEED);
+  }
+
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftBank.setVoltage(leftVolts);
     rightBank.setVoltage(rightVolts);
     drive.feed();
   }
 
-  public void resetOdometry(Pose2d pose) {
+  public void resetPose(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(IMU.getRotation2d(), leftBankEncoder.getPosition(), -rightBankEncoder.getPosition(), pose);
   }
@@ -136,7 +148,7 @@ public class Drive extends SubsystemBase {
     rightBankEncoder.setPosition(0);
   }
 
-  public double getLeftBankEncoder() {
-    return leftBankEncoder.getPosition();
+  public double getAvgEncoderDistance() {
+    return (leftBankEncoder.getPosition() - rightBankEncoder.getPosition()) / 2.0;
   }
 }

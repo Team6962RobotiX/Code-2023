@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -39,6 +41,8 @@ public final class Constants {
   public static final double INTAKE_SPEED = 0.15;
   public static final double SLEW_LIMIT = 2.0;
 
+  public static final double TRACKWIDTH = Units.inchesToMeters(22.0);
+
   public static final int ARM_STALL_CURRENT = 40;
   public static final int ARM_CURRENT_LIMIT = 60;
 
@@ -51,6 +55,8 @@ public final class Constants {
   public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
+  public static final double NEO_MOTOR_MAX_RPM = 5676.0;
+  public static final double MAX_DRIVE_SPEED = (NEO_MOTOR_MAX_RPM / 60) * DRIVE_METERS_PER_REVOLUTION;
 
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
@@ -141,10 +147,9 @@ public final class Constants {
   public static final double CLAW_GRAB_MAX_POWER = 0.4; // Fastest speed claw will grab (0 - 1)
 
   // Autonomous Config
-  public static final double AUTONOMOUS_MAX_SPEED = 1; // m / s
-  public static final double AUTONOMOUS_MAX_ACCELERATION = 1; // m / s^2
-  public static final double AUTONOMOUS_RAMSETE_B = 0;
-  public static final double AUTONOMOUS_RAMSETE_ZETA = 0;
+  public static final double AUTONOMOUS_SPEED = 3; // m / s
+  public static final double AUTONOMOUS_ACCELERATION = 3; // m / s^2
+  public static final RamseteController AUTONOMOUS_PID = new RamseteController();
 
   // Limelight Config
   public static final String TOP_LIMELIGHT_NAME = "limelight-top";
