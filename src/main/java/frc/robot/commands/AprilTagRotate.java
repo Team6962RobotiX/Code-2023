@@ -52,7 +52,7 @@ public class AprilTagRotate extends CommandBase {
     double beta = targetPos.getRotation().getY();
     double alpha = Math.atan2(xc, zc);
     double gamma = Math.atan2(xt-xc, zc);
-    double total_rotate = beta+alpha+gamma;
+    double total_rotate = beta+alpha;
     RotateDrive rotatoer = new RotateDrive(drive, imu, total_rotate);
     rotatoer.schedule();
     //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
