@@ -10,82 +10,76 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class RotateDrive extends CommandBase {
   private final Drive drive;
-  private final IMU IMU;
+  private final IMU imu;
 
-  private float angle;
-  private double threshold = 10;
+  private boolean isFinished = false;
+  private double endRadians;
+  private double startRadians;
+  private double currentAngularVelocity = 0.0;
+  private double tolerance = 0.01;
+  private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(Constants.AUTONOMOUS_ANGULAR_ACCELERATION);
 
-  private float initialYaw;
-  private float desiredYaw;
-
-  private double drivingPower = 0.3;
-
-
-  public RotateDrive(Drive drive, IMU IMU, float angle) {
+  public RotateDrive(Drive drive, IMU imu, double radians) {
     this.drive = drive;
-    this.IMU = IMU;
-    this.angle = angle;
+    this.imu = imu;
+    this.endRadians = radians;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive, IMU);  
-  }
-
-  public RotateDrive(Drive drive, IMU IMU, float angle, double power) {
-    this.drive = drive;
-    this.IMU = IMU;
-    this.angle = angle;
-    this.drivingPower = power;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive, IMU);  
+    addRequirements(drive, imu);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initialYaw = IMU.getIMU().getYaw();
-    if (initialYaw+angle > 180){
-      desiredYaw = (angle-initialYaw)*-1;
-    }
-    else {
-      desiredYaw = initialYaw+angle;
-    }
-    System.out.println("DesiredYaw" + desiredYaw + " initalYaw " + initialYaw);
-    
+    startRadians = imu.getIMU().getAngle() / 180.0 * Math.PI;
   }
+  
 
-  // Called every time the scheduler runs while the command is scheduled. 
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    float yaw = IMU.getIMU().getYaw();
-    System.out.println("YAW: " + yaw);
-    /* 
-    if (yaw < desiredYaw-threshold) {
-      System.out.println("Left");
-      drive.arcadeDrive(0,-drivingPower);
-    } 
-    else if (yaw > desiredYaw+threshold) {
-      System.out.println("Right");
-      drive.arcadeDrive(0,-drivingPower);
-    */
-    drive.arcadeDrive(0,-0.5);
+    double radians = imu.getIMU().getAngle() / 180.0 * Math.PI - startRadians;
+
+    System.out.println(radians);
     
+    // Account for acceleration
+    double timeToStop = currentAngularVelocity / (Constants.AUTONOMOUS_ANGULAR_ACCELERATION * -Math.signum(currentAngularVelocity));
+    double radiansToStop = (currentAngularVelocity * timeToStop) + (0.5 * Constants.AUTONOMOUS_ANGULAR_ACCELERATION * -Math.signum(currentAngularVelocity) * Math.pow(timeToStop, 2));
+    
+    if (currentAngularVelocity == 0) {
+      radiansToStop = 0.0;
+    }
+
+    double angularVelocity = 0.0;
+    if (Math.abs(endRadians - radians) > Math.abs(radiansToStop)) {
+      angularVelocity = Constants.AUTONOMOUS_ANGULAR_SPEED * Math.signum(endRadians - radians);
+    }
+
+    if (Math.abs(endRadians - radians) < tolerance) {
+      isFinished = true;
+    }
+
+    angularVelocity = accelerationLimiter.calculate(angularVelocity);
+    double driveVelocity = Constants.rotationalSpeedToDriveSpeed(angularVelocity);
+
+    drive.driveMetersPerSecond(driveVelocity, -driveVelocity);
+    currentAngularVelocity = angularVelocity;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.arcadeDrive(0, 0);
+    drive.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    float yaw = IMU.getIMU().getYaw();
-    return (yaw < desiredYaw+threshold && yaw > desiredYaw-threshold);
-  } 
+    return isFinished;
+  }
 }
-

@@ -37,7 +37,7 @@ public class Logger {
     DataLog log = DataLogManager.getLog();;
     Map<String, Object> logEntries = new HashMap<String, Object>();
 
-    PowerDistribution PDP = new PowerDistribution(5, ModuleType.kRev);
+    // PowerDistribution PDP = new PowerDistribution(5, ModuleType.kRev);
     public int loopCount = 0;
     public Drive drive;
     public Arm arm;
@@ -57,8 +57,8 @@ public class Logger {
     public void logAll() {
         if (Logging.ENABLE_DRIVE)
             logDrive("/drive", drive);
-        if (Logging.ENABLE_PDP)
-            logPDP("/powerDistribution", PDP);
+        // if (Logging.ENABLE_PDP)
+        //     logPDP("/powerDistribution", PDP);
         if (Logging.ENABLE_ROBOT_CONTROLLER)
             logRobotController("/robotController");
         if (Logging.ENABLE_DRIVER_STATION)

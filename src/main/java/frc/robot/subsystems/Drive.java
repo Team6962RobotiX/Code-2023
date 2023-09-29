@@ -101,7 +101,9 @@ public class Drive extends SubsystemBase {
   }
 
   public void driveMetersPerSecond(double left, double right) {
-    tankDrive(left / Constants.MAX_DRIVE_SPEED, right / Constants.MAX_DRIVE_SPEED);
+    double leftPower = Constants.driveSpeedToPower(left);
+    double rightPower = Constants.driveSpeedToPower(right);
+    tankDrive(leftPower, rightPower);
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {

@@ -57,25 +57,25 @@ public class RobotContainer {
   private final Logger logger = new Logger(drive, arm, intake, IMU);
   // private final ExampleSubsystem tester = new ExampleSubsystem();
 
-  private final Command simpleauto1 = new SequentialCommandGroup(
-    new DriveStraight(drive, IMU, -.2, 0.6), 
-    new DriveStraight(drive, IMU, 1.7, 0.4),
-    new AutoBalance(IMU, drive)
-  );
+  // private final Command simpleauto1 = new SequentialCommandGroup(
+  //   new DriveStraight(drive, IMU, -.2, 0.6), 
+  //   new DriveStraight(drive, IMU, 1.7, 0.4),
+  //   new AutoBalance(IMU, drive)
+  // );
 
-  private final Command complexauto1 = new SequentialCommandGroup(
-    new DriveStraight(drive, IMU, -.2, 0.6), 
-    new DriveStraight(drive, IMU, 2.2, 0.5),
-    new DriveStraight(drive, IMU, 1.8, 0.4),
-    new RotateDrive(drive, IMU, 175),
-    new DriveStraight(drive, IMU, 2.0, 0.5),
-    new AutoBalance(IMU, drive)
-  );
+  // private final Command complexauto1 = new SequentialCommandGroup(
+  //   new DriveStraight(drive, IMU, -.2, 0.6), 
+  //   new DriveStraight(drive, IMU, 2.2, 0.5),
+  //   new DriveStraight(drive, IMU, 1.8, 0.4),
+  //   new RotateDrive(drive, IMU, 175),
+  //   new DriveStraight(drive, IMU, 2.0, 0.5),
+  //   new AutoBalance(IMU, drive)
+  // );
 
-  private final Command auto2 = new SequentialCommandGroup(
-    new DriveStraight(drive, IMU, -.2, 0.6),
-    new DriveStraight(drive, IMU, 4.5, 0.6)
-  );
+  // private final Command auto2 = new SequentialCommandGroup(
+  //   new DriveStraight(drive, IMU, -.2, 0.6),
+  //   new DriveStraight(drive, IMU, 4.5, 0.6)
+  // );
 
   private final Command auto3 = new SequentialCommandGroup(
     new RotateDrive(drive, IMU, 180),
@@ -91,11 +91,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    chooser.setDefaultOption("Complex Auto 1", complexauto1);
-    chooser.addOption("Simple Auto 1", simpleauto1);
-    chooser.addOption("Auto 2", auto2);
-    chooser.addOption("Auto 3", auto3);
-    chooser.addOption("No Auto", noauto);
+    // chooser.setDefaultOption("Complex Auto 1", complexauto1);
+    // chooser.addOption("Simple Auto 1", simpleauto1);
+    // chooser.addOption("Auto 2", auto2);
+    // chooser.addOption("Auto 3", auto3);
+    // chooser.addOption("No Auto", noauto);
 
     SmartDashboard.putData(chooser);
 
@@ -137,7 +137,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return chooser.getSelected();
+    return new RotateDrive(drive, IMU, Math.PI);
+    // return chooser.getSelected();
     // return null;
   }
 

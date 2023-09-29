@@ -37,7 +37,7 @@ public final class Constants {
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
-  public static final double DRIVE_TURN_POWER_LIMIT = 0.7; // Hard limit on turning power
+  public static final double DRIVE_TURN_POWER_LIMIT = 0.4; // Hard limit on turning power
   public static final double INTAKE_SPEED = 0.15;
   public static final double SLEW_LIMIT = 2.0;
 
@@ -47,16 +47,16 @@ public final class Constants {
   public static final int ARM_CURRENT_LIMIT = 60;
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
-  public static final double TURN_FINE_CONTROL_POWER = 0.2;
+  public static final double TURN_FINE_CONTROL_POWER = 0.15;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
-  public static final double DRIVE_BASE_TURN_POWER = 0.2; // Motor power required to get the chassis turning
+  public static final double DRIVE_BASE_TURN_POWER = 0.15; // Motor power required to get the chassis turning
   public static final double DRIVE_TRACK_WIDTH = 0.5588; // Meters
-  public static final double WHEEL_RADIUS = 7.62 / 100; // Meters
+  public static final double WHEEL_RADIUS = 7.62 / 100.0; // Meters
   public static final double GEARBOX_RATIO = 1.0 / 8.45; // 10.71 for test chassis, 8.45 for main chassis
   public static final double DRIVE_METERS_PER_REVOLUTION = 2.0 * Math.PI * WHEEL_RADIUS * GEARBOX_RATIO;
-  public static final double NEO_MOTOR_MAX_RPM = 5676.0;
-  public static final double MAX_DRIVE_SPEED = (NEO_MOTOR_MAX_RPM / 60) * DRIVE_METERS_PER_REVOLUTION;
+  public static final double DRIVE_MOTOR_MAX_RPM = 3500.0 / 1.2;
+  public static final double MAX_DRIVE_SPEED = (DRIVE_MOTOR_MAX_RPM / 60.0) * DRIVE_METERS_PER_REVOLUTION;
 
   public static final double DRIVE_VEL_KP = 0.0091849;
   public static final double DRIVE_POS_KP = 23.685;
@@ -147,8 +147,10 @@ public final class Constants {
   public static final double CLAW_GRAB_MAX_POWER = 0.4; // Fastest speed claw will grab (0 - 1)
 
   // Autonomous Config
-  public static final double AUTONOMOUS_SPEED = 3; // m / s
+  public static final double AUTONOMOUS_SPEED = 1.5; // m / s
   public static final double AUTONOMOUS_ACCELERATION = 3; // m / s^2
+  public static final double AUTONOMOUS_ANGULAR_SPEED = driveSpeedToRotationalSpeed(Constants.AUTONOMOUS_SPEED); // m / s
+  public static final double AUTONOMOUS_ANGULAR_ACCELERATION = 3; // m / s^2
   public static final RamseteController AUTONOMOUS_PID = new RamseteController();
 
   // Limelight Config
@@ -166,6 +168,20 @@ public final class Constants {
   public static final double BOTTOM_LIMELIGHT_HEIGHT = 0.1651;
   public static final double TOP_LIMELIGHT_VFOV = 49.7;
 
+  public static double driveSpeedToRotationalSpeed(double speed) {
+    return Math.atan(speed / (Constants.DRIVE_TRACK_WIDTH / 2.0));
+  }
+
+  public static double rotationalSpeedToDriveSpeed(double speed) {
+    return Math.tan(speed) * (Constants.DRIVE_TRACK_WIDTH / 2.0);
+  }
+
+  public static double driveSpeedToPower(double speed) {
+    if (Math.pow(1.22543, Math.abs(speed)) - 0.81804 < 0.12) {
+      return 0.0;
+    }
+    return (Math.pow(1.22543, Math.abs(speed)) - 0.81804) * Math.signum(speed);
+  }
 
   public static double mapPower(double power, double min, double max, double deadZone) {
     double sign = Math.signum(power);
@@ -200,6 +216,12 @@ public final class Constants {
     } else {
       return 0.0;
     }
+  }
+
+  public static double mapBothSides(double x, double a, double b, double c, double d) {
+    if (x > 0.0) return mapNumber(x, a, b, c, d);
+    if (x < 0.0) return mapNumber(x, -a, -b, -c, -d);
+    return 0.0;
   }
 
   public static double mapNumber(double x, double a, double b, double c, double d) {
