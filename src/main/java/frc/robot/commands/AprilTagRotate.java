@@ -20,23 +20,17 @@ import frc.robot.LimelightHelpers;
 /** An example command that uses an example subsystem. */
 public class AprilTagRotate extends CommandBase {
   
-  private Limelight camera;
   private Drive drive;
   private Arm arm;
-  private PIDController orientPID = new PIDController(Constants.DRIVE_ORIENT_KP, 0, 0);
+  private IMU imu;
 
   private double xt = 0.99;
 
   private Pose3d targetPos;
   private Pose3d camPos;
 
-  public AprilTagRotate(Limelight camera, Drive drive, Arm arm) {
-    this.drive = drive;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
-  }
-
-  public AprilTagRotate(Limelight camera, Drive drive, Arm arm, IMU imu) {
+  public AprilTagRotate(Drive drive, Arm arm, IMU imu) {
+    this.imu = imu;
     this.drive = drive;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
@@ -59,7 +53,8 @@ public class AprilTagRotate extends CommandBase {
     double alpha = Math.atan2(xc, zc);
     double gamma = Math.atan2(xt-xc, zc);
     double total_rotate = beta+alpha+gamma;
-    RotateDrive rotatoer = RotateDrive(drive, total_rotate);
+    RotateDrive rotatoer = new RotateDrive(drive, imu, total_rotate);
+    rotatoer.schedule();
     //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
   }
 
