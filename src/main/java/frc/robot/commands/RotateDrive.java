@@ -22,7 +22,7 @@ public class RotateDrive extends CommandBase {
   private double endRadians;
   private double startRadians;
   private double currentAngularVelocity = 0.0;
-  private double tolerance = 0.01;
+  private double tolerance = 0.035;
   private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(Constants.AUTONOMOUS_ANGULAR_ACCELERATION);
 
   public RotateDrive(Drive drive, IMU imu, double radians) {
@@ -44,8 +44,6 @@ public class RotateDrive extends CommandBase {
   @Override
   public void execute() {
     double radians = imu.getIMU().getAngle() / 180.0 * Math.PI - startRadians;
-
-    System.out.println(radians);
     
     // Account for acceleration
     double timeToStop = currentAngularVelocity / (Constants.AUTONOMOUS_ANGULAR_ACCELERATION * -Math.signum(currentAngularVelocity));
@@ -69,6 +67,8 @@ public class RotateDrive extends CommandBase {
 
     drive.driveMetersPerSecond(driveVelocity, -driveVelocity);
     currentAngularVelocity = angularVelocity;
+
+    System.out.println(endRadians - radians);
   }
 
   // Called once the command ends or is interrupted.

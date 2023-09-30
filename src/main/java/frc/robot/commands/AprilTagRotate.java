@@ -24,7 +24,7 @@ public class AprilTagRotate extends CommandBase {
   private Arm arm;
   private IMU imu;
 
-  private double xt = 0.99;
+  private double xt = -0.99;
 
   private Pose3d targetPos;
   private Pose3d camPos;
@@ -48,13 +48,18 @@ public class AprilTagRotate extends CommandBase {
     targetPos = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
     camPos = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
     double xc = camPos.getX();
-    double zc = camPos.getZ();
+    System.out.println("xc: " + xc);
+    double zc = Math.abs(camPos.getZ());
+    System.out.println("zc: " + zc);
     double beta = targetPos.getRotation().getY();
+    System.out.println("beta:" + beta);
     double alpha = Math.atan2(xc, zc);
+    System.out.println("alpha: " + alpha);
     double gamma = Math.atan2(xt-xc, zc);
-    double total_rotate = beta+alpha+gamma;
+    System.out.println("gamma: " + gamma);
+    double total_rotate = gamma+beta;
     RotateDrive rotatoer = new RotateDrive(drive, imu, total_rotate);
-    System.out.println(total_rotate);
+    // System.out.println(total_rotate);
     rotatoer.schedule();
     //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
   }

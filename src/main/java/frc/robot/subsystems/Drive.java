@@ -103,6 +103,12 @@ public class Drive extends SubsystemBase {
   public void driveMetersPerSecond(double left, double right) {
     double leftPower = Constants.driveSpeedToPower(left);
     double rightPower = Constants.driveSpeedToPower(right);
+    if (Math.abs(leftPower) < 0.12) {
+      leftPower = 0.125 * Math.signum(leftPower);
+    }
+    if (Math.abs(rightPower) < 0.12) {
+      rightPower = 0.125 * Math.signum(rightPower);
+    }
     tankDrive(leftPower, rightPower);
   }
 
