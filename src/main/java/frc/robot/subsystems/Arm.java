@@ -125,6 +125,8 @@ public class Arm extends SubsystemBase {
       return;
     }
 
+    SmartDashboard.putData("Zero Arm (manually retract fully first)", zeroArm());
+
     liftAngle = ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
     extendMeters = extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
 
@@ -358,5 +360,11 @@ public class Arm extends SubsystemBase {
       increment = Math.max(0, increment);
     }
     nextExtendMeters += increment;
+  }
+
+  public CommandBase zeroArm() {
+    return runOnce(() -> {
+      extendEncoder.setPosition(0.0);
+    });
   }
 }
