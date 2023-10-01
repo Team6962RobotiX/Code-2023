@@ -63,14 +63,12 @@ public class RobotContainer {
   //   new AutoBalance(IMU, drive)
   // );
 
-  // private final Command complexauto1 = new SequentialCommandGroup(
-  //   new DriveStraight(drive, IMU, -.2, 0.6), 
-  //   new DriveStraight(drive, IMU, 2.2, 0.5),
-  //   new DriveStraight(drive, IMU, 1.8, 0.4),
-  //   new RotateDrive(drive, IMU, 175),
-  //   new DriveStraight(drive, IMU, 2.0, 0.5),
-  //   new AutoBalance(IMU, drive)
-  // );
+  private final Command complexauto1 = new SequentialCommandGroup(
+    new DriveStraight(drive, IMU, -.2), 
+    new DriveStraight(drive, IMU, 4.0),
+    new DriveStraight(drive, IMU, -1.5),
+    new AutoBalance(IMU, drive)
+  );
 
   // private final Command auto2 = new SequentialCommandGroup(
   //   new DriveStraight(drive, IMU, -.2, 0.6),
@@ -126,20 +124,20 @@ public class RobotContainer {
     
     new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.6, 1.55)); // TOP
     
-    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.25)); // DOUBLE SUBSTATION
-    
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.38)); // DOUBLE SUBSTATION
+     
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));
     
     new JoystickButton(utilityJoystick, 9).onTrue(arm.extendToLength(0)); // STOW
     new JoystickButton(utilityJoystick, 9).onTrue(arm.liftToAngle(55)); // STOW
 
-    new JoystickButton(driveJoystick, 8).onTrue(new AprilTagRotate(drive, arm, IMU)); // STOW
+    new JoystickButton(driveJoystick, 8).onTrue(new AprilTagRotate(drive, arm, IMU)); // auto orient
 
   }
 
   public Command getAutonomousCommand() {
-    return new RotateDrive(drive, IMU, Math.PI);
+    return complexauto1;
     // return chooser.getSelected();
     // return null;
   }

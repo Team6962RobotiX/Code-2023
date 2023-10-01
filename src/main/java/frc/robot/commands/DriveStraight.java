@@ -24,6 +24,7 @@ public class DriveStraight extends CommandBase {
   private double currentVelocity = 0.0;
   private double tolerance = 0.01;
   private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(Constants.AUTONOMOUS_ACCELERATION);
+  double speed = 0.0;
 
   public DriveStraight(Drive drive, IMU imu, double meters) {
     this.drive = drive;

@@ -37,14 +37,14 @@ public final class Constants {
 
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
-  public static final double DRIVE_TURN_POWER_LIMIT = 0.4; // Hard limit on turning power
+  public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
   public static final double INTAKE_SPEED = 0.15;
   public static final double SLEW_LIMIT = 2.0;
 
   public static final double TRACKWIDTH = Units.inchesToMeters(22.0);
 
-  public static final int ARM_STALL_CURRENT = 40;
-  public static final int ARM_CURRENT_LIMIT = 60;
+  public static final int ARM_STALL_CURRENT = 60;
+  public static final int ARM_CURRENT_LIMIT = 80;
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
   public static final double TURN_FINE_CONTROL_POWER = 0.15;
@@ -109,9 +109,9 @@ public final class Constants {
 
   // Extension
   public static final double ARM_MAX_EXTEND_TICKS = 43.0 / 5.0 * 9.0; // Arm extend limit (measured in encoder ticks)
-  public static final double ARM_EXTEND_PADDING = 0.02; // Padding to prevent overshooting limits (measured in meters)
+  public static final double ARM_EXTEND_PADDING = 0.01; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 1.0; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.04; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.03; // Meters of precision
 
   public static final double ARM_EXTEND_SPEED = 0.4; // m/s
   public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
@@ -120,18 +120,18 @@ public final class Constants {
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
   public static final double ARM_LIFT_MIN_ANGLE = 30.0; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
-  public static final double ARM_LIFT_ANGLE_TOLERANCE = 2; // Degrees of precision
+  public static final double ARM_LIFT_ANGLE_TOLERANCE = 1; // Degrees of precision
 
   public static final double ARM_LIFT_SPEED = 10.0; // degrees/s
   public static final double ARM_LIFT_SPEED_FINE = 10.0; // degrees/s
 
   // PID & FF Config
-  public static final double ARM_EXTEND_KP = 4.5;
+  public static final double ARM_EXTEND_KP = 3.0;
   public static final double ARM_EXTEND_KI = 1;
   public static final double ARM_EXTEND_KD = 0;
 
   // PID
-  public static final double ARM_LIFT_KP = 0.01;
+  public static final double ARM_LIFT_KP = 0.008;
   public static final double ARM_LIFT_KI = 0.005;
   public static final double ARM_LIFT_KD = 0;
 
@@ -148,7 +148,7 @@ public final class Constants {
 
   // Autonomous Config
   public static final double AUTONOMOUS_SPEED = 1.5; // m / s
-  public static final double AUTONOMOUS_ACCELERATION = 3; // m / s^2
+  public static final double AUTONOMOUS_ACCELERATION = 2; // m / s^2
   public static final double AUTONOMOUS_ANGULAR_SPEED = driveSpeedToRotationalSpeed(Constants.AUTONOMOUS_SPEED); // m / s
   public static final double AUTONOMOUS_ANGULAR_ACCELERATION = 3; // m / s^2
   public static final RamseteController AUTONOMOUS_PID = new RamseteController();

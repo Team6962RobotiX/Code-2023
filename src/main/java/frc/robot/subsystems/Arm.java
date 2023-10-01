@@ -111,6 +111,8 @@ public class Arm extends SubsystemBase {
     liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE);
     extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
     liftPID.setSetpoint(targetLiftAngle);
+
+    SmartDashboard.putData("Zero Arm (manually retract fully first)", new ZeroArm(this));
   }
 
   @Override
@@ -124,8 +126,6 @@ public class Arm extends SubsystemBase {
       lift.set(0.0);
       return;
     }
-
-    SmartDashboard.putData("Zero Arm (manually retract fully first)", zeroArm());
 
     liftAngle = ((((liftEncoder.getAbsolutePosition() * 360.0) + Constants.ARM_LIFT_ENCODER_OFFSET) % 360.0) + 360.0) % 360.0;
     extendMeters = extendEncoder.getPosition() - Constants.ARM_EXTEND_PADDING;
@@ -255,6 +255,10 @@ public class Arm extends SubsystemBase {
     
     // System.out.println(extend.getOutputCurrent());
     // System.out.println(getExtendMeters());
+    if (extend.getMotorTemperature() > 50.0) {
+      extend.set(0.0);
+      return;
+    }
     extend.set(power);
   }
 
@@ -362,9 +366,7 @@ public class Arm extends SubsystemBase {
     nextExtendMeters += increment;
   }
 
-  public CommandBase zeroArm() {
-    return runOnce(() -> {
-      extendEncoder.setPosition(0.0);
-    });
+  public void zeroArm() {
+    extendEncoder.setPosition(0.0);
   }
 }
