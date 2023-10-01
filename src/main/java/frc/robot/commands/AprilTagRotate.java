@@ -58,7 +58,7 @@ public class AprilTagRotate extends CommandBase {
     double gamma = Math.atan2(xt-xc, zc);
     System.out.println("gamma: " + gamma);
     double total_rotate = gamma+beta;
-    RotateDrive rotatoer = new RotateDrive(drive, imu, total_rotate);
+    RotateDriveOld rotatoer = new RotateDriveOld(drive, imu, total_rotate);
     // System.out.println(total_rotate);
     rotatoer.schedule();
     //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
