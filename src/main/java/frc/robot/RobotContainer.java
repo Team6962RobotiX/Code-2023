@@ -63,30 +63,33 @@ public class RobotContainer {
   //   new AutoBalance(IMU, drive)
   // );
 
-  private final Command communityAuto = new SequentialCommandGroup(
-    new DriveUntil(drive, IMU::isOnStation, Constants.AUTONOMOUS_POWER, 0.0),
-    new DriveUntil(drive, IMU::isOffStation,  Constants.AUTONOMOUS_POWER, 0.5),
-    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
-    new DriveUntil(drive, IMU::isCenteredOnStation,  Constants.AUTONOMOUS_POWER, 0.0),
-    new AutoBalance(IMU, drive)
-  );
-
   private final Command balanceAuto = new SequentialCommandGroup(
     new DriveUntil(drive, IMU::isCenteredOnStation, Constants.AUTONOMOUS_POWER, 0.0),
     new AutoBalance(IMU, drive)
   );
 
-  private final Command placeAndCommunityAuto = new SequentialCommandGroup(
+  private final Command communityAuto = new SequentialCommandGroup(
+    new DriveUntil(drive, IMU::isOnStation, Constants.AUTONOMOUS_POWER, 0.0),
+    new DriveUntil(drive, IMU::isOffStation,  Constants.AUTONOMOUS_POWER, 0.5),
+    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    balanceAuto
+  );
+
+  private final Command placeAuto = new SequentialCommandGroup(
     arm.toPosition(1.6, 1.55),
     intake.output(),
-    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    arm.extendToLength(0),
+    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER)
+  );
+
+  private final Command placeAndCommunityAuto = new SequentialCommandGroup(
+    placeAuto,
     communityAuto
   );
 
   private final Command placeAndBalanceAuto = new SequentialCommandGroup(
-    arm.toPosition(1.6, 1.55),
-    intake.output(),
-    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    placeAuto,
     balanceAuto
   );
 
@@ -109,11 +112,12 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    autonChooser.setDefaultOption("Community", communityAuto);
-    autonChooser.addOption("Balance", balanceAuto);
-    autonChooser.addOption("Place And Community", placeAndCommunityAuto);
-    autonChooser.addOption("Place And Balance", placeAndBalanceAuto);
-    autonChooser.addOption("No Auto", noauto);
+    autonChooser.setDefaultOption("Community and balance", communityAuto);
+    autonChooser.addOption("Just balance", balanceAuto);
+    autonChooser.addOption("Just place", placeAuto);
+    autonChooser.addOption("Place, community, and balance", placeAndCommunityAuto);
+    autonChooser.addOption("Place and balance", placeAndBalanceAuto);
+    autonChooser.addOption("No auto", noauto);
 
     SmartDashboard.putData(autonChooser);
 
