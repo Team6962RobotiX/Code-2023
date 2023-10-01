@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -18,7 +19,12 @@ import frc.robot.Constants;
 
 public class IMU extends SubsystemBase {
 
-  AHRS IMU = new AHRS(SPI.Port.kMXP);;
+  AHRS IMU = new AHRS(SPI.Port.kMXP);
+  private boolean onStation = false;
+  private boolean transitioning = false;
+  private boolean isBalanced = false;
+
+  private double roll = 0.0;
 
   public IMU() {
     
@@ -26,6 +32,19 @@ public class IMU extends SubsystemBase {
 
   @Override
   public void periodic() {
+    isBalanced = Math.abs(IMU.getRoll()) < Constants.ON_STATION_DEGREES || Math.signum(roll) != Math.signum(IMU.getRoll());
+    roll = IMU.getRoll();
+
+    if (transitioning && isBalanced) {
+      onStation = !onStation;
+      transitioning = false;
+      return;
+    }
+
+    if (!isBalanced && !transitioning) {
+      transitioning = true;
+    }
+
     // System.out.println(IMU.getRoll());
     // System.out.println(IMU.isCalibrating());
     // This method will be called once per scheduler run
@@ -46,5 +65,17 @@ public class IMU extends SubsystemBase {
 
   public Rotation2d getRotation2d() {
     return IMU.getRotation2d();
+  }
+
+  public boolean isOnStation() {
+    return onStation || transitioning;
+  }
+
+  public boolean isCenteredOnStation() {
+    return isBalanced && onStation;
+  }
+
+  public boolean isOffStation() {
+    return !(onStation || transitioning);
   }
 }

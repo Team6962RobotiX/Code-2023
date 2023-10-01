@@ -19,16 +19,15 @@ public class RotateDrive extends CommandBase {
   private final IMU imu;
 
   private boolean isFinished = false;
-  private double endRadians;
-  private double startRadians;
-  private double currentAngularVelocity = 0.0;
-  private double tolerance = 0.035;
-  private SlewRateLimiter accelerationLimiter = new SlewRateLimiter(Constants.AUTONOMOUS_ANGULAR_ACCELERATION);
+  private double endDegrees;
+  private double startDegrees;
+  private double power;
 
-  public RotateDrive(Drive drive, IMU imu, double radians) {
+  public RotateDrive(Drive drive, IMU imu, double degrees, double power) {
     this.drive = drive;
+    this.power = power;
     this.imu = imu;
-    this.endRadians = radians;
+    this.endDegrees = degrees;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive, imu);
   }
@@ -36,39 +35,23 @@ public class RotateDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startRadians = imu.getIMU().getAngle() / 180.0 * Math.PI;
+    startDegrees = imu.getIMU().getAngle();
   }
   
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double radians = imu.getIMU().getAngle() / 180.0 * Math.PI - startRadians;
-    
-    // Account for acceleration
-    double timeToStop = currentAngularVelocity / (Constants.AUTONOMOUS_ANGULAR_ACCELERATION * -Math.signum(currentAngularVelocity));
-    double radiansToStop = (currentAngularVelocity * timeToStop) + (0.5 * Constants.AUTONOMOUS_ANGULAR_ACCELERATION * -Math.signum(currentAngularVelocity) * Math.pow(timeToStop, 2));
-    
-    if (currentAngularVelocity == 0) {
-      radiansToStop = 0.0;
-    }
+    double degrees = imu.getIMU().getAngle() - startDegrees;
+    double angularVelocity = imu.getIMU().getRawGyroZ();
+    double tolerance = angularVelocity * Constants.GYRO_DELAY;
 
-    double angularVelocity = 0.0;
-    if (Math.abs(endRadians - radians) > Math.abs(radiansToStop)) {
-      angularVelocity = Constants.AUTONOMOUS_ANGULAR_SPEED * Math.signum(endRadians - radians);
-    }
-
-    if (Math.abs(endRadians - radians) < tolerance) {
+    if (Math.abs(endDegrees - degrees) < tolerance) {
       isFinished = true;
+      drive.tankDrive(0, 0);
     }
 
-    angularVelocity = accelerationLimiter.calculate(angularVelocity);
-    double driveVelocity = Constants.rotationalSpeedToDriveSpeed(angularVelocity);
-
-    drive.driveMetersPerSecond(driveVelocity, -driveVelocity);
-    currentAngularVelocity = angularVelocity;
-
-    System.out.println(endRadians - radians);
+    drive.tankDrive(power, -power);
   }
 
   // Called once the command ends or is interrupted.

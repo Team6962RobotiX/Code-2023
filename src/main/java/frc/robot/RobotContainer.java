@@ -63,10 +63,11 @@ public class RobotContainer {
   //   new AutoBalance(IMU, drive)
   // );
 
-  private final Command complexauto1 = new SequentialCommandGroup(
-    new DriveStraight(drive, IMU, -.2), 
-    new DriveStraight(drive, IMU, 4.0),
-    new DriveStraight(drive, IMU, -1.5),
+  private final Command communityAuto = new SequentialCommandGroup(
+    new DriveUntil(drive, IMU::isOnStation, Constants.AUTONOMOUS_POWER, 0.0),
+    new DriveUntil(drive, IMU::isOffStation,  Constants.AUTONOMOUS_POWER, 0.5),
+    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    new DriveUntil(drive, IMU::isCenteredOnStation,  Constants.AUTONOMOUS_POWER, 0.0),
     new AutoBalance(IMU, drive)
   );
 
@@ -76,9 +77,9 @@ public class RobotContainer {
   // );
 
   private final Command auto3 = new SequentialCommandGroup(
-    new RotateDrive(drive, IMU, 180),
-    arm.toPosition(1.6, 0.7),
-    new WaitCommand(3)
+    // new RotateDrive(drive, IMU, 180),
+    // arm.toPosition(1.6, 0.7),
+    // new WaitCommand(3)
     // claw.toggle()
     //new DriveStraight(drive, IMU, -0.5, 0.4),
     //new RotateDrive(drive, IMU, 180)
@@ -137,7 +138,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return complexauto1;
+    return communityAuto;
     // return chooser.getSelected();
     // return null;
   }

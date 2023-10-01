@@ -41,6 +41,13 @@ public final class Constants {
   public static final double INTAKE_SPEED = 0.15;
   public static final double SLEW_LIMIT = 2.0;
 
+  // TUNE FOR AUTONOMOUS
+  public static final double GYRO_DELAY = 0.3;
+  public static final double ON_STATION_DEGREES = 10;
+  public static final double AUTONOMOUS_POWER = 0.4;
+
+
+  
   public static final double TRACKWIDTH = Units.inchesToMeters(22.0);
 
   public static final int ARM_STALL_CURRENT = 60;

@@ -75,6 +75,13 @@ public class Logger {
         logSparkMax(path + "/rightMotor1", drive.rightBank1);
         logSparkMax(path + "/rightMotor2", drive.rightBank2);
         logNavX(path + "/gyro", IMU.getIMU());
+        logStationStatus(path + "/stationStatus", IMU);
+    }
+
+    public void logStationStatus(String path, IMU imu) {
+        logData(path + "/onStation", imu.isOnStation());
+        logData(path + "/offStation", imu.isOffStation());
+        logData(path + "/isCentered", imu.isCenteredOnStation());
     }
 
     public void logArm(String path, Arm arm) {
