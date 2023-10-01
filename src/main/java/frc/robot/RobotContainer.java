@@ -71,6 +71,25 @@ public class RobotContainer {
     new AutoBalance(IMU, drive)
   );
 
+  private final Command balanceAuto = new SequentialCommandGroup(
+    new DriveUntil(drive, IMU::isCenteredOnStation, Constants.AUTONOMOUS_POWER, 0.0),
+    new AutoBalance(IMU, drive)
+  );
+
+  private final Command placeAndCommunityAuto = new SequentialCommandGroup(
+    arm.toPosition(1.6, 1.55),
+    intake.output(),
+    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    communityAuto
+  );
+
+  private final Command placeAndBalanceAuto = new SequentialCommandGroup(
+    arm.toPosition(1.6, 1.55),
+    intake.output(),
+    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
+    balanceAuto
+  );
+
   // private final Command auto2 = new SequentialCommandGroup(
   //   new DriveStraight(drive, IMU, -.2, 0.6),
   //   new DriveStraight(drive, IMU, 4.5, 0.6)
@@ -86,17 +105,17 @@ public class RobotContainer {
   );
 
   private final Command noauto = new SequentialCommandGroup();
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // chooser.setDefaultOption("Complex Auto 1", complexauto1);
-    // chooser.addOption("Simple Auto 1", simpleauto1);
-    // chooser.addOption("Auto 2", auto2);
-    // chooser.addOption("Auto 3", auto3);
-    // chooser.addOption("No Auto", noauto);
+    autonChooser.setDefaultOption("Community", communityAuto);
+    autonChooser.addOption("Balance", balanceAuto);
+    autonChooser.addOption("Place And Community", placeAndCommunityAuto);
+    autonChooser.addOption("Place And Balance", placeAndBalanceAuto);
+    autonChooser.addOption("No Auto", noauto);
 
-    SmartDashboard.putData(chooser);
+    SmartDashboard.putData(autonChooser);
 
 
     drive.setDefaultCommand(new JoystickDrive(drive, () -> driveJoystick));
@@ -138,8 +157,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return communityAuto;
-    // return chooser.getSelected();
+    return autonChooser.getSelected();
     // return null;
   }
 
