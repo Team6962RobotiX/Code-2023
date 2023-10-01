@@ -45,13 +45,13 @@ public class RotateDrive extends CommandBase {
     double degrees = imu.getIMU().getAngle() - startDegrees;
     double angularVelocity = imu.getIMU().getRawGyroZ();
     double tolerance = angularVelocity * Constants.GYRO_DELAY;
-
-    if (Math.abs(endDegrees - degrees) < tolerance) {
+    
+    if (endDegrees - degrees < Math.abs(tolerance)) {
       isFinished = true;
       drive.tankDrive(0, 0);
     }
 
-    drive.tankDrive(power, -power);
+    drive.arcadeDrive(0, -power);
   }
 
   // Called once the command ends or is interrupted.

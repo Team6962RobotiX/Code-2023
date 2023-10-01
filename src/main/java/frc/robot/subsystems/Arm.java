@@ -174,12 +174,16 @@ public class Arm extends SubsystemBase {
     }
   }
 
-  private boolean doneLifting() {
+  public boolean doneLifting() {
     return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE;
   }
 
-  private boolean doneExtending() {
+  public boolean doneExtending() {
     return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE;
+  }
+
+  public boolean doneMoving() {
+    return (targetExtendMeters == nextExtendMeters) && (targetLiftAngle == nextLiftAngle) && (doneExtending()) && (getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE * 3 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE * 3);
   }
 
   public void fullyRetract() {

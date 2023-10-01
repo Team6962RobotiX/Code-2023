@@ -16,14 +16,19 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   public PWMSparkMax intakeMotor = new PWMSparkMax(0);
-
+  public double timer = 0.0;
   /** Creates a new ExampleSubsystem. */
   public Intake() {
   }
 
   @Override
   public void periodic() {
-    setSpeed(0.0);
+    timer -= 0.02;
+    if (timer < 0) {
+      setSpeed(0.0);
+    } else {
+      setSpeed(0.6);
+    }
   }
 
   @Override
@@ -44,6 +49,12 @@ public class Intake extends SubsystemBase {
   public CommandBase output() {
     return this.run(() -> {
       setSpeed(0.6);
+    });
+  }
+
+  public CommandBase totalOutput() {
+    return this.runOnce(() -> {
+      timer = 1.0;
     });
   }
 }

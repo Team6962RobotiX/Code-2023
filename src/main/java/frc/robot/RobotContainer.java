@@ -9,10 +9,14 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 
 import java.util.List;
+
+import javax.swing.RepaintManager;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
 
@@ -34,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
@@ -45,7 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+    // The robot's subsystems and commands are defined here...
 
   private final Joystick driveJoystick = new Joystick(Constants.USB_DRIVE_JOYSTICK);
   private final Joystick utilityJoystick = new Joystick(Constants.USB_UTILITY_JOYSTICK);
@@ -64,33 +69,64 @@ public class RobotContainer {
   // );
 
   private final Command balanceAuto = new SequentialCommandGroup(
-    new DriveUntil(drive, IMU::isCenteredOnStation, Constants.AUTONOMOUS_POWER, 0.0),
+    IMU.resetVariables(),
+    // new DriveUntil(drive, IMU::isCenteredOnStation, Constants.AUTONOMOUS_POWER, 0.0),
     new AutoBalance(IMU, drive)
   );
 
   private final Command communityAuto = new SequentialCommandGroup(
-    new DriveUntil(drive, IMU::isOnStation, Constants.AUTONOMOUS_POWER, 0.0),
-    new DriveUntil(drive, IMU::isOffStation,  Constants.AUTONOMOUS_POWER, 0.5),
-    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER),
-    balanceAuto
+    IMU.resetVariables(),
+    new DriveUntil(drive, (() -> true), -0.6, 0.1),
+    new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
+    new DriveUntil(drive, IMU::isOffStation,  0.4, 0.1),
+    new WaitCommand(0.2),
+    new RotateDrive(drive, IMU, 180.0, 0.8),
+    new WaitCommand(0.2),
+    new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
+    new DriveUntil(drive, IMU::isCenteredOnStation, 0.37, 0.0),
+    new AutoBalance(IMU, drive)
   );
 
   private final Command placeAuto = new SequentialCommandGroup(
+    IMU.resetVariables(),
     arm.toPosition(1.6, 1.55),
-    intake.output(),
+    new WaitUntilCommand(arm::doneMoving),
+    new WaitCommand(0.2),
+    intake.totalOutput(),
+    new WaitCommand(0.4),
     arm.extendToLength(0),
     arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
-    new RotateDrive(drive, IMU, 180.0, Constants.AUTONOMOUS_POWER)
-  );
-
-  private final Command placeAndCommunityAuto = new SequentialCommandGroup(
-    placeAuto,
-    communityAuto
+    new WaitUntilCommand(arm::doneMoving)
   );
 
   private final Command placeAndBalanceAuto = new SequentialCommandGroup(
-    placeAuto,
-    balanceAuto
+    IMU.resetVariables(),
+    arm.toPosition(1.6, 1.55),
+    new WaitUntilCommand(arm::doneMoving),
+    new WaitCommand(0.2),
+    intake.totalOutput(),
+    new WaitCommand(0.4),
+    arm.extendToLength(0),
+    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+    new WaitUntilCommand(arm::doneMoving),
+    new RotateDrive(drive, IMU, 180.0, 0.8),
+    new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
+    new DriveUntil(drive, IMU::isCenteredOnStation, 0.37, 0.0),
+    new AutoBalance(IMU, drive)
+  );
+
+  private final Command placeAndCommunity = new SequentialCommandGroup(
+    IMU.resetVariables(),
+    arm.toPosition(1.6, 1.55),
+    new WaitUntilCommand(arm::doneMoving),
+    new WaitCommand(0.2),
+    intake.totalOutput(),
+    new WaitCommand(0.4),
+    arm.extendToLength(0),
+    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+    new WaitUntilCommand(arm::doneMoving),
+    new DriveStraight(drive, IMU, -3.0),
+    new RotateDrive(drive, IMU, 180, 0.8)
   );
 
   // private final Command auto2 = new SequentialCommandGroup(
@@ -99,6 +135,7 @@ public class RobotContainer {
   // );
 
   private final Command auto3 = new SequentialCommandGroup(
+    IMU.resetVariables()
     // new RotateDrive(drive, IMU, 180),
     // arm.toPosition(1.6, 0.7),
     // new WaitCommand(3)
@@ -113,10 +150,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     autonChooser.setDefaultOption("Community and balance", communityAuto);
-    autonChooser.addOption("Just balance", balanceAuto);
     autonChooser.addOption("Just place", placeAuto);
-    autonChooser.addOption("Place, community, and balance", placeAndCommunityAuto);
+    autonChooser.addOption("Place and community", placeAndCommunity);
     autonChooser.addOption("Place and balance", placeAndBalanceAuto);
+    autonChooser.addOption("Testing", new RotateDrive(drive, IMU, 180, 0.8));
     autonChooser.addOption("No auto", noauto);
 
     SmartDashboard.putData(autonChooser);
@@ -146,9 +183,10 @@ public class RobotContainer {
     
     new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.22, 1.15)); // MIDDLE
     
-    new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.6, 1.55)); // TOP
+    new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.6, 1.53)); // TOP
     
-    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.38)); // DOUBLE SUBSTATION
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.38)); // DOUBLE SUBSTATION CONE
+    new JoystickButton(utilityJoystick, 3).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.23)); // DOUBLE SUBSTATION CUBE
      
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));

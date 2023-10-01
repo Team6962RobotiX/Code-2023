@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -32,8 +33,14 @@ public class IMU extends SubsystemBase {
 
   @Override
   public void periodic() {
-    isBalanced = Math.abs(IMU.getRoll()) < Constants.ON_STATION_DEGREES || Math.signum(roll) != Math.signum(IMU.getRoll());
+    isBalanced = Math.abs(IMU.getRoll()) < Constants.LEVEL_DEGREES || Math.signum(roll) != Math.signum(IMU.getRoll());
+    boolean isOnStation = Math.abs(IMU.getRoll()) < Constants.ON_STATION_DEGREES;
     roll = IMU.getRoll();
+
+    if (transitioning && !isOnStation && isBalanced) {
+      transitioning = false;
+      return;
+    }
 
     if (transitioning && isBalanced) {
       onStation = !onStation;
@@ -43,6 +50,7 @@ public class IMU extends SubsystemBase {
 
     if (!isBalanced && !transitioning) {
       transitioning = true;
+      return;
     }
 
     // System.out.println(IMU.getRoll());
@@ -77,5 +85,13 @@ public class IMU extends SubsystemBase {
 
   public boolean isOffStation() {
     return !(onStation || transitioning);
+  }
+
+  public Command resetVariables() {
+    return runOnce(() -> {
+      onStation = false;
+      transitioning = false;
+      isBalanced = false;
+    });
   }
 }

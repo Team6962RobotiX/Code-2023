@@ -42,15 +42,15 @@ public final class Constants {
   public static final double SLEW_LIMIT = 2.0;
 
   // TUNE FOR AUTONOMOUS
-  public static final double GYRO_DELAY = 0.3;
+  public static final double GYRO_DELAY = 0.21;
+  public static final double LEVEL_DEGREES = 5;
   public static final double ON_STATION_DEGREES = 10;
-  public static final double AUTONOMOUS_POWER = 0.4;
 
 
   
   public static final double TRACKWIDTH = Units.inchesToMeters(22.0);
 
-  public static final int ARM_STALL_CURRENT = 60;
+  public static final int ARM_STALL_CURRENT = 80;
   public static final int ARM_CURRENT_LIMIT = 80;
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
@@ -118,7 +118,7 @@ public final class Constants {
   public static final double ARM_MAX_EXTEND_TICKS = 43.0 / 5.0 * 9.0; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.01; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 1.0; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.03; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
 
   public static final double ARM_EXTEND_SPEED = 0.4; // m/s
   public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
@@ -133,13 +133,13 @@ public final class Constants {
   public static final double ARM_LIFT_SPEED_FINE = 10.0; // degrees/s
 
   // PID & FF Config
-  public static final double ARM_EXTEND_KP = 3.0;
-  public static final double ARM_EXTEND_KI = 1;
+  public static final double ARM_EXTEND_KP = 5.0;
+  public static final double ARM_EXTEND_KI = 2.5;
   public static final double ARM_EXTEND_KD = 0;
 
   // PID
-  public static final double ARM_LIFT_KP = 0.008;
-  public static final double ARM_LIFT_KI = 0.005;
+  public static final double ARM_LIFT_KP = 0.015;
+  public static final double ARM_LIFT_KI = 0.003;
   public static final double ARM_LIFT_KD = 0;
 
   // FF
@@ -154,8 +154,8 @@ public final class Constants {
   public static final double CLAW_GRAB_MAX_POWER = 0.4; // Fastest speed claw will grab (0 - 1)
 
   // Autonomous Config
-  public static final double AUTONOMOUS_SPEED = 1.5; // m / s
-  public static final double AUTONOMOUS_ACCELERATION = 2; // m / s^2
+  public static final double AUTONOMOUS_SPEED = 2.0; // m / s
+  public static final double AUTONOMOUS_ACCELERATION = 4; // m / s^2
   public static final double AUTONOMOUS_ANGULAR_SPEED = driveSpeedToRotationalSpeed(Constants.AUTONOMOUS_SPEED); // m / s
   public static final double AUTONOMOUS_ANGULAR_ACCELERATION = 3; // m / s^2
   public static final RamseteController AUTONOMOUS_PID = new RamseteController();
