@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
     if (timer < 0) {
       setSpeed(0.0);
     } else {
-      setSpeed(0.6);
+      setSpeed(1.0);
     }
   }
 
@@ -42,13 +42,13 @@ public class Intake extends SubsystemBase {
 
   public CommandBase intake() {
     return this.run(() -> {
-      setSpeed(-0.4);
+      setSpeed(-1.0);
     });
   }
 
   public CommandBase output() {
     return this.run(() -> {
-      setSpeed(0.6);
+      setSpeed(1.0);
     });
   }
 

@@ -175,11 +175,11 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean doneLifting() {
-    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE;
+    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE * 2 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE * 2;
   }
 
   public boolean doneExtending() {
-    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE;
+    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE * 2 && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE * 2;
   }
 
   public boolean doneMoving() {
