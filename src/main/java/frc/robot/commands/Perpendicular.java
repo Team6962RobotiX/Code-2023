@@ -47,21 +47,10 @@ public class AprilTagRotate extends CommandBase {
   public void execute() {
     targetPos = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
     camPos = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
-    double xc = camPos.getX();
-    System.out.println("xc: " + xc);
-    double zc = Math.abs(camPos.getZ());
-    System.out.println("zc: " + zc);
-    double alpha = Math.atan2(xc, zc);
-    System.out.println("alpha: " + alpha);
     double beta = targetPos.getRotation().getY();
     System.out.println("beta:" + beta);
-    double gamma = Math.atan2(xt-xc, zc);
-    System.out.println("gamma: " + gamma);
-    double total_rotate = gamma+beta;
-    RotateDriveOld rotatoer = new RotateDriveOld(drive, imu, total_rotate);
-    // System.out.println(total_rotate);
+    RotateDriveOld rotatoer = new RotateDriveOld(drive, imu, beta);
     rotatoer.schedule();
-    //DriveStraight forwarder = DriveStraight(drive, imu, distance, drivePower)
   }
 
   // Called once the command ends or is interrupted.
