@@ -141,7 +141,7 @@ public class Drive extends SubsystemBase {
       return;
     }
 
-    drive.arcadeDrive(straightPower, turningPower);
+    drive.arcadeDrive(Math.max(Math.min(straightPower, speedCap), -speedCap), turningPower);
   }
 
   public void tankDrive(double leftBankSpeed, double rightBankSpeed) {
@@ -152,6 +152,7 @@ public class Drive extends SubsystemBase {
     leftBankSpeed = Math.max(Math.min(leftBankSpeed, speedCap), -speedCap);
     rightBankSpeed = Math.max(Math.min(rightBankSpeed, speedCap), -speedCap);
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
+    
   }
 
   public void resetEncoders() {
@@ -165,5 +166,9 @@ public class Drive extends SubsystemBase {
 
   public void setSpeedCap(double cap) {
     speedCap = cap;
+  }
+
+  public double getSpeedCap() {
+    return speedCap;
   }
 }

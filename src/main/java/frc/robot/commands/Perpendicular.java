@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.LimelightHelpers;
 
 /** An example command that uses an example subsystem. */
-public class AprilTagRotate extends CommandBase {
+public class Perpendicular extends CommandBase {
   
   private Drive drive;
   private Arm arm;
@@ -29,7 +29,7 @@ public class AprilTagRotate extends CommandBase {
   private Pose3d targetPos;
   private Pose3d camPos;
 
-  public AprilTagRotate(Drive drive, Arm arm, IMU imu) {
+  public Perpendicular(Drive drive, Arm arm, IMU imu) {
     this.imu = imu;
     this.drive = drive;
     // Use addRequirements() here to declare subsystem dependencies.

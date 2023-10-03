@@ -10,6 +10,11 @@ import frc.robot.commands.*;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Limelight extends SubsystemBase {
   private double lastKnownAprilTagZ = 0.0;
 
@@ -25,6 +30,7 @@ public class Limelight extends SubsystemBase {
     if (z != 0) {
       lastKnownAprilTagZ = z;
     }
+    SmartDashboard.putNumber("AprilTagDistance", getLastKnownAprilTagZ());
   }
 
   public double getLastKnownAprilTagZ() {

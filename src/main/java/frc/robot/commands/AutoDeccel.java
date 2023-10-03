@@ -20,23 +20,30 @@ public class AutoDeccel extends CommandBase {
   public AutoDeccel(Drive drive, IMU imu, Limelight limelight) {
     this.imu = imu;
     this.drive = drive;
+    this.limelight = limelight;
 
-    addRequirements(drive);
+    addRequirements();
   }
   
   @Override
   public void execute() {
-    drive.setSpeedCap(getMaxSpeed());
+    // System.out.print("MaxSpeed - ");
+    // System.out.println(getMaxSpeed());
+
+    drive.setSpeedCap(1 - Math.pow(1 - getMaxSpeed(), 2));
+
+    // System.out.print("SpeedCap - ");
+    // System.out.println(drive.getSpeedCap());
   }
 
   @Override
   public void end(boolean interrupted) {
-    drive.setSpeedCap(1.0);
+    drive.setSpeedCap(1);
   }
   
   public double getMaxSpeed() {
     double z = limelight.getLastKnownAprilTagZ();
-    double maxSpeed = z / 30 + Constants.DRIVE_BASE_POWER;
+    double maxSpeed = z / 17 + Constants.DRIVE_FINE_CONTROL_POWER;
     return maxSpeed;
   }
 }
