@@ -190,6 +190,8 @@ public class RobotContainer {
      
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));
+
+    new JoystickButton(driveJoystick, 2).whileTrue(new AutoDeccel(drive, IMU));
     
     new JoystickButton(utilityJoystick, 9).onTrue(arm.extendToLength(0)); // STOW
     new JoystickButton(utilityJoystick, 9).onTrue(arm.liftToAngle(55)); // STOW

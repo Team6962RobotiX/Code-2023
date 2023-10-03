@@ -47,6 +47,7 @@ public class Drive extends SubsystemBase {
   private Field2d field = new Field2d();
 
   private IMU IMU;  
+  double speedCap = 1.0;
 
   public Drive(IMU IMU) {
     this.IMU = IMU;
@@ -148,6 +149,8 @@ public class Drive extends SubsystemBase {
       return;
     }
 
+    leftBankSpeed = Math.max(Math.min(leftBankSpeed, speedCap), -speedCap);
+    rightBankSpeed = Math.max(Math.min(rightBankSpeed, speedCap), -speedCap);
     drive.tankDrive(leftBankSpeed, rightBankSpeed);
   }
 
@@ -158,5 +161,9 @@ public class Drive extends SubsystemBase {
 
   public double getAvgEncoderDistance() {
     return (leftBankEncoder.getPosition() - rightBankEncoder.getPosition()) / 2.0;
+  }
+
+  public void setSpeedCap(double cap) {
+    speedCap = cap;
   }
 }
