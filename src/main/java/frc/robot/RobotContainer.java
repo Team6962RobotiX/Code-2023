@@ -60,6 +60,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Logger logger = new Logger(drive, arm, intake, IMU);
+  private final Limelight limelight = new Limelight();
   // private final ExampleSubsystem tester = new ExampleSubsystem();
 
   // private final Command simpleauto1 = new SequentialCommandGroup(
@@ -191,7 +192,7 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));
 
-    new JoystickButton(driveJoystick, 2).whileTrue(new AutoDeccel(drive, IMU));
+    new JoystickButton(driveJoystick, 2).whileTrue(new AutoDeccel(drive, IMU, limelight));
     
     new JoystickButton(utilityJoystick, 9).onTrue(arm.extendToLength(0)); // STOW
     new JoystickButton(utilityJoystick, 9).onTrue(arm.liftToAngle(55)); // STOW

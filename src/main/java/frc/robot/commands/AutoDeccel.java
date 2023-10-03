@@ -9,13 +9,15 @@ import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.Limelight;
 
 public class AutoDeccel extends CommandBase {
   private Drive drive;
   private Arm arm;
   private IMU imu;
+  private Limelight limelight;
 
-  public AutoDeccel(Drive drive, IMU imu) {
+  public AutoDeccel(Drive drive, IMU imu, Limelight limelight) {
     this.imu = imu;
     this.drive = drive;
 
@@ -33,9 +35,7 @@ public class AutoDeccel extends CommandBase {
   }
   
   public double getMaxSpeed() {
-    Pose3d camSpace = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
-    Pose3d targetSpace = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
-    double z = Math.abs(targetSpace.getZ());
+    double z = limelight.getLastKnownAprilTagZ();
     double maxSpeed = z / 30 + Constants.DRIVE_BASE_POWER;
     return maxSpeed;
   }
