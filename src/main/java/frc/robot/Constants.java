@@ -54,7 +54,7 @@ public final class Constants {
   public static final int ARM_CURRENT_LIMIT = 80;
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
-  public static final double TURN_FINE_CONTROL_POWER = 0.15;
+  public static final double TURN_FINE_CONTROL_POWER = 0.25;
 
   public static final double DRIVE_BASE_POWER = 0.1; // Motor power required to get the chassis moving
   public static final double DRIVE_BASE_TURN_POWER = 0.15; // Motor power required to get the chassis turning
@@ -118,7 +118,7 @@ public final class Constants {
   public static final double ARM_MAX_EXTEND_TICKS = 43.0 / 5.0 * 9.0; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.01; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 1.0; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.02; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.01; // Meters of precision
 
   public static final double ARM_EXTEND_SPEED = 0.4; // m/s
   public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
@@ -138,7 +138,7 @@ public final class Constants {
   public static final double ARM_EXTEND_KD = 0;
 
   // PID
-  public static final double ARM_LIFT_KP = 0.015;
+  public static final double ARM_LIFT_KP = 0.01;
   public static final double ARM_LIFT_KI = 0.003;
   public static final double ARM_LIFT_KD = 0;
 

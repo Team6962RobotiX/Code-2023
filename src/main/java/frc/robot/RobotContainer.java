@@ -179,7 +179,7 @@ public class RobotContainer {
     new JoystickButton(utilityJoystick, 1).whileTrue(intake.output());
     new JoystickButton(utilityJoystick, 2).whileTrue(intake.intake());
 
-    new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.46)); // FLOOR
+    new JoystickButton(utilityJoystick, 11).onTrue(arm.toPosition(1.15, 0.5)); // FLOOR
     
     new JoystickButton(utilityJoystick, 12).onTrue(arm.toPosition(1.22, 1.15)); // MIDDLE
     
