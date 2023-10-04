@@ -108,8 +108,8 @@ public class Arm extends SubsystemBase {
     updateAngleSetpoint(targetLiftAngle);
     updateExtendSetpoint(targetExtendMeters);
 
-    liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE);
-    extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE);
+    liftPID.setTolerance(Constants.ARM_LIFT_ANGLE_TOLERANCE / 2.0);
+    extendPID.setTolerance(Constants.ARM_EXTEND_METERS_TOLERANCE / 2.0);
     liftPID.setSetpoint(targetLiftAngle);
 
     SmartDashboard.putData("Zero Arm (manually retract fully first)", new ZeroArm(this));
@@ -175,11 +175,19 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean doneLifting() {
-    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE * 2 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE * 2;
+    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE;
+  }
+
+  public boolean stopLiftPower() {
+    return getLiftAngle() > targetLiftAngle - Constants.ARM_LIFT_ANGLE_TOLERANCE / 2.0 && getLiftAngle() < targetLiftAngle + Constants.ARM_LIFT_ANGLE_TOLERANCE / 2.0;
   }
 
   public boolean doneExtending() {
-    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE * 2 && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE * 2;
+    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE;
+  }
+
+  public boolean stopExtendPower() {
+    return getExtendMeters() > targetExtendMeters - Constants.ARM_EXTEND_METERS_TOLERANCE / 2.0 && getExtendMeters() < targetExtendMeters + Constants.ARM_EXTEND_METERS_TOLERANCE / 2.0;
   }
 
   public boolean doneMoving() {
@@ -248,10 +256,11 @@ public class Arm extends SubsystemBase {
     power = Math.min(Constants.ARM_EXTEND_MAX_POWER, Math.abs(power)) * Math.signum(power);
 
     SmartDashboard.putBoolean("doneExtending()", doneExtending());
+    SmartDashboard.putBoolean("doneLifting()", doneLifting());
     SmartDashboard.putNumber("targetExtendMeters", targetExtendMeters);
     SmartDashboard.putNumber("extendMeters", extendMeters);
 
-    if (doneExtending()) {
+    if (stopExtendPower()) {
       extend.set(0.0);
       extendPID.reset();
       return;
@@ -283,7 +292,7 @@ public class Arm extends SubsystemBase {
       return;
     }
 
-    if (doneLifting()) {
+    if (stopLiftPower()) {
       lift.set(0.0);
       liftPID.reset();
       return;
@@ -323,6 +332,7 @@ public class Arm extends SubsystemBase {
   public void setTargetPosition(double targetX, double targetY) {
     resetPID();
     setExtendMeters(Math.sqrt(Math.pow(targetX, 2) + Math.pow(Constants.ARM_HEIGHT - targetY, 2)) - Constants.ARM_STARTING_LENGTH);
+    System.out.println((Math.atan((targetY - Constants.ARM_HEIGHT) / targetX) / Math.PI * 180) + 90);
     setLiftAngle((Math.atan((targetY - Constants.ARM_HEIGHT) / targetX) / Math.PI * 180) + 90);
   }
 

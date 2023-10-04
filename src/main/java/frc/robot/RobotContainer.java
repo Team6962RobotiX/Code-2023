@@ -186,8 +186,10 @@ public class RobotContainer {
     
     new JoystickButton(utilityJoystick, 10).onTrue(arm.toPosition(1.6, 1.53)); // TOP
     
-    new JoystickButton(utilityJoystick, 8).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.38)); // DOUBLE SUBSTATION CONE
-    new JoystickButton(utilityJoystick, 3).onTrue(arm.toPosition(Constants.ARM_STARTING_LENGTH, 1.23)); // DOUBLE SUBSTATION CUBE
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.extendToLength(0.0)); // DOUBLE SUBSTATION CONE
+    new JoystickButton(utilityJoystick, 8).onTrue(arm.liftToAngle(107.72323661688631)); // DOUBLE SUBSTATION CONE
+    new JoystickButton(utilityJoystick, 3).onTrue(arm.extendToLength(0.0)); // DOUBLE SUBSTATION CUBE
+    new JoystickButton(utilityJoystick, 3).onTrue(arm.liftToAngle(99.36650995701211));// DOUBLE SUBSTATION CUBE
      
     new JoystickButton(utilityJoystick, 7).onTrue(arm.extendToLength(0)); // INSIDE
     new JoystickButton(utilityJoystick, 7).onTrue(arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE));

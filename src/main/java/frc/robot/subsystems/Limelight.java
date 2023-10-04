@@ -24,13 +24,19 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Pose3d camSpace = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
-    Pose3d targetSpace = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
-    double z = Math.abs(targetSpace.getZ());
-    if (z != 0) {
-      lastKnownAprilTagZ = z;
+    Pose3d targetSpaceTop = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
+    Pose3d targetSpaceBottom = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.BOTTOM_LIMELIGHT_NAME);
+
+    double z_top = Math.abs(targetSpaceTop.getZ());
+    double z_bottom = Math.abs(targetSpaceBottom.getZ());
+
+    if (z_top != 0 && z_bottom != 0) {
+      lastKnownAprilTagZ = (z_top+z_bottom)/2;
+    }else if (z_top != 0){
+      lastKnownAprilTagZ = z_top;
+    }else if (z_bottom != 0){
+      lastKnownAprilTagZ = z_bottom;
     }
-    SmartDashboard.putNumber("AprilTagDistance", getLastKnownAprilTagZ());
   }
 
   public double getLastKnownAprilTagZ() {
