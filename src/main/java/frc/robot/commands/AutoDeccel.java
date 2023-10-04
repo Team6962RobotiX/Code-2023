@@ -51,8 +51,8 @@ public class AutoDeccel extends CommandBase {
     double z = limelight.getLastKnownAprilTagZ();
     double initialDist = 4;
     double initialSpeed = 0.9;
-    double finalDist = 2;
-    double finalSpeed = 0.4;
+    double finalDist = 1.5;
+    double finalSpeed = 0.37;
     double maxSpeed = ((finalSpeed - initialSpeed)/(finalDist - initialDist)) *(z - initialDist) + initialSpeed;
     maxSpeed = maxSpeed < 0.32 ? 0.32 : maxSpeed;
     System.out.println(z);
