@@ -50,7 +50,7 @@ public final class Constants {
   
   public static final double TRACKWIDTH = Units.inchesToMeters(22.0);
 
-  public static final int ARM_STALL_CURRENT = 80;
+  public static final int ARM_STALL_CURRENT = 50;
   public static final int ARM_CURRENT_LIMIT = 80;
 
   public static final double DRIVE_FINE_CONTROL_POWER = 0.18;
@@ -87,7 +87,7 @@ public final class Constants {
   public static final int CAN_RIGHT_DRIVE_2 = 27; // 27 for Main Chassis, 4 For Test Chassis
   public static final int CAN_ARM_LIFT_1 = 5;
   public static final int CAN_ARM_LIFT_2 = 15;
-  public static final int CAN_ARM_EXTEND = 4; // changed from 13 after burning 
+  public static final int CAN_ARM_EXTEND = 24; // changed from 13 after burning 
   public static final int CAN_CLAW_GRAB = 100;
   public static final int CAN_INTAKE = 17;
 
@@ -118,7 +118,7 @@ public final class Constants {
   public static final double ARM_MAX_EXTEND_TICKS = 43.0 / 5.0 * 9.0; // Arm extend limit (measured in encoder ticks)
   public static final double ARM_EXTEND_PADDING = 0.01; // Padding to prevent overshooting limits (measured in meters)
   public static final double ARM_EXTEND_MAX_POWER = 1.0; // Fastest speed arm will extend (0 - 1)
-  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.04; // Meters of precision
+  public static final double ARM_EXTEND_METERS_TOLERANCE = 0.06; // Meters of precision
 
   public static final double ARM_EXTEND_SPEED = 0.4; // m/s
   public static final double ARM_EXTEND_SPEED_FINE = 0.1; // m/s
@@ -127,7 +127,7 @@ public final class Constants {
   public static final double ARM_LIFT_MAX_POWER = 0.3; // Max arm lifting power
   public static final double ARM_LIFT_MIN_ANGLE = 30.0; // Min arm angle (degrees)
   public static final double ARM_LIFT_MAX_ANGLE = 118; // Max arm angle (degrees)
-  public static final double ARM_LIFT_ANGLE_TOLERANCE = 2; // Degrees of precision
+  public static final double ARM_LIFT_ANGLE_TOLERANCE = 3; // Degrees of precision
 
   public static final double ARM_LIFT_SPEED = 10.0; // degrees/s
   public static final double ARM_LIFT_SPEED_FINE = 10.0; // degrees/s
