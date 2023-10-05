@@ -38,7 +38,7 @@ public final class Constants {
   // Drive Config
   public static final double DRIVE_POWER_LIMIT = 0.9; // Hard limit on power
   public static final double DRIVE_TURN_POWER_LIMIT = 0.5; // Hard limit on turning power
-  public static final double INTAKE_SPEED = 0.15;
+  public static final double INTAKE_SPEED = 0.125;
   public static final double SLEW_LIMIT = 2.0;
 
   // TUNE FOR AUTONOMOUS

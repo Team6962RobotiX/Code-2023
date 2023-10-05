@@ -261,16 +261,14 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("extendMeters", extendMeters);
 
     if (stopExtendPower()) {
-      extend.set(0.0);
+      power = 0.0;
       extendPID.reset();
-      return;
     }
     
     // System.out.println(extend.getOutputCurrent());
     // System.out.println(getExtendMeters());
     if (extend.getMotorTemperature() > 50.0) {
-      extend.set(0.0);
-      return;
+      power = 0.0;
     }
     extend.set(power);
   }
@@ -293,9 +291,8 @@ public class Arm extends SubsystemBase {
     }
 
     if (stopLiftPower()) {
-      lift.set(0.0);
+      power = 0.0;
       liftPID.reset();
-      return;
     }
 
     lift.set(power);
