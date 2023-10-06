@@ -10,6 +10,9 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+
+import java.sql.DriverAction;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -22,12 +25,17 @@ public class RotateDrive extends CommandBase {
   private double endDegrees;
   private double startDegrees;
   private double power;
+  private double baseTurnPower = 0.2;
+
+  private SlewRateLimiter accelerationLimiter;
+
 
   public RotateDrive(Drive drive, IMU imu, double degrees, double power) {
     this.drive = drive;
     this.power = power;
     this.imu = imu;
     this.endDegrees = degrees;
+    this.accelerationLimiter = new SlewRateLimiter(2.0);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive, imu);
   }
@@ -36,6 +44,7 @@ public class RotateDrive extends CommandBase {
   @Override
   public void initialize() {
     startDegrees = imu.getIMU().getAngle();
+    accelerationLimiter.calculate(0.0);
   }
   
 
@@ -49,9 +58,10 @@ public class RotateDrive extends CommandBase {
     if (endDegrees - degrees < Math.abs(tolerance)) {
       isFinished = true;
       drive.tankDrive(0, 0);
+    } else {
+      double speed = accelerationLimiter.calculate(power - baseTurnPower) + baseTurnPower;
+      drive.arcadeDrive(0, -speed);
     }
-
-    drive.arcadeDrive(0, -power);
   }
 
   // Called once the command ends or is interrupted.

@@ -42,7 +42,7 @@ public final class Constants {
   public static final double SLEW_LIMIT = 2.0;
 
   // TUNE FOR AUTONOMOUS
-  public static final double GYRO_DELAY = 0.21;
+  public static final double GYRO_DELAY = 0.19;
   public static final double LEVEL_DEGREES = 5;
   public static final double ON_STATION_DEGREES = 10;
 

@@ -75,86 +75,88 @@ public class RobotContainer {
     new AutoBalance(IMU, drive)
   );
 
-  private final Command communityAuto = new SequentialCommandGroup(
+  private final Command communityBalanceAuto = new SequentialCommandGroup(
     IMU.resetVariables(),
     new DriveUntil(drive, (() -> true), -0.6, 0.1),
     new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
     new DriveUntil(drive, IMU::isOffStation,  0.4, 0.1),
-    new WaitCommand(0.2),
+    new WaitCommand(0.15),
     new RotateDrive(drive, IMU, 180.0, 0.8),
-    new WaitCommand(0.2),
+    new WaitCommand(0.15),
     new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
     new DriveUntil(drive, IMU::isCenteredOnStation, 0.37, 0.0),
     new AutoBalance(IMU, drive)
   );
 
-  private final Command placeAuto = new SequentialCommandGroup(
+  private final Command communityAuto = new SequentialCommandGroup(
     IMU.resetVariables(),
-    arm.toPosition(1.6, 1.55),
-    new WaitUntilCommand(arm::doneMoving),
-    new WaitCommand(0.2),
-    intake.totalOutput(),
-    new WaitCommand(0.4),
-    arm.extendToLength(0),
-    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
-    new WaitUntilCommand(arm::doneMoving)
+    new DriveUntil(drive, (() -> true), -0.6, 0.1),
+    new DriveStraight(drive, IMU, 5.0)
   );
 
-  private final Command placeAndBalanceAuto = new SequentialCommandGroup(
-    IMU.resetVariables(),
-    arm.toPosition(1.6, 1.55),
-    new WaitUntilCommand(arm::doneMoving),
-    new WaitCommand(0.2),
-    intake.totalOutput(),
-    new WaitCommand(0.4),
-    arm.extendToLength(0),
-    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
-    new WaitUntilCommand(arm::doneMoving),
-    new RotateDrive(drive, IMU, 180.0, 0.8),
-    new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
-    new DriveUntil(drive, IMU::isCenteredOnStation, 0.37, 0.0),
-    new AutoBalance(IMU, drive)
-  );
+  // private final Command placeAuto = new SequentialCommandGroup(
+  //   IMU.resetVariables(),
+  //   arm.toPosition(1.6, 1.55),
+  //   new WaitUntilCommand(arm::doneMoving),
+  //   new WaitCommand(0.2),
+  //   intake.totalOutput(),
+  //   new WaitCommand(0.4),
+  //   arm.extendToLength(0),
+  //   arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+  //   new WaitUntilCommand(arm::doneMoving)
+  // );
 
-  private final Command placeAndCommunity = new SequentialCommandGroup(
-    IMU.resetVariables(),
-    arm.toPosition(1.6, 1.55),
-    new WaitUntilCommand(arm::doneMoving),
-    new WaitCommand(0.2),
-    intake.totalOutput(),
-    new WaitCommand(0.4),
-    arm.extendToLength(0),
-    arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
-    new WaitUntilCommand(arm::doneMoving),
-    new DriveStraight(drive, IMU, -3.0),
-    new RotateDrive(drive, IMU, 180, 0.8)
-  );
+  // private final Command placeAndBalanceAuto = new SequentialCommandGroup(
+  //   IMU.resetVariables(),
+  //   arm.toPosition(1.6, 1.55),
+  //   new WaitUntilCommand(arm::doneMoving),
+  //   new WaitCommand(0.2),
+  //   intake.totalOutput(),
+  //   new WaitCommand(0.4),
+  //   arm.extendToLength(0),
+  //   arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+  //   new WaitUntilCommand(arm::doneMoving),
+  //   new RotateDrive(drive, IMU, 180.0, 0.8),
+  //   new DriveUntil(drive, IMU::isOnStation, 0.6, 0.0),
+  //   new DriveUntil(drive, IMU::isCenteredOnStation, 0.37, 0.0),
+  //   new AutoBalance(IMU, drive)
+  // );
+
+  // private final Command placeAndCommunity = new SequentialCommandGroup(
+  //   IMU.resetVariables(),
+  //   arm.toPosition(1.6, 1.55),
+  //   new WaitUntilCommand(arm::doneMoving),
+  //   new WaitCommand(0.2),
+  //   intake.totalOutput(),
+  //   new WaitCommand(0.4),
+  //   arm.extendToLength(0),
+  //   arm.liftToAngle(Constants.ARM_LIFT_MIN_ANGLE),
+  //   new WaitUntilCommand(arm::doneMoving),
+  //   new DriveStraight(drive, IMU, -3.0),
+  //   new RotateDrive(drive, IMU, 180, 0.8)
+  // );
 
   // private final Command auto2 = new SequentialCommandGroup(
   //   new DriveStraight(drive, IMU, -.2, 0.6),
   //   new DriveStraight(drive, IMU, 4.5, 0.6)
   // );
 
-  private final Command auto3 = new SequentialCommandGroup(
-    IMU.resetVariables()
-    // new RotateDrive(drive, IMU, 180),
-    // arm.toPosition(1.6, 0.7),
-    // new WaitCommand(3)
-    // claw.toggle()
-    //new DriveStraight(drive, IMU, -0.5, 0.4),
-    //new RotateDrive(drive, IMU, 180)
-  );
+  // private final Command testingAuto = new SequentialCommandGroup(
+  //   IMU.resetVariables(),
+  //   new DriveUntil(drive, (() -> true), 0.5, 1.0),
+  //   new WaitCommand(0.2),
+  //   new RotateDrive(drive, IMU, 180, 0.8),
+  //   new WaitCommand(0.2),
+  //   new DriveUntil(drive, (() -> true), 0.5, 1.0)
+  // );
 
   private final Command noauto = new SequentialCommandGroup();
   SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    autonChooser.setDefaultOption("Community and balance", communityAuto);
-    autonChooser.addOption("Just place", placeAuto);
-    autonChooser.addOption("Place and community", placeAndCommunity);
-    autonChooser.addOption("Place and balance", placeAndBalanceAuto);
-    autonChooser.addOption("Testing", new RotateDrive(drive, IMU, 180, 0.8));
+    autonChooser.setDefaultOption("Community and balance", communityBalanceAuto);
+    autonChooser.addOption("Just community", communityAuto);
     autonChooser.addOption("No auto", noauto);
 
     SmartDashboard.putData(autonChooser);
