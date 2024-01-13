@@ -24,7 +24,7 @@ public class AprilTagRotate extends CommandBase {
   private Arm arm;
   private IMU imu;
 
-  private double xt = -0.99;
+  private double x_cone_tag = -0.99;
 
   private Pose3d targetPos;
   private Pose3d camPos;
@@ -47,17 +47,17 @@ public class AprilTagRotate extends CommandBase {
   public void execute() {
     targetPos = LimelightHelpers.getTargetPose3d_CameraSpace(Constants.TOP_LIMELIGHT_NAME);
     camPos = LimelightHelpers.getCameraPose3d_TargetSpace(Constants.TOP_LIMELIGHT_NAME);
-    double xc = camPos.getX();
-    System.out.println("xc: " + xc);
-    double zc = Math.abs(camPos.getZ());
-    System.out.println("zc: " + zc);
-    double alpha = Math.atan2(xc, zc);
-    System.out.println("alpha: " + alpha);
-    double beta = targetPos.getRotation().getY();
-    System.out.println("beta:" + beta);
-    double gamma = Math.atan2(xt-xc, zc);
-    System.out.println("gamma: " + gamma);
-    double total_rotate = gamma+beta;
+    double x_lime_tag = camPos.getX();
+    System.out.println("x_lime_tag: " + x_lime_tag);
+    double z_lime_tag = Math.abs(camPos.getZ());
+    System.out.println("z_lime_tag: " + z_lime_tag);
+    double radrotate_tag_wall = Math.atan2(x_lime_tag, z_lime_tag);
+    System.out.println("radrotate_tag_wall: " + radrotate_tag_wall);
+    double radrotate_lime_tag = targetPos.getRotation().getY();
+    System.out.println("radrotate_lime_tag:" + radrotate_lime_tag);
+    double radrotate_cone = Math.atan2(x_cone_tag-x_lime_tag, z_lime_tag);
+    System.out.println("radrotate_cone: " + radrotate_cone);
+    double total_rotate = radrotate_cone+radrotate_lime_tag;
     RotateDriveOld rotatoer = new RotateDriveOld(drive, imu, total_rotate);
     // System.out.println(total_rotate);
     rotatoer.schedule();
